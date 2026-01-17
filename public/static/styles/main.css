@@ -1444,8 +1444,10 @@ body, html {
   .options {
     height: 450px;
   }
-  .option:nth-child(6) {
-    display: none;
+  /* Keep all 6 service cards visible - removed hiding */
+  
+  .logo-scroll-section {
+    margin-top: 0;
   }
 
   .footer-content {
@@ -1534,10 +1536,10 @@ body, html {
 @media screen and (max-width: 900px) {
   .options {
     height: 400px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  .option:nth-child(5) {
-    display: none;
-  }
+  /* Keep all service cards visible */
 
   .game-container {
     grid-template-columns: 1fr;
@@ -1717,12 +1719,29 @@ body, html {
 }
 
 @media screen and (max-width: 700px) {
+  /* Services - switch to vertical layout on mobile */
   .options {
-    height: 350px;
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+    padding: 0 16px;
   }
-  .option:nth-child(4) {
-    display: none;
+  
+  .option {
+    min-width: 100% !important;
+    width: 100%;
+    height: 200px;
+    min-height: 200px;
+    margin: 0;
+    flex-grow: 0 !important;
   }
+  
+  .option.active {
+    flex-grow: 0 !important;
+    min-width: 100% !important;
+    height: 280px;
+  }
+  
   .option .label .info .main {
     font-size: 1.1rem;
   }
@@ -1733,6 +1752,17 @@ body, html {
     min-width: 40px;
     max-width: 40px;
     height: 40px;
+  }
+  
+  .option .label {
+    bottom: 15px !important;
+    left: 15px !important;
+    opacity: 1 !important;
+  }
+  
+  .option .label .info > div {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
   }
 
   .game-cta-text {
@@ -1755,18 +1785,25 @@ body, html {
 
 @media screen and (max-width: 500px) {
   .options {
-    height: 300px;
-    min-width: 300px;
+    height: auto;
+    min-width: auto;
+    gap: 10px;
   }
-  .option:nth-child(3) {
-    display: none;
+  
+  .option {
+    height: 180px;
+    min-height: 180px;
+    border-radius: 16px;
   }
+  
   .option.active {
-    border-radius: 25px;
+    border-radius: 20px;
+    height: 240px;
   }
+  
   .option.active .label {
-    bottom: 20px;
-    left: 20px;
+    bottom: 15px;
+    left: 15px;
   }
 
   .animation-word, .animation-clone {
@@ -1844,38 +1881,63 @@ body, html {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
-    height: 100dvh;
+    height: 85vh;
+    height: 85dvh;
   }
   
   .hero-section {
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 85vh;
+    min-height: 85dvh;
   }
   
   .hero {
-    height: 100vh;
-    height: 100dvh;
+    height: 85vh;
+    height: 85dvh;
     padding: 0 16px;
+  }
+  
+  /* Remove gaps between sections */
+  .logo-scroll-section {
+    margin-top: 0;
+    padding-top: 40px;
   }
 }
 
 /* Mobile landscape and portrait */
 @media screen and (max-width: 768px) {
   .webgl {
-    height: 100vh;
-    height: 100dvh;
+    height: 75vh;
+    height: 75dvh;
   }
   
   .hero-section {
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 75vh;
+    min-height: 75dvh;
   }
   
   .hero {
-    height: 100vh;
-    height: 100dvh;
+    height: 75vh;
+    height: 75dvh;
     padding: 0 12px;
+  }
+  
+  /* Remove gaps between sections */
+  .logo-scroll-section {
+    padding: 30px 0;
+  }
+  
+  .services-section {
+    padding: 40px 0;
+    min-height: auto;
+  }
+  
+  .game-section {
+    padding: 40px 20px;
+    min-height: auto;
+  }
+  
+  .about-transition-section {
+    margin-top: 80px;
   }
 }
 
@@ -1886,20 +1948,47 @@ body, html {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
-    height: 100dvh;
+    height: 65vh;
+    height: 65dvh;
   }
   
   .hero-section {
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 65vh;
+    min-height: 65dvh;
     overflow: hidden;
   }
   
   .hero {
-    height: 100vh;
-    height: 100dvh;
+    height: 65vh;
+    height: 65dvh;
     padding: 0 10px;
+  }
+  
+  /* Remove gaps between sections */
+  .logo-scroll-section {
+    padding: 25px 0;
+  }
+  
+  .services-section {
+    padding: 30px 0;
+    min-height: auto;
+  }
+  
+  .services-title {
+    margin-bottom: 20px;
+  }
+  
+  .game-section {
+    padding: 30px 16px;
+    min-height: auto;
+  }
+  
+  .about-transition-section {
+    margin-top: 60px;
+  }
+  
+  .curve-container {
+    height: 80px;
   }
   
   /* Adjust side menu for small screens */
@@ -1928,6 +2017,21 @@ body, html {
 
 /* Very small screens (iPhone SE, etc) */
 @media screen and (max-width: 375px) {
+  .webgl {
+    height: 55vh;
+    height: 55dvh;
+  }
+  
+  .hero-section {
+    min-height: 55vh;
+    min-height: 55dvh;
+  }
+  
+  .hero {
+    height: 55vh;
+    height: 55dvh;
+  }
+  
   .top-nav {
     padding: 16px 14px;
   }
@@ -1956,6 +2060,16 @@ body, html {
   .side-menu-link {
     font-size: 18px;
     padding: 12px 0;
+  }
+  
+  /* Smaller services on very small screens */
+  .option {
+    height: 160px;
+    min-height: 160px;
+  }
+  
+  .option.active {
+    height: 200px;
   }
 }
 

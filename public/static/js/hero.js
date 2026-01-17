@@ -8,29 +8,31 @@ const scene = new THREE.Scene();
 // Calculate responsive camera position based on screen size
 function getResponsiveCameraZ() {
   const width = window.innerWidth;
-  if (width <= 375) return 8;    // Very small phones (iPhone SE)
-  if (width <= 480) return 7;    // Small phones
-  if (width <= 768) return 6;    // Large phones / small tablets
-  if (width <= 1024) return 5.5; // Tablets
-  return 5;                       // Desktop
+  if (width <= 375) return 9;     // Very small phones (iPhone SE) - further back
+  if (width <= 480) return 8;     // Small phones - further back
+  if (width <= 600) return 7;     // Medium phones
+  if (width <= 768) return 6.5;   // Large phones / small tablets
+  if (width <= 1024) return 5.5;  // Tablets
+  return 5;                        // Desktop
 }
 
 // Calculate responsive text size based on screen width
 function getResponsiveTextSize() {
   const width = window.innerWidth;
-  if (width <= 375) return 0.35;   // Very small phones
-  if (width <= 480) return 0.45;   // Small phones
-  if (width <= 600) return 0.55;   // Medium phones
-  if (width <= 768) return 0.7;    // Large phones / small tablets
-  if (width <= 1024) return 0.85;  // Tablets
+  if (width <= 375) return 0.28;   // Very small phones - even smaller
+  if (width <= 480) return 0.35;   // Small phones - smaller
+  if (width <= 600) return 0.45;   // Medium phones
+  if (width <= 768) return 0.6;    // Large phones / small tablets
+  if (width <= 1024) return 0.8;   // Tablets
   return 1;                         // Desktop
 }
 
 // Calculate responsive torus size
 function getResponsiveTorusSize() {
   const width = window.innerWidth;
-  if (width <= 480) return { radius: 0.4, tube: 0.25 };
-  if (width <= 768) return { radius: 0.55, tube: 0.32 };
+  if (width <= 375) return { radius: 0.3, tube: 0.18 };  // Even smaller
+  if (width <= 480) return { radius: 0.35, tube: 0.2 };  // Smaller
+  if (width <= 768) return { radius: 0.5, tube: 0.28 };
   return { radius: 0.7, tube: 0.4 };
 }
 
