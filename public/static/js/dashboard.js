@@ -415,7 +415,112 @@ document.addEventListener('DOMContentLoaded', () => {
     if (connected) connected.style.display = 'none';
   }
 
-  // Load content for CMS - ENHANCED VERSION
+  // ==================== CMS CONTENT EDITOR ====================
+
+  // Define ALL editable sections - COMPREHENSIVE with defaults from HTML
+  const contentSections = {
+    home: {
+      hero: { 
+        title: 'Hero Section', 
+        fields: [
+          { key: 'tagline', label: 'Tagline', type: 'text', default: 'Where Brands Win.' }
+        ]
+      },
+      logo_scroll: {
+        title: 'Logo Scroll Section',
+        fields: [
+          { key: 'title', label: 'Section Title', type: 'text', default: 'Brands We\'ve Worked With' },
+          { key: 'logo1_url', label: 'Brand Logo 1 (URL)', type: 'url', default: 'https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971' },
+          { key: 'logo2_url', label: 'Brand Logo 2 (URL)', type: 'url', default: 'https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg' },
+          { key: 'logo3_url', label: 'Brand Logo 3 (URL)', type: 'url', default: 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg' }
+        ]
+      },
+      services: {
+        title: 'Services Section',
+        fields: [
+          { key: 'title', label: 'Section Title', type: 'text', default: 'Our Services' },
+          { key: 'service1_title', label: 'Service 1 Title', type: 'text', default: 'Strategic Consulting' },
+          { key: 'service1_subtitle', label: 'Service 1 Description', type: 'text', default: 'Personalized marketing analysis & strategy' },
+          { key: 'service1_image', label: 'Service 1 Image (URL)', type: 'url', default: 'https://i.ibb.co/3YdDVd9P/33aca89d-c4fe-43ff-a4ac-00e921a9213c.jpg' },
+          { key: 'service2_title', label: 'Service 2 Title', type: 'text', default: 'Media Buying' },
+          { key: 'service2_subtitle', label: 'Service 2 Description', type: 'text', default: 'Optimized advertising campaigns' },
+          { key: 'service2_image', label: 'Service 2 Image (URL)', type: 'url', default: 'https://i.ibb.co/8nvv5vM2/dee359e2-f702-4a59-8baa-87df5600a300.jpg' },
+          { key: 'service3_title', label: 'Service 3 Title', type: 'text', default: 'Video Production' },
+          { key: 'service3_subtitle', label: 'Service 3 Description', type: 'text', default: 'Professional shooting & editing' },
+          { key: 'service3_image', label: 'Service 3 Image (URL)', type: 'url', default: 'https://i.ibb.co/3PZvBNq/c23b0c50-f718-4df8-a5ec-ec1c9b337007.jpg' },
+          { key: 'service4_title', label: 'Service 4 Title', type: 'text', default: 'Social Media Management' },
+          { key: 'service4_subtitle', label: 'Service 4 Description', type: 'text', default: 'Expert community management' },
+          { key: 'service4_image', label: 'Service 4 Image (URL)', type: 'url', default: 'https://i.ibb.co/Q7vnL5tC/87a60201-0539-4235-b157-d1d482767c17.jpg' },
+          { key: 'service5_title', label: 'Service 5 Title', type: 'text', default: 'Graphic Design' },
+          { key: 'service5_subtitle', label: 'Service 5 Description', type: 'text', default: 'Visual identity & creations' },
+          { key: 'service5_image', label: 'Service 5 Image (URL)', type: 'url', default: 'https://i.ibb.co/G3FM7rqf/910362e8-26f4-4f29-b8c5-d81155a8fd59.jpg' },
+          { key: 'service6_title', label: 'Service 6 Title', type: 'text', default: 'Data Analytics' },
+          { key: 'service6_subtitle', label: 'Service 6 Description', type: 'text', default: 'Insights & detailed reports' },
+          { key: 'service6_image', label: 'Service 6 Image (URL)', type: 'url', default: 'https://i.ibb.co/DPczL7XT/83a4fbb4-fd83-44ef-9071-4193c8ddbc82.jpg' }
+        ]
+      },
+      about: {
+        title: 'About Section',
+        fields: [
+          { key: 'heading_line1', label: 'Heading Line 1', type: 'text', default: 'About' },
+          { key: 'heading_line2', label: 'Heading Line 2', type: 'text', default: 'Us' },
+          { key: 'paragraph1', label: 'Paragraph 1', type: 'textarea', default: 'At fitup, we believe that every brand has a unique story waiting to be told. We\'re not just a marketing agency—we\'re your strategic partners in growth, dedicated to transforming your vision into measurable success.' },
+          { key: 'paragraph2', label: 'Paragraph 2', type: 'textarea', default: 'Our team combines creative excellence with data-driven insights to craft campaigns that resonate with your audience and drive real results. From strategic consulting to full-scale media production, we handle every aspect of your brand\'s digital presence.' },
+          { key: 'paragraph3', label: 'Paragraph 3', type: 'textarea', default: 'Based in Casablanca, Morocco, we\'ve helped businesses across industries elevate their brand, connect with their audience, and achieve sustainable growth. Whether you\'re a startup looking to make your mark or an established brand seeking fresh perspectives, we\'re here to help you win.' },
+          { key: 'stat1_number', label: 'Stat 1 Number', type: 'text', default: '50+' },
+          { key: 'stat1_label', label: 'Stat 1 Label', type: 'text', default: 'Projects Delivered' },
+          { key: 'stat2_number', label: 'Stat 2 Number', type: 'text', default: '98%' },
+          { key: 'stat2_label', label: 'Stat 2 Label', type: 'text', default: 'Client Satisfaction' },
+          { key: 'stat3_number', label: 'Stat 3 Number', type: 'text', default: '5+' },
+          { key: 'stat3_label', label: 'Stat 3 Label', type: 'text', default: 'Years Experience' }
+        ]
+      },
+      social: {
+        title: 'Social Media Links',
+        fields: [
+          { key: 'twitter_handle', label: 'Twitter Handle', type: 'text', default: '@fitup_ma' },
+          { key: 'twitter_url', label: 'Twitter URL', type: 'url', default: 'https://twitter.com/fitup_ma' },
+          { key: 'instagram_handle', label: 'Instagram Handle', type: 'text', default: '@fitup.ma' },
+          { key: 'instagram_url', label: 'Instagram URL', type: 'url', default: 'https://instagram.com/fitup.ma' },
+          { key: 'linkedin_url', label: 'LinkedIn URL', type: 'url', default: 'https://linkedin.com/company/fitup' }
+        ]
+      },
+      footer: {
+        title: 'Footer Section',
+        fields: [
+          { key: 'description', label: 'Company Description', type: 'textarea', default: 'Where brands win. We help businesses grow through strategic marketing, creative content, and data-driven decisions.' },
+          { key: 'email', label: 'Contact Email', type: 'text', default: 'hello@fitup.ma' },
+          { key: 'phone', label: 'Phone Number', type: 'text', default: '+212 6 00 00 00 00' },
+          { key: 'location', label: 'Location', type: 'text', default: 'Casablanca, Morocco' }
+        ]
+      },
+      branding: {
+        title: 'Branding & Logos',
+        fields: [
+          { key: 'main_logo', label: 'Main Logo (URL)', type: 'url', default: 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg' },
+          { key: 'favicon', label: 'Favicon (URL)', type: 'url', default: 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg' }
+        ]
+      }
+    },
+    contact: {
+      hero: {
+        title: 'Page Header',
+        fields: [
+          { key: 'title', label: 'Page Title', type: 'text', default: 'Prenez rendez-vous' },
+          { key: 'subtitle', label: 'Page Subtitle', type: 'text', default: 'Choisissez un créneau qui vous convient' }
+        ]
+      },
+      form: {
+        title: 'Form Labels',
+        fields: [
+          { key: 'submit_button', label: 'Submit Button Text', type: 'text', default: 'Envoyer' },
+          { key: 'success_message', label: 'Success Message', type: 'text', default: 'Merci ! Votre demande a été envoyée avec succès.' }
+        ]
+      }
+    }
+  };
+
+  // Load content for CMS
   async function loadContent(page = 'home') {
     try {
       const content = await api.get(`/content/${page}`);
@@ -423,115 +528,19 @@ document.addEventListener('DOMContentLoaded', () => {
       renderContentEditor(page);
     } catch (error) {
       console.error('Failed to load content:', error);
+      // Still render with defaults
+      contentData[page] = {};
+      renderContentEditor(page);
     }
   }
 
-  // ENHANCED: Render content editor with ALL editable fields
+  // Render content editor with ALL editable fields and defaults
   function renderContentEditor(page) {
     const form = document.getElementById('contentEditForm');
     if (!form) return;
 
     const content = contentData[page] || {};
-    
-    // Define ALL editable sections for each page - comprehensive list
-    const sections = page === 'home' ? {
-      hero: { 
-        title: 'Hero Section', 
-        fields: [
-          { key: 'tagline', label: 'Tagline', type: 'text' }
-        ]
-      },
-      logo_scroll: {
-        title: 'Logo Scroll Section',
-        fields: [
-          { key: 'title', label: 'Section Title', type: 'text' },
-          { key: 'logo1_url', label: 'Brand Logo 1 (URL)', type: 'url' },
-          { key: 'logo2_url', label: 'Brand Logo 2 (URL)', type: 'url' },
-          { key: 'logo3_url', label: 'Brand Logo 3 (URL)', type: 'url' }
-        ]
-      },
-      services: {
-        title: 'Services Section',
-        fields: [
-          { key: 'title', label: 'Section Title', type: 'text' },
-          { key: 'service1_title', label: 'Service 1 Title', type: 'text' },
-          { key: 'service1_subtitle', label: 'Service 1 Description', type: 'text' },
-          { key: 'service1_image', label: 'Service 1 Image (URL)', type: 'url' },
-          { key: 'service2_title', label: 'Service 2 Title', type: 'text' },
-          { key: 'service2_subtitle', label: 'Service 2 Description', type: 'text' },
-          { key: 'service2_image', label: 'Service 2 Image (URL)', type: 'url' },
-          { key: 'service3_title', label: 'Service 3 Title', type: 'text' },
-          { key: 'service3_subtitle', label: 'Service 3 Description', type: 'text' },
-          { key: 'service3_image', label: 'Service 3 Image (URL)', type: 'url' },
-          { key: 'service4_title', label: 'Service 4 Title', type: 'text' },
-          { key: 'service4_subtitle', label: 'Service 4 Description', type: 'text' },
-          { key: 'service4_image', label: 'Service 4 Image (URL)', type: 'url' },
-          { key: 'service5_title', label: 'Service 5 Title', type: 'text' },
-          { key: 'service5_subtitle', label: 'Service 5 Description', type: 'text' },
-          { key: 'service5_image', label: 'Service 5 Image (URL)', type: 'url' },
-          { key: 'service6_title', label: 'Service 6 Title', type: 'text' },
-          { key: 'service6_subtitle', label: 'Service 6 Description', type: 'text' },
-          { key: 'service6_image', label: 'Service 6 Image (URL)', type: 'url' }
-        ]
-      },
-      about: {
-        title: 'About Section',
-        fields: [
-          { key: 'heading_line1', label: 'Heading Line 1', type: 'text' },
-          { key: 'heading_line2', label: 'Heading Line 2', type: 'text' },
-          { key: 'paragraph1', label: 'Paragraph 1', type: 'textarea' },
-          { key: 'paragraph2', label: 'Paragraph 2', type: 'textarea' },
-          { key: 'paragraph3', label: 'Paragraph 3', type: 'textarea' },
-          { key: 'stat1_number', label: 'Stat 1 Number', type: 'text' },
-          { key: 'stat1_label', label: 'Stat 1 Label', type: 'text' },
-          { key: 'stat2_number', label: 'Stat 2 Number', type: 'text' },
-          { key: 'stat2_label', label: 'Stat 2 Label', type: 'text' },
-          { key: 'stat3_number', label: 'Stat 3 Number', type: 'text' },
-          { key: 'stat3_label', label: 'Stat 3 Label', type: 'text' }
-        ]
-      },
-      social: {
-        title: 'Social Media Links',
-        fields: [
-          { key: 'twitter_handle', label: 'Twitter Handle', type: 'text' },
-          { key: 'twitter_url', label: 'Twitter URL', type: 'url' },
-          { key: 'instagram_handle', label: 'Instagram Handle', type: 'text' },
-          { key: 'instagram_url', label: 'Instagram URL', type: 'url' },
-          { key: 'linkedin_url', label: 'LinkedIn URL', type: 'url' }
-        ]
-      },
-      footer: {
-        title: 'Footer Section',
-        fields: [
-          { key: 'description', label: 'Company Description', type: 'textarea' },
-          { key: 'email', label: 'Contact Email', type: 'text' },
-          { key: 'phone', label: 'Phone Number', type: 'text' },
-          { key: 'location', label: 'Location', type: 'text' }
-        ]
-      },
-      branding: {
-        title: 'Branding & Logos',
-        fields: [
-          { key: 'main_logo', label: 'Main Logo (URL)', type: 'url' },
-          { key: 'favicon', label: 'Favicon (URL)', type: 'url' }
-        ]
-      }
-    } : {
-      hero: {
-        title: 'Page Header',
-        fields: [
-          { key: 'title', label: 'Page Title', type: 'text' },
-          { key: 'subtitle', label: 'Page Subtitle', type: 'text' }
-        ]
-      },
-      form: {
-        title: 'Form Labels',
-        fields: [
-          { key: 'submit_button', label: 'Submit Button Text', type: 'text' },
-          { key: 'success_message', label: 'Success Message', type: 'text' }
-        ]
-      }
-    };
+    const sections = contentSections[page] || {};
 
     let html = '';
     for (const [sectionKey, sectionDef] of Object.entries(sections)) {
@@ -539,7 +548,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="content-section">
           <h3 class="content-section-title">${sectionDef.title}</h3>
           ${sectionDef.fields.map(field => {
-            const value = content[sectionKey]?.[field.key] || '';
+            // Get value from loaded content, or use default
+            const value = content[sectionKey]?.[field.key] ?? field.default ?? '';
             const inputType = field.type || 'text';
             
             if (inputType === 'textarea') {
@@ -557,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     data-type="${inputType}"
                     placeholder="Enter ${field.label.toLowerCase()}"
                     rows="3"
-                  >${value}</textarea>
+                  >${escapeHtml(value)}</textarea>
                 </div>
               `;
             } else if (inputType === 'url') {
@@ -567,7 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${field.label}
                     <small>(${sectionKey})</small>
                   </label>
-                  <div style="display: flex; gap: 8px; align-items: center;">
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <input 
                       type="url" 
                       id="content_${sectionKey}_${field.key}"
@@ -575,11 +585,13 @@ document.addEventListener('DOMContentLoaded', () => {
                       data-section="${sectionKey}"
                       data-key="${field.key}"
                       data-type="${inputType}"
-                      value="${value}"
+                      value="${escapeHtml(value)}"
                       placeholder="https://..."
-                      style="flex: 1;"
+                      style="flex: 1; min-width: 200px;"
                     >
-                    ${value ? `<img src="${value}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">` : ''}
+                    <div class="url-preview" style="width: 50px; height: 50px; border-radius: 4px; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                      ${value ? `<img src="${escapeHtml(value)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='<span style=\\'color:#999;font-size:10px;\\'>No img</span>'">` : '<span style="color:#999;font-size:10px;">No img</span>'}
+                    </div>
                   </div>
                 </div>
               `;
@@ -597,7 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     data-section="${sectionKey}"
                     data-key="${field.key}"
                     data-type="${inputType}"
-                    value="${value}"
+                    value="${escapeHtml(value)}"
                     placeholder="Enter ${field.label.toLowerCase()}"
                   >
                 </div>
@@ -609,6 +621,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     form.innerHTML = html;
+    
+    // Add live preview for URL inputs
+    form.querySelectorAll('input[type="url"]').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const preview = e.target.parentElement.querySelector('.url-preview');
+        if (preview) {
+          const url = e.target.value;
+          if (url) {
+            preview.innerHTML = `<img src="${escapeHtml(url)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='<span style=\\'color:#999;font-size:10px;\\'>Invalid</span>'">`;
+          } else {
+            preview.innerHTML = '<span style="color:#999;font-size:10px;">No img</span>';
+          }
+        }
+      });
+    });
+  }
+
+  // Helper function to escape HTML
+  function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   // Save all content
@@ -618,20 +653,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     inputs.forEach(input => {
       const value = input.tagName === 'TEXTAREA' ? input.value : input.value;
-      items.push({
-        page: input.dataset.page,
-        section: input.dataset.section,
-        content_key: input.dataset.key,
-        content_value: value,
-        content_type: input.dataset.type || 'text'
-      });
+      if (input.dataset.page && input.dataset.section && input.dataset.key) {
+        items.push({
+          page: input.dataset.page,
+          section: input.dataset.section,
+          content_key: input.dataset.key,
+          content_value: value,
+          content_type: input.dataset.type || 'text'
+        });
+      }
     });
 
+    if (items.length === 0) {
+      alert('No content to save');
+      return;
+    }
+
     try {
-      await api.post('/content/bulk', items);
-      alert('Content saved successfully! Changes will reflect on the live site immediately.');
+      const result = await api.post('/content/bulk', items);
+      if (result.success) {
+        alert('Content saved successfully! Changes will reflect on the live site immediately.');
+        // Reload content to confirm save
+        loadContent(selectedContentPage);
+      } else {
+        throw new Error('Save failed');
+      }
     } catch (error) {
-      alert('Failed to save content');
+      console.error('Failed to save content:', error);
+      alert('Failed to save content. Please try again.');
     }
   }
 
@@ -717,32 +766,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Export button
+  // Export button - CSV export
   const exportBtn = document.getElementById('exportBtn');
   if (exportBtn) {
     exportBtn.addEventListener('click', () => {
+      if (inquiries.length === 0) {
+        alert('No inquiries to export');
+        return;
+      }
+      
       const csvContent = [
         ['Name', 'Email', 'Phone', 'Company', 'Job Title', 'Budget', 'Message', 'Source', 'Status', 'Date'].join(','),
         ...inquiries.map(i => [
-          `"${i.first_name} ${i.last_name}"`,
-          i.email,
-          i.phone || '',
-          `"${i.company || ''}"`,
-          `"${i.job_title || ''}"`,
-          i.budget || '',
+          `"${(i.first_name + ' ' + i.last_name).replace(/"/g, '""')}"`,
+          `"${(i.email || '').replace(/"/g, '""')}"`,
+          `"${(i.phone || '').replace(/"/g, '""')}"`,
+          `"${(i.company || '').replace(/"/g, '""')}"`,
+          `"${(i.job_title || '').replace(/"/g, '""')}"`,
+          `"${(i.budget || '').replace(/"/g, '""')}"`,
           `"${(i.message || '').replace(/"/g, '""')}"`,
-          i.source,
-          i.status,
-          i.created_at
+          `"${(i.source || 'website').replace(/"/g, '""')}"`,
+          `"${(i.status || 'new').replace(/"/g, '""')}"`,
+          `"${i.created_at || ''}"`
         ].join(','))
       ].join('\n');
 
-      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `inquiries_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
       URL.revokeObjectURL(url);
     });
   }
@@ -770,6 +826,69 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Failed to update status');
     }
   });
+
+  // ==================== NEW INQUIRY FORM ====================
+  
+  // Add inquiry button
+  document.getElementById('addInquiryBtn')?.addEventListener('click', () => {
+    document.getElementById('inquiryForm')?.reset();
+    document.getElementById('inquiryModal')?.classList.add('active');
+  });
+
+  // Inquiry modal close
+  document.getElementById('inquiryModalClose')?.addEventListener('click', () => {
+    document.getElementById('inquiryModal')?.classList.remove('active');
+  });
+
+  document.getElementById('inquiryModalCloseBtn')?.addEventListener('click', () => {
+    document.getElementById('inquiryModal')?.classList.remove('active');
+  });
+
+  // Save new inquiry
+  document.getElementById('saveInquiryBtn')?.addEventListener('click', async () => {
+    const firstName = document.getElementById('inquiryFirstName')?.value;
+    const lastName = document.getElementById('inquiryLastName')?.value;
+    const email = document.getElementById('inquiryEmail')?.value;
+    const phone = document.getElementById('inquiryPhone')?.value;
+    const company = document.getElementById('inquiryCompany')?.value;
+    const jobTitle = document.getElementById('inquiryJobTitle')?.value;
+    const budget = document.getElementById('inquiryBudget')?.value;
+    const message = document.getElementById('inquiryMessage')?.value;
+    const source = document.getElementById('inquirySource')?.value;
+
+    if (!firstName || !lastName || !email) {
+      alert('First name, last name, and email are required');
+      return;
+    }
+
+    try {
+      const result = await api.post('/inquiries', {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+        company,
+        job_title: jobTitle,
+        budget,
+        message,
+        source: source || 'dashboard'
+      });
+
+      if (result.success || result.id) {
+        document.getElementById('inquiryModal')?.classList.remove('active');
+        loadInquiries();
+        loadStats();
+        alert('Inquiry added successfully!');
+      } else {
+        throw new Error('Failed to create inquiry');
+      }
+    } catch (error) {
+      console.error('Failed to create inquiry:', error);
+      alert('Failed to add inquiry. Please try again.');
+    }
+  });
+
+  // ==================== USER MANAGEMENT ====================
 
   // Add user button
   document.getElementById('addUserBtn')?.addEventListener('click', () => {

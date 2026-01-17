@@ -14,13 +14,44 @@ VALUES
   ('Nadia', 'Benali', 'nadia.benali@fashion.ma', '+212 6 77 88 99 00', 'Fashion Brand', 'Founder', '25000-50000', 'Fashion brand looking for influencer marketing campaign management and Instagram growth strategy.', 'instagram', 'closed', datetime('now', '-6 days')),
   ('Karim', 'Alaoui', 'k.alaoui@realestate.ma', '+212 6 22 33 44 55', 'Real Estate Agency', 'Manager', '10000-25000', 'Real estate agency needing Facebook and Google ads management. Monthly budget 30,000 MAD.', 'website', 'new', datetime('now', '-7 days'));
 
--- Seed initial editable content
+-- Seed initial editable content with ALL fields including images
 INSERT OR IGNORE INTO content (page, section, content_key, content_value, content_type)
 VALUES 
-  -- Homepage content
+  -- ========================================
+  -- HOMEPAGE CONTENT
+  -- ========================================
+  
+  -- Hero Section
   ('home', 'hero', 'tagline', 'Where Brands Win.', 'text'),
+  
+  -- Logo Scroll Section
   ('home', 'logo_scroll', 'title', 'Brands We''ve Worked With', 'text'),
+  ('home', 'logo_scroll', 'logo1_url', 'https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971', 'url'),
+  ('home', 'logo_scroll', 'logo2_url', 'https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg', 'url'),
+  ('home', 'logo_scroll', 'logo3_url', 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg', 'url'),
+  
+  -- Services Section
   ('home', 'services', 'title', 'Our Services', 'text'),
+  ('home', 'services', 'service1_title', 'Strategic Consulting', 'text'),
+  ('home', 'services', 'service1_subtitle', 'Personalized marketing analysis & strategy', 'text'),
+  ('home', 'services', 'service1_image', 'https://i.ibb.co/3YdDVd9P/33aca89d-c4fe-43ff-a4ac-00e921a9213c.jpg', 'url'),
+  ('home', 'services', 'service2_title', 'Media Buying', 'text'),
+  ('home', 'services', 'service2_subtitle', 'Optimized advertising campaigns', 'text'),
+  ('home', 'services', 'service2_image', 'https://i.ibb.co/8nvv5vM2/dee359e2-f702-4a59-8baa-87df5600a300.jpg', 'url'),
+  ('home', 'services', 'service3_title', 'Video Production', 'text'),
+  ('home', 'services', 'service3_subtitle', 'Professional shooting & editing', 'text'),
+  ('home', 'services', 'service3_image', 'https://i.ibb.co/3PZvBNq/c23b0c50-f718-4df8-a5ec-ec1c9b337007.jpg', 'url'),
+  ('home', 'services', 'service4_title', 'Social Media Management', 'text'),
+  ('home', 'services', 'service4_subtitle', 'Expert community management', 'text'),
+  ('home', 'services', 'service4_image', 'https://i.ibb.co/Q7vnL5tC/87a60201-0539-4235-b157-d1d482767c17.jpg', 'url'),
+  ('home', 'services', 'service5_title', 'Graphic Design', 'text'),
+  ('home', 'services', 'service5_subtitle', 'Visual identity & creations', 'text'),
+  ('home', 'services', 'service5_image', 'https://i.ibb.co/G3FM7rqf/910362e8-26f4-4f29-b8c5-d81155a8fd59.jpg', 'url'),
+  ('home', 'services', 'service6_title', 'Data Analytics', 'text'),
+  ('home', 'services', 'service6_subtitle', 'Insights & detailed reports', 'text'),
+  ('home', 'services', 'service6_image', 'https://i.ibb.co/DPczL7XT/83a4fbb4-fd83-44ef-9071-4193c8ddbc82.jpg', 'url'),
+  
+  -- About Section
   ('home', 'about', 'heading_line1', 'About', 'text'),
   ('home', 'about', 'heading_line2', 'Us', 'text'),
   ('home', 'about', 'paragraph1', 'At fitup, we believe that every brand has a unique story waiting to be told. We''re not just a marketing agency—we''re your strategic partners in growth, dedicated to transforming your vision into measurable success.', 'text'),
@@ -32,25 +63,28 @@ VALUES
   ('home', 'about', 'stat2_label', 'Client Satisfaction', 'text'),
   ('home', 'about', 'stat3_number', '5+', 'text'),
   ('home', 'about', 'stat3_label', 'Years Experience', 'text'),
+  
+  -- Social Media Links
+  ('home', 'social', 'twitter_handle', '@fitup_ma', 'text'),
+  ('home', 'social', 'twitter_url', 'https://twitter.com/fitup_ma', 'url'),
+  ('home', 'social', 'instagram_handle', '@fitup.ma', 'text'),
+  ('home', 'social', 'instagram_url', 'https://instagram.com/fitup.ma', 'url'),
+  ('home', 'social', 'linkedin_url', 'https://linkedin.com/company/fitup', 'url'),
+  
+  -- Footer Section
   ('home', 'footer', 'description', 'Where brands win. We help businesses grow through strategic marketing, creative content, and data-driven decisions.', 'text'),
   ('home', 'footer', 'email', 'hello@fitup.ma', 'text'),
   ('home', 'footer', 'phone', '+212 6 00 00 00 00', 'text'),
   ('home', 'footer', 'location', 'Casablanca, Morocco', 'text'),
   
-  -- Contact page content
+  -- Branding Section
+  ('home', 'branding', 'main_logo', 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg', 'url'),
+  ('home', 'branding', 'favicon', 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg', 'url'),
+  
+  -- ========================================
+  -- CONTACT PAGE CONTENT
+  -- ========================================
   ('contact', 'hero', 'title', 'Prenez rendez-vous', 'text'),
   ('contact', 'hero', 'subtitle', 'Choisissez un créneau qui vous convient', 'text'),
-  
-  -- Services
-  ('home', 'services', 'service1_title', 'Strategic Consulting', 'text'),
-  ('home', 'services', 'service1_subtitle', 'Personalized marketing analysis & strategy', 'text'),
-  ('home', 'services', 'service2_title', 'Media Buying', 'text'),
-  ('home', 'services', 'service2_subtitle', 'Optimized advertising campaigns', 'text'),
-  ('home', 'services', 'service3_title', 'Video Production', 'text'),
-  ('home', 'services', 'service3_subtitle', 'Professional shooting & editing', 'text'),
-  ('home', 'services', 'service4_title', 'Social Media Management', 'text'),
-  ('home', 'services', 'service4_subtitle', 'Expert community management', 'text'),
-  ('home', 'services', 'service5_title', 'Graphic Design', 'text'),
-  ('home', 'services', 'service5_subtitle', 'Visual identity & creations', 'text'),
-  ('home', 'services', 'service6_title', 'Data Analytics', 'text'),
-  ('home', 'services', 'service6_subtitle', 'Insights & detailed reports', 'text');
+  ('contact', 'form', 'submit_button', 'Envoyer', 'text'),
+  ('contact', 'form', 'success_message', 'Merci ! Votre demande a été envoyée avec succès.', 'text');

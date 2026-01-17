@@ -196,9 +196,64 @@ export function dashboardPage(): string {
       </div>
     </div>
 
-    <!-- Inquiries Page (same as dashboard for now) -->
+    <!-- Inquiries Page (full inquiries view) -->
     <div id="inquiriesPage" class="page-content">
-      <!-- Same as dashboard -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">All Inquiries</h1>
+          <p class="page-subtitle">View and manage all contact form submissions</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="exportBtn2">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <button class="btn btn-primary" id="addInquiryBtn">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Inquiry
+          </button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <h2 class="table-title">All Inquiries</h2>
+          <div class="table-filters">
+            <select class="filter-select" id="statusFilter2">
+              <option value="">All Status</option>
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="converted">Converted</option>
+              <option value="closed">Closed</option>
+            </select>
+            <select class="filter-select" id="sourceFilter2">
+              <option value="">All Sources</option>
+              <option value="website">Website</option>
+              <option value="instagram">Instagram</option>
+              <option value="twitter">Twitter</option>
+              <option value="referral">Referral</option>
+              <option value="dashboard">Dashboard</option>
+            </select>
+            <input type="text" class="search-input" placeholder="Search..." id="searchInput2">
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Contact</th>
+              <th>Message</th>
+              <th>Source</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inquiriesTableBody2">
+            <!-- Will be populated by JS - same data as main table -->
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Content Editor Page -->
@@ -340,6 +395,79 @@ export function dashboardPage(): string {
       <div class="modal-footer">
         <button class="btn btn-secondary" id="modalCloseBtn">Close</button>
         <button class="btn btn-primary" id="updateStatusBtn">Update Status</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Inquiry Modal -->
+  <div class="modal-overlay" id="inquiryModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Inquiry</h3>
+        <button class="modal-close" id="inquiryModalClose">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="inquiryForm">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="inquiryFirstName">First Name *</label>
+              <input type="text" id="inquiryFirstName" name="first_name" placeholder="First name" required>
+            </div>
+            <div class="form-group">
+              <label for="inquiryLastName">Last Name *</label>
+              <input type="text" id="inquiryLastName" name="last_name" placeholder="Last name" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inquiryEmail">Email *</label>
+            <input type="email" id="inquiryEmail" name="email" placeholder="email@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="inquiryPhone">Phone</label>
+            <input type="tel" id="inquiryPhone" name="phone" placeholder="+212 6 00 00 00 00">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="inquiryCompany">Company</label>
+              <input type="text" id="inquiryCompany" name="company" placeholder="Company name">
+            </div>
+            <div class="form-group">
+              <label for="inquiryJobTitle">Job Title</label>
+              <input type="text" id="inquiryJobTitle" name="job_title" placeholder="Position">
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="inquiryBudget">Budget</label>
+              <select id="inquiryBudget" name="budget">
+                <option value="">Select budget</option>
+                <option value="10000-25000">10,000 - 25,000 MAD</option>
+                <option value="25000-50000">25,000 - 50,000 MAD</option>
+                <option value="50000+">50,000+ MAD</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="inquirySource">Source</label>
+              <select id="inquirySource" name="source">
+                <option value="dashboard">Dashboard</option>
+                <option value="website">Website</option>
+                <option value="instagram">Instagram</option>
+                <option value="twitter">Twitter</option>
+                <option value="referral">Referral</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inquiryMessage">Message</label>
+            <textarea id="inquiryMessage" name="message" rows="4" placeholder="Enter inquiry message or notes..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="inquiryModalCloseBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveInquiryBtn">Add Inquiry</button>
       </div>
     </div>
   </div>
