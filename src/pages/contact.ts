@@ -34,6 +34,108 @@ export function contactPage(content: Record<string, Record<string, string>> = {}
     return `<a href="${url}" class="side-menu-link${isActive}">${item.label}</a>`;
   }).join('\n      ');
 
+  // Helper to get form fields
+  interface FormField {
+    id: number;
+    name: string;
+    label: string;
+    type: string;
+    required: boolean;
+    order: number;
+    placeholder?: string;
+    options?: string[];
+  }
+  
+  const getFormFields = (): FormField[] => {
+    const fieldsStr = content['form']?.['fields'];
+    if (fieldsStr) {
+      try {
+        const parsed = typeof fieldsStr === 'string' ? JSON.parse(fieldsStr) : fieldsStr;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
+      } catch (e) {
+        // Fall through to defaults
+      }
+    }
+    // Default form fields
+    return [
+      { id: 1, name: 'first_name', label: 'Prénom', type: 'text', required: true, order: 1, placeholder: 'Votre prénom' },
+      { id: 2, name: 'last_name', label: 'Nom', type: 'text', required: true, order: 2, placeholder: 'Votre nom' },
+      { id: 3, name: 'email', label: 'Email', type: 'email', required: true, order: 3, placeholder: 'votre@email.com' },
+      { id: 4, name: 'phone', label: 'Téléphone', type: 'tel', required: false, order: 4, placeholder: '+212 6XX XXX XXX' },
+      { id: 5, name: 'company', label: 'Entreprise', type: 'text', required: false, order: 5, placeholder: 'Votre entreprise' },
+      { id: 6, name: 'message', label: 'Message', type: 'textarea', required: true, order: 6, placeholder: 'Décrivez votre projet...' }
+    ];
+  };
+  
+  // Generate form fields HTML
+  const formFields = getFormFields();
+  
+  const generateFieldHTML = (field: FormField): string => {
+    const requiredAttr = field.required ? ' required' : '';
+    const requiredMark = field.required ? ' *' : '';
+    const placeholder = field.placeholder || '';
+    
+    if (field.type === 'textarea') {
+      return `
+        <div class="form-group full-width">
+          <label for="${field.name}">${field.label}${requiredMark}</label>
+          <textarea id="${field.name}" name="${field.name}" rows="4" placeholder="${placeholder}"${requiredAttr}></textarea>
+        </div>`;
+    } else if (field.type === 'select') {
+      const options = field.options || ['Option 1', 'Option 2', 'Option 3'];
+      return `
+        <div class="form-group full-width">
+          <label for="${field.name}">${field.label}${requiredMark}</label>
+          <select id="${field.name}" name="${field.name}"${requiredAttr}>
+            <option value="">Select...</option>
+            ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('\n            ')}
+          </select>
+        </div>`;
+    } else {
+      return `
+        <div class="form-group">
+          <label for="${field.name}">${field.label}${requiredMark}</label>
+          <input type="${field.type}" id="${field.name}" name="${field.name}" placeholder="${placeholder}"${requiredAttr}>
+        </div>`;
+    }
+  };
+  
+  // Group fields into rows (2 per row for non-full-width fields)
+  const generateFormHTML = (): string => {
+    let html = '';
+    let rowFields: FormField[] = [];
+    
+    for (const field of formFields) {
+      if (field.type === 'textarea' || field.type === 'select') {
+        // Close any open row first
+        if (rowFields.length > 0) {
+          html += `<div class="form-row">${rowFields.map(f => generateFieldHTML(f)).join('')}</div>`;
+          rowFields = [];
+        }
+        // Full width field
+        html += generateFieldHTML(field);
+      } else {
+        rowFields.push(field);
+        if (rowFields.length === 2) {
+          html += `<div class="form-row">${rowFields.map(f => generateFieldHTML(f)).join('')}</div>`;
+          rowFields = [];
+        }
+      }
+    }
+    
+    // Handle remaining fields
+    if (rowFields.length > 0) {
+      html += `<div class="form-row">${rowFields.map(f => generateFieldHTML(f)).join('')}</div>`;
+    }
+    
+    return html;
+  };
+  
+  const formFieldsHTML = generateFormHTML();
+  const submitButtonText = getContent('form', 'submit_button', 'Confirmer le rendez-vous');
+
   return `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -146,56 +248,9 @@ export function contactPage(content: Record<string, Record<string, string>> = {}
       <p class="selected-slot-info" id="selectedSlotInfo"></p>
       
       <form id="contactForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="prenom">Prénom *</label>
-            <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required>
-          </div>
-          <div class="form-group">
-            <label for="nom">Nom *</label>
-            <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
-          </div>
-        </div>
+        ${formFieldsHTML}
         
-        <div class="form-row">
-          <div class="form-group">
-            <label for="telephone">Numéro de téléphone *</label>
-            <input type="tel" id="telephone" name="telephone" placeholder="+212 6XX XXX XXX" required>
-          </div>
-          <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" placeholder="votre@email.com" required>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="entreprise">Nom de l'entreprise</label>
-            <input type="text" id="entreprise" name="entreprise" placeholder="Votre entreprise">
-          </div>
-          <div class="form-group">
-            <label for="poste">Titre du poste</label>
-            <input type="text" id="poste" name="poste" placeholder="Votre fonction">
-          </div>
-        </div>
-        
-        <div class="form-group full-width">
-          <label for="budget">Budget estimé</label>
-          <select id="budget" name="budget">
-            <option value="">Sélectionner un budget...</option>
-            <option value="5000-10000">5 000 - 10 000 MAD</option>
-            <option value="10000-25000">10 000 - 25 000 MAD</option>
-            <option value="25000-50000">25 000 - 50 000 MAD</option>
-            <option value="50000+">50 000+ MAD</option>
-          </select>
-        </div>
-        
-        <div class="form-group full-width">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="4" placeholder="Décrivez votre projet ou vos besoins..."></textarea>
-        </div>
-        
-        <button type="submit" class="submit-btn">Confirmer le rendez-vous</button>
+        <button type="submit" class="submit-btn">${submitButtonText}</button>
       </form>
     </div>
     
