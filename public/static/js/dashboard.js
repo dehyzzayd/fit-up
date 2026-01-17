@@ -1,5 +1,13 @@
 // Dashboard JavaScript - fitup Admin Dashboard
 document.addEventListener('DOMContentLoaded', () => {
+  // Helper function to escape HTML - MUST be at top for hoisting
+  function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
   // State
   let currentUser = null;
   let inquiries = [];
@@ -415,8 +423,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    container.innerHTML = menuItems.map((item, index) => \`
-      <div class="menu-item-card" data-index="\${index}">
+    container.innerHTML = menuItems.map((item, index) => `
+      <div class="menu-item-card" data-index="${index}">
         <div class="menu-item-drag">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/>
@@ -424,12 +432,12 @@ document.addEventListener('DOMContentLoaded', () => {
           </svg>
         </div>
         <div class="menu-item-inputs">
-          <input type="text" class="menu-label" value="\${escapeHtml(item.label)}" placeholder="Label">
-          <input type="text" class="menu-url" value="\${escapeHtml(item.url)}" placeholder="URL (e.g., /page or #section)">
+          <input type="text" class="menu-label" value="${escapeHtml(item.label)}" placeholder="Label">
+          <input type="text" class="menu-url" value="${escapeHtml(item.url)}" placeholder="URL (e.g., /page or #section)">
           <select class="menu-type">
-            <option value="internal" \${item.type === 'internal' ? 'selected' : ''}>Page</option>
-            <option value="anchor" \${item.type === 'anchor' ? 'selected' : ''}>Section</option>
-            <option value="external" \${item.type === 'external' ? 'selected' : ''}>External</option>
+            <option value="internal" ${item.type === 'internal' ? 'selected' : ''}>Page</option>
+            <option value="anchor" ${item.type === 'anchor' ? 'selected' : ''}>Section</option>
+            <option value="external" ${item.type === 'external' ? 'selected' : ''}>External</option>
           </select>
         </div>
         <button class="menu-item-delete" title="Delete">
@@ -438,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </svg>
         </button>
       </div>
-    \`).join('');
+    `).join('');
     
     initMenuItemListeners();
   }
@@ -504,16 +512,16 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    container.innerHTML = blogPosts.map(post => \`
-      <div class="blog-post-card" data-id="\${post.id}">
+    container.innerHTML = blogPosts.map(post => `
+      <div class="blog-post-card" data-id="${post.id}">
         <div class="blog-post-image">
-          \${post.image ? \`<img src="\${escapeHtml(post.image)}" alt="\${escapeHtml(post.title)}">\` : ''}
+          ${post.image ? `<img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}">` : ''}
         </div>
         <div class="blog-post-content">
-          <h4 class="blog-post-title">\${escapeHtml(post.title)}</h4>
-          <p class="blog-post-excerpt">\${escapeHtml(post.excerpt || '')}</p>
+          <h4 class="blog-post-title">${escapeHtml(post.title)}</h4>
+          <p class="blog-post-excerpt">${escapeHtml(post.excerpt || '')}</p>
           <div class="blog-post-meta">
-            \${post.published ? '✓ Published' : '○ Draft'} · \${new Date(post.created_at).toLocaleDateString()}
+            ${post.published ? '✓ Published' : '○ Draft'} · ${new Date(post.created_at).toLocaleDateString()}
           </div>
         </div>
         <div class="blog-post-actions">
@@ -521,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="btn btn-secondary btn-sm delete-blog-btn" style="color: #dc3545;">Delete</button>
         </div>
       </div>
-    \`).join('');
+    `).join('');
     
     initBlogListeners();
   }
@@ -538,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.onclick = async () => {
         const id = btn.closest('.blog-post-card').dataset.id;
         if (confirm('Delete this blog post?')) {
-          await api.delete(\`/blog/\${id}\`);
+          await api.delete(`/blog/${id}`);
           loadBlogPosts();
         }
       };
@@ -553,40 +561,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.querySelector('.modal-title');
     
     modalTitle.textContent = id ? 'Edit Blog Post' : 'New Blog Post';
-    modalBody.innerHTML = \`
+    modalBody.innerHTML = `
       <form id="blogEditForm">
         <div class="form-group">
           <label>Title</label>
-          <input type="text" id="blogTitle" value="\${escapeHtml(post.title || '')}" required>
+          <input type="text" id="blogTitle" value="${escapeHtml(post.title || '')}" required>
         </div>
         <div class="form-group">
           <label>Excerpt (short description)</label>
-          <textarea id="blogExcerpt" rows="2">\${escapeHtml(post.excerpt || '')}</textarea>
+          <textarea id="blogExcerpt" rows="2">${escapeHtml(post.excerpt || '')}</textarea>
         </div>
         <div class="form-group">
           <label>Featured Image URL</label>
-          <input type="url" id="blogImage" value="\${escapeHtml(post.image || '')}" placeholder="https://...">
+          <input type="url" id="blogImage" value="${escapeHtml(post.image || '')}" placeholder="https://...">
         </div>
         <div class="form-group">
           <label>Content</label>
-          <textarea id="blogContent" rows="10" style="font-family: inherit;">\${escapeHtml(post.content || '')}</textarea>
+          <textarea id="blogContent" rows="10" style="font-family: inherit;">${escapeHtml(post.content || '')}</textarea>
         </div>
         <div class="form-group checkbox-group">
           <label>
-            <input type="checkbox" id="blogPublished" \${post.published ? 'checked' : ''}>
+            <input type="checkbox" id="blogPublished" ${post.published ? 'checked' : ''}>
             Publish this post
           </label>
         </div>
-        <input type="hidden" id="blogId" value="\${id || ''}">
+        <input type="hidden" id="blogId" value="${id || ''}">
       </form>
-    \`;
+    `;
     
     // Update modal footer
     const modalFooter = document.querySelector('.modal-footer');
-    modalFooter.innerHTML = \`
+    modalFooter.innerHTML = `
       <button class="btn btn-secondary" id="modalCloseBtn">Cancel</button>
       <button class="btn btn-primary" id="saveBlogBtn">Save Post</button>
-    \`;
+    `;
     
     document.getElementById('modalCloseBtn').onclick = () => modal.classList.remove('active');
     document.getElementById('saveBlogBtn').onclick = saveBlogPost;
@@ -606,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     try {
       if (id) {
-        await api.put(\`/blog/\${id}\`, data);
+        await api.put(`/blog/${id}`, data);
       } else {
         await api.post('/blog', data);
       }
@@ -648,8 +656,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('formFieldsList');
     if (!container) return;
     
-    container.innerHTML = formFields.map((field, index) => \`
-      <div class="form-field-card" data-index="\${index}">
+    container.innerHTML = formFields.map((field, index) => `
+      <div class="form-field-card" data-index="${index}">
         <div class="form-field-drag">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/>
@@ -657,17 +665,17 @@ document.addEventListener('DOMContentLoaded', () => {
           </svg>
         </div>
         <div class="form-field-inputs">
-          <input type="text" class="field-label" value="\${escapeHtml(field.label)}" placeholder="Field Label">
-          <input type="text" class="field-name" value="\${escapeHtml(field.name)}" placeholder="field_name">
+          <input type="text" class="field-label" value="${escapeHtml(field.label)}" placeholder="Field Label">
+          <input type="text" class="field-name" value="${escapeHtml(field.name)}" placeholder="field_name">
           <select class="field-type">
-            <option value="text" \${field.type === 'text' ? 'selected' : ''}>Text</option>
-            <option value="email" \${field.type === 'email' ? 'selected' : ''}>Email</option>
-            <option value="tel" \${field.type === 'tel' ? 'selected' : ''}>Phone</option>
-            <option value="textarea" \${field.type === 'textarea' ? 'selected' : ''}>Text Area</option>
-            <option value="select" \${field.type === 'select' ? 'selected' : ''}>Dropdown</option>
+            <option value="text" ${field.type === 'text' ? 'selected' : ''}>Text</option>
+            <option value="email" ${field.type === 'email' ? 'selected' : ''}>Email</option>
+            <option value="tel" ${field.type === 'tel' ? 'selected' : ''}>Phone</option>
+            <option value="textarea" ${field.type === 'textarea' ? 'selected' : ''}>Text Area</option>
+            <option value="select" ${field.type === 'select' ? 'selected' : ''}>Dropdown</option>
           </select>
           <label>
-            <input type="checkbox" class="field-required" \${field.required ? 'checked' : ''}>
+            <input type="checkbox" class="field-required" ${field.required ? 'checked' : ''}>
             Required
           </label>
         </div>
@@ -677,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </svg>
         </button>
       </div>
-    \`).join('');
+    `).join('');
     
     initFormFieldListeners();
   }
@@ -1164,14 +1172,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hiddenInput) {
       hiddenInput.value = JSON.stringify(logos);
     }
-  }
-
-  // Helper function to escape HTML
-  function escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
   }
 
   // Save all content

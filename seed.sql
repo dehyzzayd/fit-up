@@ -1,7 +1,8 @@
--- Seed initial admin user (password: admin123)
+-- Seed initial admin user (password: fitup2024!)
 -- In production, change this password immediately!
+-- Hash is SHA-256 of "fitup2024!fitup-salt-2024"
 INSERT OR IGNORE INTO users (email, password_hash, name, role)
-VALUES ('admin@fitup.ma', 'a681bd13b6b352b5ec8030dba14c40b5bfc7995eae2f533129455f853c9ace75', 'Admin', 'admin');
+VALUES ('admin@fitup.ma', '80f8cf291868d93950c9a9ddfdd022be6b17b500b9f191db4797651b31ecdfac', 'Admin', 'admin');
 
 -- Seed some sample inquiries for testing
 INSERT OR IGNORE INTO inquiries (first_name, last_name, email, phone, company, job_title, budget, message, source, status, created_at)

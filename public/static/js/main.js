@@ -37,16 +37,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Scroll behavior for nav
+  // Scroll behavior for nav and hero CTA button
+  const heroCTA = document.querySelector('.hero-cta-btn');
+  
   if (topNav) {
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
+      const heroHeight = window.innerHeight * 0.85;
       const switchPoint = window.innerHeight * 0.8;
 
+      // Nav color switch
       if (scrollY > switchPoint) {
         topNav.classList.add('scrolled');
       } else {
         topNav.classList.remove('scrolled');
+      }
+      
+      // Hide CTA button when scrolled past hero section
+      if (heroCTA) {
+        if (scrollY > heroHeight) {
+          heroCTA.classList.add('hidden');
+        } else {
+          heroCTA.classList.remove('hidden');
+        }
       }
     });
   }

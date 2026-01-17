@@ -237,10 +237,10 @@ body {
   pointer-events: none;
 }
 
-/* Hero CTA Button */
+/* Hero CTA Button - Fixed position like the 3D hero text */
 .hero-cta-btn {
-  position: absolute;
-  bottom: 15%;
+  position: fixed;
+  bottom: 12%;
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
@@ -255,7 +255,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   border-radius: 50px;
-  z-index: 20;
+  z-index: 15;
   pointer-events: auto;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   box-shadow: 0 4px 20px rgba(184, 255, 92, 0.3);
@@ -315,6 +315,13 @@ body {
 
 .hero-cta-btn:hover {
   animation: none;
+}
+
+/* Hide button when scrolled past hero */
+.hero-cta-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(20px);
 }
 
 /* Logo Scroll Section */
