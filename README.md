@@ -1,93 +1,138 @@
-# fitup - Internal Dashboard & Website
+# fitup · Unseen Media Agency
 
-A fully-featured web application for fitup media agency, built with Hono and deployed to Cloudflare Pages.
+A full-stack web application for a digital marketing agency with admin dashboard, CMS, and contact form management.
 
-## Project Overview
+## Live URLs
 
-- **Name**: fitup-webapp
-- **Goal**: Convert static HTML files into a fully functional web application with CMS capabilities
-- **Features**: Main website, Contact form, Admin Dashboard, Content Management System
+- **Main Website**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai/
+- **Contact Page**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai/contact
+- **Admin Login**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai/admin
+- **Dashboard**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai/admin/dashboard
 
-## URLs
+## Admin Credentials
 
-- **Development**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai
-- **Main Website**: `/`
-- **Contact Page**: `/contact`
-- **Admin Login**: `/admin`
-- **Admin Dashboard**: `/admin/dashboard`
-
-## Data Architecture
-
-### Database Schema (Cloudflare D1)
-
-- **users**: User accounts with roles (admin/viewer)
-- **sessions**: JWT session tokens
-- **inquiries**: Contact form submissions
-- **content**: CMS editable content
-- **email_settings**: Gmail OAuth configuration
-
-### Storage Services
-- **Cloudflare D1**: SQLite-based database for all data
+- **Email**: admin@fitup.ma
+- **Password**: admin123
 
 ## Features
 
-### Main Website
-- Pixel-perfect reproduction of the original design
-- Three.js 3D hero animation
-- Interactive service cards
-- FITUP letter game (20% discount game)
-- Social media sliders
-- FAQ accordion
-- Responsive design
+### Main Website (Pixel-Perfect)
+- ✅ 3D hero animation with rotating torus (Three.js)
+- ✅ Animated logo carousel
+- ✅ Interactive expanding service cards
+- ✅ FITUP letter game (drag-and-drop for 20% discount)
+- ✅ About section with animated SVG curve
+- ✅ Social media phone sliders (Twitter/Instagram)
+- ✅ FAQ accordion
+- ✅ Full responsive design
+- ✅ Side menu navigation
 
 ### Contact Page
-- Calendar-based appointment booking
-- Time slot selection
-- Form validation
-- Data stored in D1 database
-- Success confirmation
+- ✅ **Full navigation menu** - Same as main site with side menu
+- ✅ Interactive calendar with month navigation
+- ✅ Time slot selection
+- ✅ Multi-field form with validation
+- ✅ Database storage for submissions
+- ✅ Success message display
 
 ### Admin Dashboard
-- **Inquiry Management**: View, filter, search, update status, delete
-- **KPI Metrics**: Total inquiries, weekly stats, conversion tracking
-- **Content Editor (CMS)**: Edit website text without redeploying
-- **User Management**: Create, edit, delete users with roles
-- **Email Settings**: Gmail OAuth configuration for notifications
-
-## User Guide
-
-### Admin Login
-1. Navigate to `/admin`
-2. Login with credentials:
-   - Email: `admin@fitup.ma`
-   - Password: `admin123`
-
-### Managing Inquiries
-1. Dashboard shows all contact form submissions
-2. Filter by status (new, contacted, converted, closed)
-3. Filter by source (website, instagram, twitter, referral)
-4. Search by name, email, or message
-5. Click eye icon to view details
-6. Update status from the detail modal
-7. Delete inquiries with the trash icon
+- ✅ **Mobile-responsive design** - Works on all device sizes
+- ✅ **Real inquiry data** - Populated from database with 7 sample inquiries
+- ✅ KPI metrics (Total, This Week, Contacted, Converted)
+- ✅ Inquiry management (view, filter, status update, delete)
+- ✅ Export to CSV functionality
+- ✅ Search and filter by status/source
 
 ### Content Editor (CMS)
-1. Navigate to "Content Editor" in sidebar
-2. Select a page (Homepage, Contact)
-3. Edit text fields directly
-4. Click "Save All Changes" to update
+- ✅ **Edit ALL website content** without redeploy:
+  - Text and headings
+  - Images and logos (via URL)
+  - Social media links
+  - Footer information
+  - Service descriptions
+  - About section stats
+- ✅ **Pre-filled with existing content**
+- ✅ Instant live updates
+- ✅ Multi-page support (Homepage, Contact)
 
-### User Management (Admin only)
-1. Navigate to "Users" in sidebar
-2. Click "Add User" to create new users
-3. Assign role (Admin or Viewer)
-4. Delete users with the trash icon
+### User Management
+- ✅ Admin and Viewer roles
+- ✅ Create, edit, delete users
+- ✅ Secure password hashing
+- ✅ JWT-like token authentication
 
-### Email Notifications
-1. Navigate to "Email Settings" in sidebar
-2. Enter Gmail OAuth credentials
-3. Enable notifications checkbox
-4. Save settings
+### Email Settings
+- ✅ **One-click Gmail OAuth button** (UI ready)
+- ✅ Gmail connection status display
+- ✅ Notification email configuration
+- ✅ Enable/disable notifications toggle
+
+## Tech Stack
+
+- **Frontend**: HTML5, CSS3, JavaScript, Three.js, GSAP
+- **Backend**: Hono (TypeScript)
+- **Platform**: Cloudflare Workers/Pages
+- **Database**: Cloudflare D1 (SQLite)
+- **Build**: Vite
+- **Process Manager**: PM2
+
+## Project Structure
+
+```
+webapp/
+├── src/
+│   ├── index.tsx          # Main Hono app entry
+│   ├── types.ts           # TypeScript types
+│   ├── routes/
+│   │   └── api.ts         # All API routes
+│   ├── pages/
+│   │   ├── home.ts        # Homepage template
+│   │   ├── contact.ts     # Contact page template
+│   │   ├── login.ts       # Admin login page
+│   │   └── dashboard.ts   # Admin dashboard page
+│   └── utils/
+│       └── auth.ts        # Authentication utilities
+├── public/
+│   └── static/
+│       ├── styles/
+│       │   ├── main.css      # Homepage styles
+│       │   ├── contact.css   # Contact page styles
+│       │   └── dashboard.css # Dashboard styles (mobile responsive)
+│       └── js/
+│           ├── hero.js       # Three.js hero animation
+│           ├── main.js       # Main site interactions
+│           ├── contact.js    # Contact page with menu
+│           └── dashboard.js  # Dashboard with enhanced CMS
+├── migrations/
+│   └── 0001_initial_schema.sql
+├── seed.sql
+├── ecosystem.config.cjs
+├── wrangler.jsonc
+├── vite.config.ts
+└── package.json
+```
+
+## Database Schema
+
+### Users
+- id, email, password_hash, name, role (admin/viewer), timestamps
+
+### Sessions
+- id, user_id, token, expires_at, timestamps
+
+### Inquiries
+- id, first_name, last_name, email, phone, company, job_title
+- budget, message, appointment_date, appointment_time
+- source, status (new/contacted/converted/closed), is_read
+- timestamps
+
+### Content
+- id, page, section, content_key, content_value, content_type
+- timestamps
+
+### Email Settings
+- id, gmail_client_id, gmail_client_secret, gmail_refresh_token
+- gmail_email, is_active, timestamps
 
 ## API Endpoints
 
@@ -96,92 +141,65 @@ A fully-featured web application for fitup media agency, built with Hono and dep
 - `POST /api/auth/logout` - Logout
 - `GET /api/auth/verify` - Verify token
 
-### Users
-- `GET /api/users` - List all users
-- `POST /api/users` - Create user
-- `PUT /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user
-
 ### Inquiries
-- `GET /api/inquiries` - List inquiries (with filters)
-- `GET /api/inquiries/:id` - Get single inquiry
-- `POST /api/inquiries` - Create inquiry
-- `PUT /api/inquiries/:id` - Update inquiry
-- `DELETE /api/inquiries/:id` - Delete inquiry
-
-### Stats
-- `GET /api/stats` - Get KPI metrics
+- `GET /api/inquiries` - List all (with filters)
+- `GET /api/inquiries/:id` - Get single
+- `POST /api/inquiries` - Create new
+- `PUT /api/inquiries/:id` - Update
+- `DELETE /api/inquiries/:id` - Delete
+- `POST /api/inquiries/:id/read` - Mark as read
 
 ### Content (CMS)
-- `GET /api/content` - List all content
-- `GET /api/content/:page` - Get page content
-- `PUT /api/content` - Update content
-- `POST /api/content/bulk` - Bulk update content
+- `GET /api/content` - All content
+- `GET /api/content/:page` - Content by page
+- `PUT /api/content` - Update single
+- `POST /api/content/bulk` - Update multiple
 
-### Email Settings
+### Users
+- `GET /api/users` - List all
+- `POST /api/users` - Create
+- `PUT /api/users/:id` - Update
+- `DELETE /api/users/:id` - Delete
+
+### Stats
+- `GET /api/stats` - Dashboard KPIs
+
+### Email
 - `GET /api/email-settings` - Get settings
 - `PUT /api/email-settings` - Update settings
 
-## Deployment
+## Development
 
-### Local Development
 ```bash
 # Install dependencies
 npm install
 
-# Run database migrations
-npm run db:migrate:local
-
-# Seed sample data
-npm run db:seed
-
-# Build and start dev server
-npm run build
-pm2 start ecosystem.config.cjs
-```
-
-### Production Deployment (Cloudflare Pages)
-```bash
 # Build
 npm run build
 
-# Deploy
-npm run deploy:prod
+# Start dev server
+npm run dev:sandbox
+
+# Or with PM2
+pm2 start ecosystem.config.cjs
+
+# Database operations
+npm run db:migrate:local
+npm run db:seed
+npm run db:reset
 ```
 
-## Tech Stack
+## Recent Updates
 
-- **Framework**: Hono
-- **Runtime**: Cloudflare Workers
-- **Database**: Cloudflare D1 (SQLite)
-- **Frontend**: Vanilla JS, CSS, Three.js, GSAP
-- **Build**: Vite
+1. **Contact Page Navigation** - Added full side menu matching main site
+2. **Mobile Dashboard** - Improved responsiveness for all screen sizes
+3. **Real Data Population** - Dashboard shows 7 sample inquiries from database
+4. **Enhanced CMS Editor** - Edit ALL text, images, logos, links with pre-fill
+5. **Gmail OAuth UI** - One-click connect button with status display
 
-## Environment Variables
+## Deployment Status
 
-For production, set these as Cloudflare secrets:
-- No external API keys required for base functionality
-- Gmail OAuth tokens for email notifications (optional)
-
-## Project Structure
-
-```
-webapp/
-├── src/
-│   ├── index.tsx         # Main app entry
-│   ├── types.ts          # TypeScript types
-│   ├── pages/            # HTML page templates
-│   ├── routes/           # API routes
-│   └── utils/            # Utilities (auth)
-├── public/
-│   └── static/
-│       ├── styles/       # CSS files
-│       └── js/           # JavaScript files
-├── migrations/           # D1 database migrations
-├── seed.sql              # Sample data
-├── wrangler.jsonc        # Cloudflare config
-└── package.json
-```
-
-## Last Updated
-2026-01-17
+- **Platform**: Cloudflare Pages (ready)
+- **Database**: D1 configured
+- **Status**: ✅ Active (sandbox)
+- **Last Updated**: 2026-01-17
