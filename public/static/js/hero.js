@@ -5,6 +5,19 @@ import { TextGeometry } from "jsm/geometries/TextGeometry.js";
 
 const scene = new THREE.Scene();
 
+// Get the actual canvas container height based on CSS
+function getCanvasHeight() {
+  const width = window.innerWidth;
+  const fullHeight = window.innerHeight;
+  
+  // Match CSS breakpoints for hero height
+  if (width <= 375) return fullHeight * 0.55;  // 55vh
+  if (width <= 480) return fullHeight * 0.65;  // 65vh  
+  if (width <= 768) return fullHeight * 0.75;  // 75vh
+  if (width <= 1024) return fullHeight * 0.85; // 85vh
+  return fullHeight;                            // 100vh
+}
+
 // Calculate responsive camera position based on screen size
 function getResponsiveCameraZ() {
   const width = window.innerWidth;
@@ -36,9 +49,12 @@ function getResponsiveTorusSize() {
   return { radius: 0.7, tube: 0.4 };
 }
 
+// Initial canvas height
+const initialCanvasHeight = getCanvasHeight();
+
 const camera = new THREE.PerspectiveCamera(
   75,
-  window.innerWidth / window.innerHeight,
+  window.innerWidth / initialCanvasHeight,
   0.1,
   1000
 );
@@ -49,7 +65,10 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true,
   alpha: true
 });
-renderer.setSize(window.innerWidth, window.innerHeight);
+
+// Set size to match CSS hero height
+const canvasHeight = initialCanvasHeight;
+renderer.setSize(window.innerWidth, canvasHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x000000, 1);
 
@@ -163,13 +182,15 @@ function debounce(func, wait) {
 
 // Resize handler with debounce
 const handleResize = debounce(() => {
+  const newHeight = getCanvasHeight();
+  
   // Update camera
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = window.innerWidth / newHeight;
   camera.position.z = getResponsiveCameraZ();
   camera.updateProjectionMatrix();
   
-  // Update renderer
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  // Update renderer to match CSS hero height
+  renderer.setSize(window.innerWidth, newHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   
   // Update text size if font is loaded
