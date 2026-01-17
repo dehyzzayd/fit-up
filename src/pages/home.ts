@@ -36,16 +36,17 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     return '';
   };
   
-  // Generate logo items HTML
+  // Generate logo items HTML - duplicate for infinite seamless scroll
   const logos = getLogos();
   const logoItemsHTML = logos.map(logo => `
     <div class="logo-item${logo.round ? ' round' : ''}">
-      <img src="${logo.url}" alt="${logo.name || 'Brand'}">
+      <img src="${logo.url}" alt="${logo.name || 'Brand'}" loading="lazy">
     </div>
   `).join('');
-  // Repeat logos to fill the scroll track (at least 12 items for smooth scrolling)
-  const repeatCount = Math.max(1, Math.ceil(12 / logos.length));
-  const repeatedLogosHTML = Array(repeatCount).fill(logoItemsHTML).join('');
+  // For seamless infinite scroll, we need exactly 2 copies of logos
+  // The animation will scroll through the first copy, then reset (showing the second copy which looks identical)
+  // This creates the illusion of infinite scrolling
+  const repeatedLogosHTML = logoItemsHTML + logoItemsHTML;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -149,6 +150,11 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     <div class="hero">
       <!-- Text is rendered in 3D canvas -->
     </div>
+    <!-- Contact Us Button -->
+    <a href="/contact" class="hero-cta-btn">
+      <span class="btn-text">Contact Us</span>
+      <span class="btn-arrow">→</span>
+    </a>
   </section>
 
   <!-- Logo Scroll Section -->

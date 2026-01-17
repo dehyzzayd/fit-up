@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedContentPage = 'home';
   let currentInquiry = null;
   let editingUserId = null;
+  let menuItems = [];
+  let blogPosts = [];
+  let formFields = [];
 
   // Get token from localStorage
   const getToken = () => localStorage.getItem('fitup_token');
@@ -91,7 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
       loadStats(),
       loadInquiries(),
       loadUsers(),
-      loadEmailSettings()
+      loadMenuItems(),
+      loadBlogPosts(),
+      loadFormFields()
     ]);
   }
 
@@ -375,44 +380,351 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Load email settings
-  async function loadEmailSettings() {
+  // ==================== MENU EDITOR ====================
+  
+  // Default menu items
+  const defaultMenuItems = [
+    { id: 1, label: 'Home', url: '/', type: 'internal', order: 1 },
+    { id: 2, label: 'Services', url: '#services', type: 'anchor', order: 2 },
+    { id: 3, label: 'About', url: '#about', type: 'anchor', order: 3 },
+    { id: 4, label: 'Blog', url: '/blog', type: 'internal', order: 4 },
+    { id: 5, label: 'Contact', url: '/contact', type: 'internal', order: 5 }
+  ];
+
+  async function loadMenuItems() {
     try {
-      const settings = await api.get('/email-settings');
-      if (settings) {
-        const notificationEmail = document.getElementById('notificationEmail');
-        if (notificationEmail) notificationEmail.value = settings.gmail_email || '';
-        
-        const emailActive = document.getElementById('emailActive');
-        if (emailActive) emailActive.checked = settings.is_active === 1;
-        
-        // Show connected state if Gmail is configured
-        if (settings.gmail_email && settings.is_active) {
-          showGmailConnected(settings.gmail_email);
-        }
+      const content = await api.get('/content/home');
+      const menuStr = content?.menu?.items;
+      if (menuStr) {
+        menuItems = typeof menuStr === 'string' ? JSON.parse(menuStr) : menuStr;
+      } else {
+        menuItems = [...defaultMenuItems];
       }
     } catch (error) {
-      console.error('Failed to load email settings:', error);
+      menuItems = [...defaultMenuItems];
+    }
+    renderMenuItems();
+  }
+
+  function renderMenuItems() {
+    const container = document.getElementById('menuItemsList');
+    if (!container) return;
+    
+    if (menuItems.length === 0) {
+      container.innerHTML = '<p class="blog-empty">No menu items. Click "Add Menu Item" to create one.</p>';
+      return;
+    }
+    
+    container.innerHTML = menuItems.map((item, index) => \`
+      <div class="menu-item-card" data-index="\${index}">
+        <div class="menu-item-drag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/>
+            <circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>
+          </svg>
+        </div>
+        <div class="menu-item-inputs">
+          <input type="text" class="menu-label" value="\${escapeHtml(item.label)}" placeholder="Label">
+          <input type="text" class="menu-url" value="\${escapeHtml(item.url)}" placeholder="URL (e.g., /page or #section)">
+          <select class="menu-type">
+            <option value="internal" \${item.type === 'internal' ? 'selected' : ''}>Page</option>
+            <option value="anchor" \${item.type === 'anchor' ? 'selected' : ''}>Section</option>
+            <option value="external" \${item.type === 'external' ? 'selected' : ''}>External</option>
+          </select>
+        </div>
+        <button class="menu-item-delete" title="Delete">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    \`).join('');
+    
+    initMenuItemListeners();
+  }
+
+  function initMenuItemListeners() {
+    document.querySelectorAll('.menu-item-card').forEach(card => {
+      const index = parseInt(card.dataset.index);
+      
+      card.querySelector('.menu-label').oninput = (e) => {
+        menuItems[index].label = e.target.value;
+      };
+      
+      card.querySelector('.menu-url').oninput = (e) => {
+        menuItems[index].url = e.target.value;
+      };
+      
+      card.querySelector('.menu-type').onchange = (e) => {
+        menuItems[index].type = e.target.value;
+      };
+      
+      card.querySelector('.menu-item-delete').onclick = () => {
+        menuItems.splice(index, 1);
+        renderMenuItems();
+      };
+    });
+  }
+
+  async function saveMenu() {
+    try {
+      await api.post('/content/bulk', [{
+        page: 'home',
+        section: 'menu',
+        content_key: 'items',
+        content_value: JSON.stringify(menuItems),
+        content_type: 'json'
+      }]);
+      alert('Menu saved successfully!');
+    } catch (error) {
+      alert('Failed to save menu');
     }
   }
-  
-  // Gmail OAuth connection
-  function showGmailConnected(email) {
-    const notConnected = document.getElementById('gmailNotConnected');
-    const connected = document.getElementById('gmailConnected');
-    const connectedEmail = document.getElementById('connectedEmail');
-    
-    if (notConnected) notConnected.style.display = 'none';
-    if (connected) connected.style.display = 'block';
-    if (connectedEmail) connectedEmail.textContent = email;
+
+  // ==================== BLOG POSTS ====================
+
+  const defaultBlogPosts = [];
+
+  async function loadBlogPosts() {
+    try {
+      const result = await api.get('/blog');
+      blogPosts = result.posts || [];
+    } catch (error) {
+      blogPosts = [];
+    }
+    renderBlogPosts();
   }
-  
-  function showGmailNotConnected() {
-    const notConnected = document.getElementById('gmailNotConnected');
-    const connected = document.getElementById('gmailConnected');
+
+  function renderBlogPosts() {
+    const container = document.getElementById('blogPostsList');
+    if (!container) return;
     
-    if (notConnected) notConnected.style.display = 'block';
-    if (connected) connected.style.display = 'none';
+    if (blogPosts.length === 0) {
+      container.innerHTML = '<p class="blog-empty">No blog posts yet. Click "New Post" to create your first article.</p>';
+      return;
+    }
+    
+    container.innerHTML = blogPosts.map(post => \`
+      <div class="blog-post-card" data-id="\${post.id}">
+        <div class="blog-post-image">
+          \${post.image ? \`<img src="\${escapeHtml(post.image)}" alt="\${escapeHtml(post.title)}">\` : ''}
+        </div>
+        <div class="blog-post-content">
+          <h4 class="blog-post-title">\${escapeHtml(post.title)}</h4>
+          <p class="blog-post-excerpt">\${escapeHtml(post.excerpt || '')}</p>
+          <div class="blog-post-meta">
+            \${post.published ? '✓ Published' : '○ Draft'} · \${new Date(post.created_at).toLocaleDateString()}
+          </div>
+        </div>
+        <div class="blog-post-actions">
+          <button class="btn btn-secondary btn-sm edit-blog-btn">Edit</button>
+          <button class="btn btn-secondary btn-sm delete-blog-btn" style="color: #dc3545;">Delete</button>
+        </div>
+      </div>
+    \`).join('');
+    
+    initBlogListeners();
+  }
+
+  function initBlogListeners() {
+    document.querySelectorAll('.edit-blog-btn').forEach(btn => {
+      btn.onclick = () => {
+        const id = btn.closest('.blog-post-card').dataset.id;
+        openBlogEditor(id);
+      };
+    });
+    
+    document.querySelectorAll('.delete-blog-btn').forEach(btn => {
+      btn.onclick = async () => {
+        const id = btn.closest('.blog-post-card').dataset.id;
+        if (confirm('Delete this blog post?')) {
+          await api.delete(\`/blog/\${id}\`);
+          loadBlogPosts();
+        }
+      };
+    });
+  }
+
+  function openBlogEditor(id = null) {
+    const post = id ? blogPosts.find(p => p.id == id) : { title: '', content: '', excerpt: '', image: '', published: false };
+    
+    const modal = document.getElementById('detailModal');
+    const modalBody = document.getElementById('modalBody');
+    const modalTitle = document.querySelector('.modal-title');
+    
+    modalTitle.textContent = id ? 'Edit Blog Post' : 'New Blog Post';
+    modalBody.innerHTML = \`
+      <form id="blogEditForm">
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="blogTitle" value="\${escapeHtml(post.title || '')}" required>
+        </div>
+        <div class="form-group">
+          <label>Excerpt (short description)</label>
+          <textarea id="blogExcerpt" rows="2">\${escapeHtml(post.excerpt || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Featured Image URL</label>
+          <input type="url" id="blogImage" value="\${escapeHtml(post.image || '')}" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>Content</label>
+          <textarea id="blogContent" rows="10" style="font-family: inherit;">\${escapeHtml(post.content || '')}</textarea>
+        </div>
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" id="blogPublished" \${post.published ? 'checked' : ''}>
+            Publish this post
+          </label>
+        </div>
+        <input type="hidden" id="blogId" value="\${id || ''}">
+      </form>
+    \`;
+    
+    // Update modal footer
+    const modalFooter = document.querySelector('.modal-footer');
+    modalFooter.innerHTML = \`
+      <button class="btn btn-secondary" id="modalCloseBtn">Cancel</button>
+      <button class="btn btn-primary" id="saveBlogBtn">Save Post</button>
+    \`;
+    
+    document.getElementById('modalCloseBtn').onclick = () => modal.classList.remove('active');
+    document.getElementById('saveBlogBtn').onclick = saveBlogPost;
+    
+    modal.classList.add('active');
+  }
+
+  async function saveBlogPost() {
+    const id = document.getElementById('blogId').value;
+    const data = {
+      title: document.getElementById('blogTitle').value,
+      excerpt: document.getElementById('blogExcerpt').value,
+      image: document.getElementById('blogImage').value,
+      content: document.getElementById('blogContent').value,
+      published: document.getElementById('blogPublished').checked
+    };
+    
+    try {
+      if (id) {
+        await api.put(\`/blog/\${id}\`, data);
+      } else {
+        await api.post('/blog', data);
+      }
+      document.getElementById('detailModal').classList.remove('active');
+      loadBlogPosts();
+      alert('Blog post saved!');
+    } catch (error) {
+      alert('Failed to save blog post');
+    }
+  }
+
+  // ==================== FORM FIELDS ====================
+
+  const defaultFormFields = [
+    { id: 1, name: 'first_name', label: 'First Name', type: 'text', required: true, order: 1 },
+    { id: 2, name: 'last_name', label: 'Last Name', type: 'text', required: true, order: 2 },
+    { id: 3, name: 'email', label: 'Email', type: 'email', required: true, order: 3 },
+    { id: 4, name: 'phone', label: 'Phone', type: 'tel', required: false, order: 4 },
+    { id: 5, name: 'company', label: 'Company', type: 'text', required: false, order: 5 },
+    { id: 6, name: 'message', label: 'Message', type: 'textarea', required: true, order: 6 }
+  ];
+
+  async function loadFormFields() {
+    try {
+      const content = await api.get('/content/contact');
+      const fieldsStr = content?.form?.fields;
+      if (fieldsStr) {
+        formFields = typeof fieldsStr === 'string' ? JSON.parse(fieldsStr) : fieldsStr;
+      } else {
+        formFields = [...defaultFormFields];
+      }
+    } catch (error) {
+      formFields = [...defaultFormFields];
+    }
+    renderFormFields();
+  }
+
+  function renderFormFields() {
+    const container = document.getElementById('formFieldsList');
+    if (!container) return;
+    
+    container.innerHTML = formFields.map((field, index) => \`
+      <div class="form-field-card" data-index="\${index}">
+        <div class="form-field-drag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/>
+            <circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>
+          </svg>
+        </div>
+        <div class="form-field-inputs">
+          <input type="text" class="field-label" value="\${escapeHtml(field.label)}" placeholder="Field Label">
+          <input type="text" class="field-name" value="\${escapeHtml(field.name)}" placeholder="field_name">
+          <select class="field-type">
+            <option value="text" \${field.type === 'text' ? 'selected' : ''}>Text</option>
+            <option value="email" \${field.type === 'email' ? 'selected' : ''}>Email</option>
+            <option value="tel" \${field.type === 'tel' ? 'selected' : ''}>Phone</option>
+            <option value="textarea" \${field.type === 'textarea' ? 'selected' : ''}>Text Area</option>
+            <option value="select" \${field.type === 'select' ? 'selected' : ''}>Dropdown</option>
+          </select>
+          <label>
+            <input type="checkbox" class="field-required" \${field.required ? 'checked' : ''}>
+            Required
+          </label>
+        </div>
+        <button class="form-field-delete" title="Delete">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    \`).join('');
+    
+    initFormFieldListeners();
+  }
+
+  function initFormFieldListeners() {
+    document.querySelectorAll('.form-field-card').forEach(card => {
+      const index = parseInt(card.dataset.index);
+      
+      card.querySelector('.field-label').oninput = (e) => {
+        formFields[index].label = e.target.value;
+        // Auto-generate name from label
+        formFields[index].name = e.target.value.toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+        card.querySelector('.field-name').value = formFields[index].name;
+      };
+      
+      card.querySelector('.field-name').oninput = (e) => {
+        formFields[index].name = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+      };
+      
+      card.querySelector('.field-type').onchange = (e) => {
+        formFields[index].type = e.target.value;
+      };
+      
+      card.querySelector('.field-required').onchange = (e) => {
+        formFields[index].required = e.target.checked;
+      };
+      
+      card.querySelector('.form-field-delete').onclick = () => {
+        formFields.splice(index, 1);
+        renderFormFields();
+      };
+    });
+  }
+
+  async function saveFormFields() {
+    try {
+      await api.post('/content/bulk', [{
+        page: 'contact',
+        section: 'form',
+        content_key: 'fields',
+        content_value: JSON.stringify(formFields),
+        content_type: 'json'
+      }]);
+      alert('Form fields saved successfully!');
+    } catch (error) {
+      alert('Failed to save form fields');
+    }
   }
 
   // ==================== CMS CONTENT EDITOR ====================
@@ -1175,53 +1487,41 @@ document.addEventListener('DOMContentLoaded', () => {
   // Save content button
   document.getElementById('saveContentBtn')?.addEventListener('click', saveContent);
 
-  // Gmail Connect Button - One-Click OAuth
-  document.getElementById('gmailConnectBtn')?.addEventListener('click', () => {
-    // Open Google OAuth in a popup
-    const clientId = ''; // Would be configured in production
-    const redirectUri = encodeURIComponent(window.location.origin + '/api/gmail/callback');
-    const scope = encodeURIComponent('https://www.googleapis.com/auth/gmail.send');
-    
-    // For demo purposes, show a message about OAuth setup
-    alert('Gmail OAuth Setup Required:\n\n1. Go to Google Cloud Console\n2. Create OAuth 2.0 credentials\n3. Add the Client ID and Secret to your Cloudflare environment variables\n4. The redirect URI will be: ' + window.location.origin + '/api/gmail/callback\n\nOnce configured, clicking this button will open Google sign-in.');
-    
-    // In production, this would open the OAuth popup:
-    // const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
-    // window.open(oauthUrl, 'gmail-oauth', 'width=500,height=600');
+  // Menu Editor buttons
+  document.getElementById('addMenuItemBtn')?.addEventListener('click', () => {
+    const newItem = {
+      id: Date.now(),
+      label: 'New Item',
+      url: '/',
+      type: 'internal',
+      order: menuItems.length + 1
+    };
+    menuItems.push(newItem);
+    renderMenuItems();
   });
   
-  // Gmail Disconnect Button
-  document.getElementById('gmailDisconnectBtn')?.addEventListener('click', async () => {
-    if (!confirm('Are you sure you want to disconnect Gmail?')) return;
-    
-    try {
-      await api.put('/email-settings', { is_active: false, gmail_email: '' });
-      showGmailNotConnected();
-    } catch (error) {
-      alert('Failed to disconnect Gmail');
-    }
+  document.getElementById('saveMenuBtn')?.addEventListener('click', saveMenu);
+
+  // Blog buttons
+  document.getElementById('addBlogPostBtn')?.addEventListener('click', () => {
+    openBlogEditor();
   });
 
-  // Email settings form
-  document.getElementById('emailSettingsForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const data = {
-      gmail_email: document.getElementById('notificationEmail')?.value || '',
-      is_active: document.getElementById('emailActive')?.checked || false
+  // Form Fields buttons
+  document.getElementById('addFormFieldBtn')?.addEventListener('click', () => {
+    const newField = {
+      id: Date.now(),
+      name: 'new_field',
+      label: 'New Field',
+      type: 'text',
+      required: false,
+      order: formFields.length + 1
     };
-
-    try {
-      await api.put('/email-settings', data);
-      alert('Email settings saved successfully!');
-      
-      if (data.gmail_email && data.is_active) {
-        showGmailConnected(data.gmail_email);
-      }
-    } catch (error) {
-      alert('Failed to save email settings');
-    }
+    formFields.push(newField);
+    renderFormFields();
   });
+  
+  document.getElementById('saveFormFieldsBtn')?.addEventListener('click', saveFormFields);
 
   // Logout
   document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {

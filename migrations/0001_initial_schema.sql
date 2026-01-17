@@ -52,14 +52,15 @@ CREATE TABLE IF NOT EXISTS content (
   UNIQUE(page, section, content_key)
 );
 
--- Email settings table for Gmail OAuth
-CREATE TABLE IF NOT EXISTS email_settings (
+-- Blog posts table for blog content
+CREATE TABLE IF NOT EXISTS blog_posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  gmail_client_id TEXT,
-  gmail_client_secret TEXT,
-  gmail_refresh_token TEXT,
-  gmail_email TEXT,
-  is_active INTEGER DEFAULT 0,
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  content TEXT,
+  excerpt TEXT,
+  image TEXT,
+  published INTEGER DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

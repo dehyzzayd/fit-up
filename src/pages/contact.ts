@@ -69,11 +69,7 @@ export function contactPage(content: Record<string, Record<string, string>> = {}
     </div>
     
     <div class="nav-center-right">
-      <div class="nav-lang-toggle">
-        <span class="lang-active">Fr</span>
-        <span class="lang-separator">/</span>
-        <span class="lang-inactive">En</span>
-      </div>
+      <!-- Language toggle removed -->
     </div>
     
     <div class="nav-right">

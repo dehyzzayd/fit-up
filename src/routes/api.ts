@@ -538,38 +538,90 @@ api.get('/email-settings', async (c) => {
   }
 });
 
-// Update email settings
-api.put('/email-settings', async (c) => {
+// ==================== BLOG ROUTES ====================
+
+// Get all blog posts
+api.get('/blog', async (c) => {
   try {
-    const { gmail_client_id, gmail_client_secret, gmail_refresh_token, gmail_email, is_active } = await c.req.json();
+    const { results } = await c.env.DB.prepare(
+      'SELECT * FROM blog_posts ORDER BY created_at DESC'
+    ).all();
+    return c.json({ posts: results || [] });
+  } catch (error) {
+    return c.json({ posts: [] });
+  }
+});
 
-    // Check if settings exist
-    const existing = await c.env.DB.prepare('SELECT id FROM email_settings LIMIT 1').first();
-
-    if (existing) {
-      await c.env.DB.prepare(`
-        UPDATE email_settings SET 
-          gmail_client_id = ?, 
-          gmail_client_secret = ?, 
-          gmail_refresh_token = ?, 
-          gmail_email = ?,
-          is_active = ?,
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-      `).bind(
-        gmail_client_id, gmail_client_secret, gmail_refresh_token, gmail_email,
-        is_active ? 1 : 0, existing.id
-      ).run();
-    } else {
-      await c.env.DB.prepare(`
-        INSERT INTO email_settings (gmail_client_id, gmail_client_secret, gmail_refresh_token, gmail_email, is_active)
-        VALUES (?, ?, ?, ?, ?)
-      `).bind(gmail_client_id, gmail_client_secret, gmail_refresh_token, gmail_email, is_active ? 1 : 0).run();
+// Get single blog post
+api.get('/blog/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const post = await c.env.DB.prepare(
+      'SELECT * FROM blog_posts WHERE id = ?'
+    ).bind(id).first();
+    
+    if (!post) {
+      return c.json({ error: 'Post not found' }, 404);
     }
+    return c.json(post);
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch post' }, 500);
+  }
+});
 
+// Create blog post
+api.post('/blog', async (c) => {
+  try {
+    const { title, content, excerpt, image, published } = await c.req.json();
+    
+    // Generate slug from title
+    const slug = title.toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    
+    const result = await c.env.DB.prepare(`
+      INSERT INTO blog_posts (title, slug, content, excerpt, image, published)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(title, slug, content, excerpt, image, published ? 1 : 0).run();
+    
+    return c.json({ success: true, id: result.meta.last_row_id });
+  } catch (error) {
+    return c.json({ error: 'Failed to create post' }, 500);
+  }
+});
+
+// Update blog post
+api.put('/blog/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const { title, content, excerpt, image, published } = await c.req.json();
+    
+    // Generate slug from title
+    const slug = title.toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    
+    await c.env.DB.prepare(`
+      UPDATE blog_posts SET 
+        title = ?, slug = ?, content = ?, excerpt = ?, image = ?, 
+        published = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(title, slug, content, excerpt, image, published ? 1 : 0, id).run();
+    
     return c.json({ success: true });
   } catch (error) {
-    return c.json({ error: 'Failed to update email settings' }, 500);
+    return c.json({ error: 'Failed to update post' }, 500);
+  }
+});
+
+// Delete blog post
+api.delete('/blog/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    await c.env.DB.prepare('DELETE FROM blog_posts WHERE id = ?').bind(id).run();
+    return c.json({ success: true });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete post' }, 500);
   }
 });
 
