@@ -429,10 +429,24 @@ document.addEventListener('DOMContentLoaded', () => {
       logo_scroll: {
         title: 'Logo Scroll Section',
         fields: [
-          { key: 'title', label: 'Section Title', type: 'text', default: 'Brands We\'ve Worked With' },
-          { key: 'logo1_url', label: 'Brand Logo 1 (URL)', type: 'url', default: 'https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971' },
-          { key: 'logo2_url', label: 'Brand Logo 2 (URL)', type: 'url', default: 'https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg' },
-          { key: 'logo3_url', label: 'Brand Logo 3 (URL)', type: 'url', default: 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg' }
+          { key: 'title', label: 'Section Title', type: 'text', default: 'Brands We\'ve Worked With' }
+        ],
+        dynamicField: {
+          key: 'logos',
+          label: 'Brand Logos',
+          type: 'logo_list',
+          default: [
+            { url: 'https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971', name: 'Fedaura', round: false },
+            { url: 'https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg', name: 'Brand 2', round: true },
+            { url: 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg', name: 'fitup', round: true }
+          ]
+        }
+      },
+      custom_css: {
+        title: 'Custom CSS',
+        fields: [
+          { key: 'enabled', label: 'Enable Custom CSS', type: 'checkbox', default: false },
+          { key: 'code', label: 'Custom CSS Code', type: 'css', default: '/* Add your custom CSS here */\n\n/* Example:\n.hero-section {\n  background: linear-gradient(135deg, #000 0%, #333 100%);\n}\n*/' }
         ]
       },
       services: {
@@ -547,75 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
       html += `
         <div class="content-section">
           <h3 class="content-section-title">${sectionDef.title}</h3>
-          ${sectionDef.fields.map(field => {
-            // Get value from loaded content, or use default
-            const value = content[sectionKey]?.[field.key] ?? field.default ?? '';
-            const inputType = field.type || 'text';
-            
-            if (inputType === 'textarea') {
-              return `
-                <div class="content-field">
-                  <label for="content_${sectionKey}_${field.key}">
-                    ${field.label}
-                    <small>(${sectionKey})</small>
-                  </label>
-                  <textarea 
-                    id="content_${sectionKey}_${field.key}"
-                    data-page="${page}"
-                    data-section="${sectionKey}"
-                    data-key="${field.key}"
-                    data-type="${inputType}"
-                    placeholder="Enter ${field.label.toLowerCase()}"
-                    rows="3"
-                  >${escapeHtml(value)}</textarea>
-                </div>
-              `;
-            } else if (inputType === 'url') {
-              return `
-                <div class="content-field">
-                  <label for="content_${sectionKey}_${field.key}">
-                    ${field.label}
-                    <small>(${sectionKey})</small>
-                  </label>
-                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                    <input 
-                      type="url" 
-                      id="content_${sectionKey}_${field.key}"
-                      data-page="${page}"
-                      data-section="${sectionKey}"
-                      data-key="${field.key}"
-                      data-type="${inputType}"
-                      value="${escapeHtml(value)}"
-                      placeholder="https://..."
-                      style="flex: 1; min-width: 200px;"
-                    >
-                    <div class="url-preview" style="width: 50px; height: 50px; border-radius: 4px; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                      ${value ? `<img src="${escapeHtml(value)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='<span style=\\'color:#999;font-size:10px;\\'>No img</span>'">` : '<span style="color:#999;font-size:10px;">No img</span>'}
-                    </div>
-                  </div>
-                </div>
-              `;
-            } else {
-              return `
-                <div class="content-field">
-                  <label for="content_${sectionKey}_${field.key}">
-                    ${field.label}
-                    <small>(${sectionKey})</small>
-                  </label>
-                  <input 
-                    type="text" 
-                    id="content_${sectionKey}_${field.key}"
-                    data-page="${page}"
-                    data-section="${sectionKey}"
-                    data-key="${field.key}"
-                    data-type="${inputType}"
-                    value="${escapeHtml(value)}"
-                    placeholder="Enter ${field.label.toLowerCase()}"
-                  >
-                </div>
-              `;
-            }
-          }).join('')}
+          ${sectionDef.fields.map(field => renderField(page, sectionKey, field, content)).join('')}
+          ${sectionDef.dynamicField ? renderDynamicField(page, sectionKey, sectionDef.dynamicField, content) : ''}
         </div>
       `;
     }
@@ -636,6 +583,275 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+    
+    // Initialize logo list functionality
+    initLogoListHandlers();
+  }
+  
+  // Render a single field
+  function renderField(page, sectionKey, field, content) {
+    const value = content[sectionKey]?.[field.key] ?? field.default ?? '';
+    const inputType = field.type || 'text';
+    
+    if (inputType === 'textarea') {
+      return `
+        <div class="content-field">
+          <label for="content_${sectionKey}_${field.key}">
+            ${field.label}
+            <small>(${sectionKey})</small>
+          </label>
+          <textarea 
+            id="content_${sectionKey}_${field.key}"
+            data-page="${page}"
+            data-section="${sectionKey}"
+            data-key="${field.key}"
+            data-type="${inputType}"
+            placeholder="Enter ${field.label.toLowerCase()}"
+            rows="3"
+          >${escapeHtml(value)}</textarea>
+        </div>
+      `;
+    } else if (inputType === 'url') {
+      return `
+        <div class="content-field">
+          <label for="content_${sectionKey}_${field.key}">
+            ${field.label}
+            <small>(${sectionKey})</small>
+          </label>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <input 
+              type="url" 
+              id="content_${sectionKey}_${field.key}"
+              data-page="${page}"
+              data-section="${sectionKey}"
+              data-key="${field.key}"
+              data-type="${inputType}"
+              value="${escapeHtml(value)}"
+              placeholder="https://..."
+              style="flex: 1; min-width: 200px;"
+            >
+            <div class="url-preview" style="width: 50px; height: 50px; border-radius: 4px; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              ${value ? `<img src="${escapeHtml(value)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='<span style=\\'color:#999;font-size:10px;\\'>No img</span>'">` : '<span style="color:#999;font-size:10px;">No img</span>'}
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (inputType === 'checkbox') {
+      const checked = value === true || value === 'true' || value === '1';
+      return `
+        <div class="content-field">
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <input 
+              type="checkbox" 
+              id="content_${sectionKey}_${field.key}"
+              data-page="${page}"
+              data-section="${sectionKey}"
+              data-key="${field.key}"
+              data-type="${inputType}"
+              ${checked ? 'checked' : ''}
+              style="width: 18px; height: 18px; cursor: pointer;"
+            >
+            ${field.label}
+            <small>(${sectionKey})</small>
+          </label>
+        </div>
+      `;
+    } else if (inputType === 'css') {
+      return `
+        <div class="content-field">
+          <label for="content_${sectionKey}_${field.key}">
+            ${field.label}
+            <small>(${sectionKey})</small>
+          </label>
+          <textarea 
+            id="content_${sectionKey}_${field.key}"
+            data-page="${page}"
+            data-section="${sectionKey}"
+            data-key="${field.key}"
+            data-type="css"
+            placeholder="/* Your custom CSS */"
+            rows="12"
+            style="font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 13px; background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 6px; border: 1px solid #333; line-height: 1.5;"
+          >${escapeHtml(value)}</textarea>
+          <small style="color: #666; display: block; margin-top: 8px;">
+            💡 Tip: Your custom CSS will be applied to the website. Use browser DevTools to inspect elements and find class names.
+          </small>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="content-field">
+          <label for="content_${sectionKey}_${field.key}">
+            ${field.label}
+            <small>(${sectionKey})</small>
+          </label>
+          <input 
+            type="text" 
+            id="content_${sectionKey}_${field.key}"
+            data-page="${page}"
+            data-section="${sectionKey}"
+            data-key="${field.key}"
+            data-type="${inputType}"
+            value="${escapeHtml(value)}"
+            placeholder="Enter ${field.label.toLowerCase()}"
+          >
+        </div>
+      `;
+    }
+  }
+  
+  // Render dynamic field (logo list)
+  function renderDynamicField(page, sectionKey, dynamicField, content) {
+    if (dynamicField.type === 'logo_list') {
+      // Get logos from content or use defaults
+      let logos = [];
+      try {
+        const logosStr = content[sectionKey]?.[dynamicField.key];
+        if (logosStr) {
+          logos = typeof logosStr === 'string' ? JSON.parse(logosStr) : logosStr;
+        }
+        if (!Array.isArray(logos) || logos.length === 0) {
+          logos = dynamicField.default;
+        }
+      } catch (e) {
+        logos = dynamicField.default;
+      }
+      
+      return `
+        <div class="content-field logo-list-container">
+          <label>${dynamicField.label}</label>
+          <div id="logoList" data-page="${page}" data-section="${sectionKey}" data-key="${dynamicField.key}">
+            ${logos.map((logo, index) => renderLogoItem(logo, index)).join('')}
+          </div>
+          <button type="button" id="addLogoBtn" class="btn btn-secondary" style="margin-top: 12px;">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 6px;">
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+            Add Logo
+          </button>
+          <input type="hidden" 
+            id="content_${sectionKey}_${dynamicField.key}"
+            data-page="${page}"
+            data-section="${sectionKey}"
+            data-key="${dynamicField.key}"
+            data-type="json"
+            value='${escapeHtml(JSON.stringify(logos))}'>
+        </div>
+      `;
+    }
+    return '';
+  }
+  
+  // Render a single logo item
+  function renderLogoItem(logo, index) {
+    return `
+      <div class="logo-item-editor" data-index="${index}" style="display: flex; gap: 12px; align-items: center; padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+        <div class="logo-preview" style="width: 60px; height: 60px; border-radius: ${logo.round ? '50%' : '8px'}; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #ddd;">
+          ${logo.url ? `<img src="${escapeHtml(logo.url)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='<span style=\\'color:#999;font-size:10px;\\'>No img</span>'">` : '<span style="color:#999;font-size:10px;">No img</span>'}
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+          <input type="url" class="logo-url-input" value="${escapeHtml(logo.url || '')}" placeholder="Logo URL (https://...)" style="width: 100%; margin-bottom: 6px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" class="logo-name-input" value="${escapeHtml(logo.name || '')}" placeholder="Logo name" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap;">
+              <input type="checkbox" class="logo-round-input" ${logo.round ? 'checked' : ''} style="width: 16px; height: 16px;">
+              Round
+            </label>
+          </div>
+        </div>
+        <button type="button" class="remove-logo-btn" style="background: #dc3545; color: white; border: none; border-radius: 4px; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove logo">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </button>
+      </div>
+    `;
+  }
+  
+  // Initialize logo list handlers
+  function initLogoListHandlers() {
+    const addLogoBtn = document.getElementById('addLogoBtn');
+    const logoList = document.getElementById('logoList');
+    
+    if (addLogoBtn && logoList) {
+      // Add logo button
+      addLogoBtn.addEventListener('click', () => {
+        const newLogo = { url: '', name: '', round: false };
+        const index = logoList.querySelectorAll('.logo-item-editor').length;
+        logoList.insertAdjacentHTML('beforeend', renderLogoItem(newLogo, index));
+        updateLogosHiddenInput();
+        initLogoItemListeners();
+      });
+      
+      // Initialize listeners for existing items
+      initLogoItemListeners();
+    }
+  }
+  
+  // Initialize listeners for logo items
+  function initLogoItemListeners() {
+    const logoList = document.getElementById('logoList');
+    if (!logoList) return;
+    
+    // Remove logo buttons
+    logoList.querySelectorAll('.remove-logo-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        e.target.closest('.logo-item-editor').remove();
+        updateLogosHiddenInput();
+      };
+    });
+    
+    // URL input change - update preview
+    logoList.querySelectorAll('.logo-url-input').forEach(input => {
+      input.oninput = (e) => {
+        const preview = e.target.closest('.logo-item-editor').querySelector('.logo-preview');
+        const url = e.target.value;
+        if (preview) {
+          if (url) {
+            preview.innerHTML = `<img src="${escapeHtml(url)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='<span style=\\'color:#999;font-size:10px;\\'>Invalid</span>'">`;
+          } else {
+            preview.innerHTML = '<span style="color:#999;font-size:10px;">No img</span>';
+          }
+        }
+        updateLogosHiddenInput();
+      };
+    });
+    
+    // Name input change
+    logoList.querySelectorAll('.logo-name-input').forEach(input => {
+      input.oninput = () => updateLogosHiddenInput();
+    });
+    
+    // Round checkbox change - update preview border-radius
+    logoList.querySelectorAll('.logo-round-input').forEach(input => {
+      input.onchange = (e) => {
+        const preview = e.target.closest('.logo-item-editor').querySelector('.logo-preview');
+        if (preview) {
+          preview.style.borderRadius = e.target.checked ? '50%' : '8px';
+        }
+        updateLogosHiddenInput();
+      };
+    });
+  }
+  
+  // Update the hidden input with current logos data
+  function updateLogosHiddenInput() {
+    const logoList = document.getElementById('logoList');
+    if (!logoList) return;
+    
+    const logos = [];
+    logoList.querySelectorAll('.logo-item-editor').forEach(item => {
+      logos.push({
+        url: item.querySelector('.logo-url-input')?.value || '',
+        name: item.querySelector('.logo-name-input')?.value || '',
+        round: item.querySelector('.logo-round-input')?.checked || false
+      });
+    });
+    
+    const hiddenInput = document.querySelector(`#content_${logoList.dataset.section}_${logoList.dataset.key}`);
+    if (hiddenInput) {
+      hiddenInput.value = JSON.stringify(logos);
+    }
   }
 
   // Helper function to escape HTML
@@ -652,16 +868,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const items = [];
 
     inputs.forEach(input => {
-      const value = input.tagName === 'TEXTAREA' ? input.value : input.value;
-      if (input.dataset.page && input.dataset.section && input.dataset.key) {
-        items.push({
-          page: input.dataset.page,
-          section: input.dataset.section,
-          content_key: input.dataset.key,
-          content_value: value,
-          content_type: input.dataset.type || 'text'
-        });
+      // Skip inputs without data attributes
+      if (!input.dataset.page || !input.dataset.section || !input.dataset.key) return;
+      
+      // Skip logo item inputs (they're handled by the hidden input)
+      if (input.classList.contains('logo-url-input') || 
+          input.classList.contains('logo-name-input') || 
+          input.classList.contains('logo-round-input')) return;
+      
+      let value;
+      const inputType = input.dataset.type || 'text';
+      
+      if (input.type === 'checkbox') {
+        value = input.checked ? 'true' : 'false';
+      } else if (inputType === 'json') {
+        value = input.value; // Already JSON string
+      } else {
+        value = input.tagName === 'TEXTAREA' ? input.value : input.value;
       }
+      
+      items.push({
+        page: input.dataset.page,
+        section: input.dataset.section,
+        content_key: input.dataset.key,
+        content_value: value,
+        content_type: inputType
+      });
     });
 
     if (items.length === 0) {

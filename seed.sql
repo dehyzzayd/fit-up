@@ -26,9 +26,11 @@ VALUES
   
   -- Logo Scroll Section
   ('home', 'logo_scroll', 'title', 'Brands We''ve Worked With', 'text'),
-  ('home', 'logo_scroll', 'logo1_url', 'https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971', 'url'),
-  ('home', 'logo_scroll', 'logo2_url', 'https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg', 'url'),
-  ('home', 'logo_scroll', 'logo3_url', 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg', 'url'),
+  ('home', 'logo_scroll', 'logos', '[{"url":"https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971","name":"Fedaura","round":false},{"url":"https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg","name":"Brand 2","round":true},{"url":"https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg","name":"fitup","round":true}]', 'json'),
+  
+  -- Custom CSS Section
+  ('home', 'custom_css', 'enabled', 'false', 'checkbox'),
+  ('home', 'custom_css', 'code', '/* Add your custom CSS here */\n\n/* Example:\n.hero-section {\n  background: linear-gradient(135deg, #000 0%, #333 100%);\n}\n*/', 'css'),
   
   -- Services Section
   ('home', 'services', 'title', 'Our Services', 'text'),

@@ -4,6 +4,48 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   const getContent = (section: string, key: string, fallback: string): string => {
     return content[section]?.[key] || fallback;
   };
+  
+  // Helper to get logos array
+  const getLogos = (): Array<{url: string, name: string, round: boolean}> => {
+    const logosStr = content['logo_scroll']?.['logos'];
+    if (logosStr) {
+      try {
+        const parsed = typeof logosStr === 'string' ? JSON.parse(logosStr) : logosStr;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        // Fall through to defaults
+      }
+    }
+    // Default logos
+    return [
+      { url: 'https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971', name: 'Fedaura', round: false },
+      { url: 'https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg', name: 'Brand', round: true },
+      { url: 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg', name: 'fitup', round: true }
+    ];
+  };
+  
+  // Get custom CSS
+  const getCustomCSS = (): string => {
+    const enabled = content['custom_css']?.['enabled'];
+    const code = content['custom_css']?.['code'];
+    if ((enabled === 'true' || enabled === true) && code) {
+      return `<style id="custom-css">\n/* Custom CSS */\n${code}\n</style>`;
+    }
+    return '';
+  };
+  
+  // Generate logo items HTML
+  const logos = getLogos();
+  const logoItemsHTML = logos.map(logo => `
+    <div class="logo-item${logo.round ? ' round' : ''}">
+      <img src="${logo.url}" alt="${logo.name || 'Brand'}">
+    </div>
+  `).join('');
+  // Repeat logos to fill the scroll track (at least 12 items for smooth scrolling)
+  const repeatCount = Math.max(1, Math.ceil(12 / logos.length));
+  const repeatedLogosHTML = Array(repeatCount).fill(logoItemsHTML).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -25,6 +67,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   </script>
   
   <link rel="stylesheet" href="/static/styles/main.css">
+  ${getCustomCSS()}
 </head>
 <body>
 
@@ -113,14 +156,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     <p class="logo-scroll-title" data-content="logo_scroll.title">${getContent('logo_scroll', 'title', 'Brands We\'ve Worked With')}</p>
     <div class="logo-scroll-container">
       <div class="logo-scroll-track">
-        ${Array(12).fill(`
-        <div class="logo-item">
-          <img src="https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971" alt="Fedaura">
-        </div>
-        <div class="logo-item round">
-          <img src="https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fcmn3-1.fna.fbcdn.net&_nc_cat=107&_nc_oc=Q6cZ2QESVqXFyo87kHmwd0B7kG7Ny3n_HRS9pPjdL5veNuKv9cJu7rOLDxmO32cZ_s3VeBI&_nc_ohc=Dsq4i4-ChGMQ7kNvwFZD3c_&_nc_gid=T1liHn0OEoTpExNI7IDiQw&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AfrH-TvJMkR2G96HO4xdw7mh9eyuqSJUqf0dPVh-7tooNg&oe=697154ED&_nc_sid=7a9f4b" alt="Brand">
-        </div>
-        `).join('')}
+        ${repeatedLogosHTML}
       </div>
     </div>
   </section>
