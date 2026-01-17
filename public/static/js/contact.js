@@ -187,20 +187,20 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.textContent = 'Envoi en cours...';
       }
       
-      // Get form data
-      const formData = {
-        first_name: document.getElementById('prenom')?.value || '',
-        last_name: document.getElementById('nom')?.value || '',
-        phone: document.getElementById('telephone')?.value || '',
-        email: document.getElementById('email')?.value || '',
-        company: document.getElementById('entreprise')?.value || '',
-        job_title: document.getElementById('poste')?.value || '',
-        budget: document.getElementById('budget')?.value || '',
-        message: document.getElementById('message')?.value || '',
-        appointment_date: calendarState.selectedDate?.toISOString().split('T')[0] || '',
-        appointment_time: calendarState.selectedTime || '',
-        source: 'website'
-      };
+     // Get form data
+const formData = {
+  first_name: document.getElementById('first_name')?.value || '',
+  last_name: document.getElementById('last_name')?.value || '',
+  phone: document.getElementById('phone')?.value || '',
+  email: document.getElementById('email')?.value || '',
+  company: document.getElementById('company')?.value || '',
+  job_title: document.getElementById('job_title')?.value || '',
+  budget: document.getElementById('budget')?.value || '',
+  message: document.getElementById('message')?.value || '',
+  appointment_date: calendarState.selectedDate?.toISOString().split('T')[0] || '',
+  appointment_time: calendarState.selectedTime || '',
+  source: 'website'
+};
       
       try {
         const response = await fetch('/api/inquiries', {
