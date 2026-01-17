@@ -36,6 +36,34 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     return '';
   };
   
+  // Helper to get menu items
+  const getMenuItems = (): Array<{label: string, url: string, type: string}> => {
+    const menuStr = content['menu']?.['items'];
+    if (menuStr) {
+      try {
+        const parsed = typeof menuStr === 'string' ? JSON.parse(menuStr) : menuStr;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        // Fall through to defaults
+      }
+    }
+    // Default menu items
+    return [
+      { label: 'Home', url: '/', type: 'internal' },
+      { label: 'Services', url: '#services', type: 'anchor' },
+      { label: 'Get 20% Off', url: '#discount', type: 'anchor' },
+      { label: 'Contact', url: '/contact', type: 'internal' }
+    ];
+  };
+  
+  // Generate menu HTML
+  const menuItems = getMenuItems();
+  const sideMenuLinksHTML = menuItems.map(item => 
+    `<a href="${item.url}" class="side-menu-link">${item.label}</a>`
+  ).join('\n      ');
+  
   // Generate logo items HTML - duplicate for infinite seamless scroll
   const logos = getLogos();
   const logoItemsHTML = logos.map(logo => `
@@ -88,10 +116,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
       </button>
     </div>
     <nav class="side-menu-nav">
-      <a href="#" class="side-menu-link">Home</a>
-      <a href="#services" class="side-menu-link">Services</a>
-      <a href="#discount" class="side-menu-link">Get 20% Off</a>
-      <a href="/contact" class="side-menu-link">Contact</a>
+      ${sideMenuLinksHTML}
     </nav>
     <div class="side-menu-footer">
       <div class="side-menu-social">
@@ -485,10 +510,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
       <div class="footer-column">
         <h4>Navigation</h4>
         <ul class="footer-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#discount">Get 20% Off</a></li>
-          <li><a href="/contact">Contact</a></li>
+          ${menuItems.map(item => `<li><a href="${item.url}">${item.label}</a></li>`).join('\n          ')}
         </ul>
       </div>
       

@@ -41,8 +41,9 @@ app.get('/', async (c) => {
 app.get('/contact', async (c) => {
   let content: Record<string, Record<string, string>> = {};
   try {
+    // Fetch contact page content AND menu items from home page
     const { results } = await c.env.DB.prepare(
-      "SELECT * FROM content WHERE page = 'contact'"
+      "SELECT * FROM content WHERE page = 'contact' OR (page = 'home' AND section = 'menu')"
     ).all<any>();
     
     for (const item of results || []) {

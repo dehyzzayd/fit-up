@@ -3,6 +3,36 @@ export function contactPage(content: Record<string, Record<string, string>> = {}
   const getContent = (section: string, key: string, fallback: string): string => {
     return content[section]?.[key] || fallback;
   };
+  
+  // Helper to get menu items
+  const getMenuItems = (): Array<{label: string, url: string, type: string}> => {
+    const menuStr = content['menu']?.['items'];
+    if (menuStr) {
+      try {
+        const parsed = typeof menuStr === 'string' ? JSON.parse(menuStr) : menuStr;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        // Fall through to defaults
+      }
+    }
+    // Default menu items
+    return [
+      { label: 'Home', url: '/', type: 'internal' },
+      { label: 'Services', url: '#services', type: 'anchor' },
+      { label: 'Get 20% Off', url: '#discount', type: 'anchor' },
+      { label: 'Contact', url: '/contact', type: 'internal' }
+    ];
+  };
+  
+  // Generate menu HTML for contact page (prefix anchors with / for home page)
+  const menuItems = getMenuItems();
+  const sideMenuLinksHTML = menuItems.map(item => {
+    const url = item.type === 'anchor' ? '/' + item.url : item.url;
+    const isActive = item.url === '/contact' ? ' active' : '';
+    return `<a href="${url}" class="side-menu-link${isActive}">${item.label}</a>`;
+  }).join('\n      ');
 
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -32,10 +62,7 @@ export function contactPage(content: Record<string, Record<string, string>> = {}
       </button>
     </div>
     <nav class="side-menu-nav">
-      <a href="/" class="side-menu-link">Home</a>
-      <a href="/#services" class="side-menu-link">Services</a>
-      <a href="/#discount" class="side-menu-link">Get 20% Off</a>
-      <a href="/contact" class="side-menu-link active">Contact</a>
+      ${sideMenuLinksHTML}
     </nav>
     <div class="side-menu-footer">
       <div class="side-menu-social">
