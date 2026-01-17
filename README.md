@@ -1,196 +1,187 @@
-# fitup - Unseen Media Agency Website
+# fitup - Internal Dashboard & Website
+
+A fully-featured web application for fitup media agency, built with Hono and deployed to Cloudflare Pages.
 
 ## Project Overview
+
 - **Name**: fitup-webapp
-- **Goal**: Full-stack web application for a marketing agency with CMS and admin dashboard
-- **Features**: 
-  - Pixel-perfect responsive main website with animations
-  - Contact form with calendar scheduling
-  - Admin dashboard with inquiry tracking
-  - User management (Admin/Viewer roles)
-  - Content Management System (CMS) for real-time website updates
-  - Gmail OAuth email notification integration
-  - KPI metrics and analytics
+- **Goal**: Convert static HTML files into a fully functional web application with CMS capabilities
+- **Features**: Main website, Contact form, Admin Dashboard, Content Management System
 
 ## URLs
+
 - **Development**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai
-- **Homepage**: `/`
+- **Main Website**: `/`
 - **Contact Page**: `/contact`
 - **Admin Login**: `/admin`
 - **Admin Dashboard**: `/admin/dashboard`
 
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/login` - Login with email/password
-- `POST /api/auth/logout` - Logout and invalidate token
-- `GET /api/auth/verify` - Verify session token
-
-### Users (Admin only)
-- `GET /api/users` - List all users
-- `POST /api/users` - Create new user
-- `PUT /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user
-
-### Inquiries
-- `GET /api/inquiries` - List all inquiries (with filters)
-- `GET /api/inquiries/:id` - Get single inquiry
-- `POST /api/inquiries` - Create inquiry (contact form)
-- `PUT /api/inquiries/:id` - Update inquiry status
-- `DELETE /api/inquiries/:id` - Delete inquiry
-- `POST /api/inquiries/:id/read` - Mark as read
-
-### Stats/KPI
-- `GET /api/stats` - Get dashboard statistics
-
-### Content (CMS)
-- `GET /api/content` - List all content
-- `GET /api/content/:page` - Get content for a page
-- `PUT /api/content` - Update/create content item
-- `POST /api/content/bulk` - Bulk update content
-
-### Email Settings
-- `GET /api/email-settings` - Get email configuration
-- `PUT /api/email-settings` - Update email settings
-
 ## Data Architecture
 
-### Data Models
-- **Users**: id, email, password_hash, name, role (admin/viewer)
-- **Sessions**: id, user_id, token, expires_at
-- **Inquiries**: id, first_name, last_name, email, phone, company, job_title, budget, message, appointment_date, appointment_time, source, status, is_read
-- **Content**: id, page, section, content_key, content_value, content_type
-- **EmailSettings**: id, gmail_client_id, gmail_client_secret, gmail_refresh_token, gmail_email, is_active
+### Database Schema (Cloudflare D1)
+
+- **users**: User accounts with roles (admin/viewer)
+- **sessions**: JWT session tokens
+- **inquiries**: Contact form submissions
+- **content**: CMS editable content
+- **email_settings**: Gmail OAuth configuration
 
 ### Storage Services
-- **Cloudflare D1**: SQLite-based database for all data persistence
+- **Cloudflare D1**: SQLite-based database for all data
+
+## Features
+
+### Main Website
+- Pixel-perfect reproduction of the original design
+- Three.js 3D hero animation
+- Interactive service cards
+- FITUP letter game (20% discount game)
+- Social media sliders
+- FAQ accordion
+- Responsive design
+
+### Contact Page
+- Calendar-based appointment booking
+- Time slot selection
+- Form validation
+- Data stored in D1 database
+- Success confirmation
+
+### Admin Dashboard
+- **Inquiry Management**: View, filter, search, update status, delete
+- **KPI Metrics**: Total inquiries, weekly stats, conversion tracking
+- **Content Editor (CMS)**: Edit website text without redeploying
+- **User Management**: Create, edit, delete users with roles
+- **Email Settings**: Gmail OAuth configuration for notifications
 
 ## User Guide
 
 ### Admin Login
 1. Navigate to `/admin`
-2. Login with default credentials:
-   - **Email**: admin@fitup.ma
-   - **Password**: admin123
-3. You'll be redirected to the dashboard
+2. Login with credentials:
+   - Email: `admin@fitup.ma`
+   - Password: `admin123`
 
-### Dashboard Features
-- **Inquiries**: View, filter, search, and manage contact form submissions
-- **Content Editor**: Update website text without redeploying
-- **Users**: Create/edit/delete admin and viewer accounts
-- **Email Settings**: Configure Gmail OAuth for notifications
+### Managing Inquiries
+1. Dashboard shows all contact form submissions
+2. Filter by status (new, contacted, converted, closed)
+3. Filter by source (website, instagram, twitter, referral)
+4. Search by name, email, or message
+5. Click eye icon to view details
+6. Update status from the detail modal
+7. Delete inquiries with the trash icon
 
-### Contact Form
-1. Navigate to `/contact`
-2. Select a date from the calendar
-3. Choose a time slot
-4. Fill in the form fields
-5. Submit to create an inquiry
+### Content Editor (CMS)
+1. Navigate to "Content Editor" in sidebar
+2. Select a page (Homepage, Contact)
+3. Edit text fields directly
+4. Click "Save All Changes" to update
 
-## Tech Stack
-- **Framework**: Hono (lightweight edge runtime)
-- **Frontend**: Vanilla JS with Tailwind CSS (CDN)
-- **Backend**: Hono API routes
-- **Database**: Cloudflare D1 (SQLite)
-- **Animations**: GSAP + Three.js
-- **Build**: Vite
-- **Deploy**: Cloudflare Pages
+### User Management (Admin only)
+1. Navigate to "Users" in sidebar
+2. Click "Add User" to create new users
+3. Assign role (Admin or Viewer)
+4. Delete users with the trash icon
 
-## Development Setup
+### Email Notifications
+1. Navigate to "Email Settings" in sidebar
+2. Enter Gmail OAuth credentials
+3. Enable notifications checkbox
+4. Save settings
 
-### Prerequisites
-- Node.js 18+
-- npm
+## API Endpoints
 
-### Installation
-```bash
-cd /home/user/webapp
-npm install
-```
+### Authentication
+- `POST /api/auth/login` - Login
+- `POST /api/auth/logout` - Logout
+- `GET /api/auth/verify` - Verify token
 
-### Database Setup
-```bash
-# Apply migrations
-npm run db:migrate:local
+### Users
+- `GET /api/users` - List all users
+- `POST /api/users` - Create user
+- `PUT /api/users/:id` - Update user
+- `DELETE /api/users/:id` - Delete user
 
-# Seed with initial data
-npm run db:seed
+### Inquiries
+- `GET /api/inquiries` - List inquiries (with filters)
+- `GET /api/inquiries/:id` - Get single inquiry
+- `POST /api/inquiries` - Create inquiry
+- `PUT /api/inquiries/:id` - Update inquiry
+- `DELETE /api/inquiries/:id` - Delete inquiry
 
-# Reset database (delete + migrate + seed)
-npm run db:reset
-```
+### Stats
+- `GET /api/stats` - Get KPI metrics
 
-### Development
-```bash
-# Build first
-npm run build
+### Content (CMS)
+- `GET /api/content` - List all content
+- `GET /api/content/:page` - Get page content
+- `PUT /api/content` - Update content
+- `POST /api/content/bulk` - Bulk update content
 
-# Start development server with PM2
-pm2 start ecosystem.config.cjs
-
-# Or start directly
-npm run dev:sandbox
-```
-
-### Environment Variables
-Create `.dev.vars` for local development:
-```
-# No secrets required for local development
-# D1 database is handled automatically with --local flag
-```
+### Email Settings
+- `GET /api/email-settings` - Get settings
+- `PUT /api/email-settings` - Update settings
 
 ## Deployment
 
-### Cloudflare Pages
+### Local Development
 ```bash
-# Login to Cloudflare
-wrangler login
+# Install dependencies
+npm install
 
-# Create D1 database
-wrangler d1 create FITUP_DB
+# Run database migrations
+npm run db:migrate:local
 
-# Update wrangler.jsonc with database ID
+# Seed sample data
+npm run db:seed
 
-# Apply migrations to production
-npm run db:migrate:prod
+# Build and start dev server
+npm run build
+pm2 start ecosystem.config.cjs
+```
+
+### Production Deployment (Cloudflare Pages)
+```bash
+# Build
+npm run build
 
 # Deploy
 npm run deploy:prod
 ```
 
+## Tech Stack
+
+- **Framework**: Hono
+- **Runtime**: Cloudflare Workers
+- **Database**: Cloudflare D1 (SQLite)
+- **Frontend**: Vanilla JS, CSS, Three.js, GSAP
+- **Build**: Vite
+
+## Environment Variables
+
+For production, set these as Cloudflare secrets:
+- No external API keys required for base functionality
+- Gmail OAuth tokens for email notifications (optional)
+
 ## Project Structure
+
 ```
 webapp/
 ├── src/
-│   ├── index.tsx          # Main Hono app
-│   ├── types.ts           # TypeScript types
-│   ├── pages/             # HTML page generators
-│   │   ├── home.ts        # Main website
-│   │   ├── contact.ts     # Contact page
-│   │   ├── dashboard.ts   # Admin dashboard
-│   │   └── login.ts       # Login page
-│   ├── routes/
-│   │   └── api.ts         # All API routes
-│   └── utils/
-│       └── auth.ts        # Auth utilities
+│   ├── index.tsx         # Main app entry
+│   ├── types.ts          # TypeScript types
+│   ├── pages/            # HTML page templates
+│   ├── routes/           # API routes
+│   └── utils/            # Utilities (auth)
 ├── public/
 │   └── static/
-│       ├── js/            # Frontend JavaScript
-│       └── styles/        # CSS files
-├── migrations/            # D1 database migrations
-├── seed.sql               # Initial data
-├── wrangler.jsonc         # Cloudflare config
-├── ecosystem.config.cjs   # PM2 config
+│       ├── styles/       # CSS files
+│       └── js/           # JavaScript files
+├── migrations/           # D1 database migrations
+├── seed.sql              # Sample data
+├── wrangler.jsonc        # Cloudflare config
 └── package.json
 ```
 
-## Security Notes
-- Change default admin password immediately in production
-- Use environment variables for OAuth credentials
-- Sessions expire after 24 hours
-- Passwords are hashed with SHA-256 + salt
-
-## Status
-- **Platform**: Cloudflare Pages
-- **Status**: ✅ Active (Development)
-- **Last Updated**: 2026-01-17
+## Last Updated
+2026-01-17
