@@ -87,11 +87,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
     
     <div class="nav-center-right">
-      <div class="nav-lang-toggle">
-        <span class="lang-active">Eng</span>
-        <span class="lang-separator">/</span>
-        <span class="lang-inactive">Fr</span>
-      </div>
+      <!-- Language toggle removed -->
     </div>
     
     <div class="nav-right">

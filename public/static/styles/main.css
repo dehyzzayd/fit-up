@@ -172,12 +172,16 @@ body, html {
 
 /* Hero Canvas */
 .webgl {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   z-index: 1;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
 }
 
 #blackFadeOverlay {
@@ -196,17 +200,23 @@ body, html {
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   z-index: 1;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .hero {
   height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 0 20px;
+  margin: 0;
   position: relative;
   z-index: 10;
   pointer-events: none;
@@ -1301,28 +1311,13 @@ body, html {
 }
 
 .nav-lang-toggle {
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  color: white;
-  line-height: 1;
-  display: flex;
-  gap: 6px;
-  align-items: center;
+  display: none; /* Language toggle removed */
 }
 
-.lang-active {
-  opacity: 1;
-}
-
-.lang-separator {
-  opacity: 0.4;
-}
-
+.lang-active,
+.lang-separator,
 .lang-inactive {
-  opacity: 0.4;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
+  display: none; /* Language toggle removed */
 }
 
 .lang-inactive:hover {
@@ -1404,37 +1399,7 @@ body, html {
 /* ========================================
    HERO SECTION MOBILE RESPONSIVENESS
    ======================================== */
-
-/* Base hero canvas styles */
-.webgl {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.hero-section {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.hero {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0 20px;
-  position: relative;
-  z-index: 10;
-  pointer-events: none;
-}
+/* Hero styles are defined above - this section contains responsive overrides only */
 
 /* ========================================
    RESPONSIVE STYLES
@@ -1883,17 +1848,22 @@ body, html {
     width: 100%;
     height: 85vh;
     height: 85dvh;
+    margin: 0;
+    padding: 0;
   }
   
   .hero-section {
     min-height: 85vh;
     min-height: 85dvh;
+    margin: 0;
+    padding: 0;
   }
   
   .hero {
     height: 85vh;
     height: 85dvh;
     padding: 0 16px;
+    margin: 0;
   }
   
   /* Remove gaps between sections */
@@ -1906,29 +1876,40 @@ body, html {
 /* Mobile landscape and portrait */
 @media screen and (max-width: 768px) {
   .webgl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 75vh;
     height: 75dvh;
+    margin: 0;
+    padding: 0;
   }
   
   .hero-section {
     min-height: 75vh;
     min-height: 75dvh;
+    margin: 0;
+    padding: 0;
   }
   
   .hero {
     height: 75vh;
     height: 75dvh;
     padding: 0 12px;
+    margin: 0;
   }
   
   /* Remove gaps between sections */
   .logo-scroll-section {
     padding: 30px 0;
+    margin-top: 0;
   }
   
   .services-section {
     padding: 40px 0;
     min-height: auto;
+    margin-top: 0;
   }
   
   .game-section {
@@ -1950,28 +1931,35 @@ body, html {
     width: 100%;
     height: 65vh;
     height: 65dvh;
+    margin: 0;
+    padding: 0;
   }
   
   .hero-section {
     min-height: 65vh;
     min-height: 65dvh;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
   }
   
   .hero {
     height: 65vh;
     height: 65dvh;
     padding: 0 10px;
+    margin: 0;
   }
   
   /* Remove gaps between sections */
   .logo-scroll-section {
     padding: 25px 0;
+    margin-top: 0;
   }
   
   .services-section {
     padding: 30px 0;
     min-height: auto;
+    margin-top: 0;
   }
   
   .services-title {
@@ -2018,18 +2006,28 @@ body, html {
 /* Very small screens (iPhone SE, etc) */
 @media screen and (max-width: 375px) {
   .webgl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 55vh;
     height: 55dvh;
+    margin: 0;
+    padding: 0;
   }
   
   .hero-section {
     min-height: 55vh;
     min-height: 55dvh;
+    margin: 0;
+    padding: 0;
   }
   
   .hero {
     height: 55vh;
     height: 55dvh;
+    margin: 0;
+    padding: 0 10px;
   }
   
   .top-nav {
