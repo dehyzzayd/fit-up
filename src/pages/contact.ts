@@ -1,4 +1,4 @@
-// Contact Page - Exact pixel-perfect reproduction of Contact.html
+// Contact Page - Exact pixel-perfect reproduction of Contact.html with full navigation
 export function contactPage(content: Record<string, Record<string, string>> = {}): string {
   const getContent = (section: string, key: string, fallback: string): string => {
     return content[section]?.[key] || fallback;
@@ -11,9 +11,43 @@ export function contactPage(content: Record<string, Record<string, string>> = {}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>fitup · Contact</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles/contact.css">
 </head>
 <body>
+
+  <!-- Side Menu Overlay -->
+  <div class="side-menu-overlay" id="sideMenuOverlay"></div>
+
+  <!-- Side Menu (Same as main site) -->
+  <aside class="side-menu" id="sideMenu">
+    <div class="side-menu-header">
+      <div class="side-menu-logo">
+        <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+        <span>fitup</span>
+      </div>
+      <button class="side-menu-close" id="sideMenuClose">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <nav class="side-menu-nav">
+      <a href="/" class="side-menu-link">Home</a>
+      <a href="/#services" class="side-menu-link">Services</a>
+      <a href="/#discount" class="side-menu-link">Get 20% Off</a>
+      <a href="/contact" class="side-menu-link active">Contact</a>
+    </nav>
+    <div class="side-menu-footer">
+      <div class="side-menu-social">
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Twitter</a>
+      </div>
+      <div class="side-menu-email">
+        <a href="mailto:${getContent('footer', 'email', 'hello@fitup.ma')}">${getContent('footer', 'email', 'hello@fitup.ma')}</a>
+      </div>
+    </div>
+  </aside>
 
   <!-- Top Navigation -->
   <nav class="top-nav" id="topNav">
@@ -43,7 +77,7 @@ export function contactPage(content: Record<string, Record<string, string>> = {}
     </div>
     
     <div class="nav-right">
-      <button class="nav-menu-btn">
+      <button class="nav-menu-btn" id="menuBtn">
         <span class="menu-text">Menu</span>
         <span class="menu-icon">
           <span class="menu-line menu-line-h"></span>

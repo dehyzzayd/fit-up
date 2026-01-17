@@ -1,6 +1,33 @@
 // Contact Page JavaScript
 document.addEventListener('DOMContentLoaded', () => {
-  // Calendar Logic
+  // ==================== SIDE MENU NAVIGATION ====================
+  const menuBtn = document.getElementById('menuBtn');
+  const sideMenu = document.getElementById('sideMenu');
+  const sideMenuOverlay = document.getElementById('sideMenuOverlay');
+  const sideMenuClose = document.getElementById('sideMenuClose');
+
+  function openMenu() {
+    if (sideMenu) sideMenu.classList.add('active');
+    if (sideMenuOverlay) sideMenuOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    if (sideMenu) sideMenu.classList.remove('active');
+    if (sideMenuOverlay) sideMenuOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (menuBtn) menuBtn.addEventListener('click', openMenu);
+  if (sideMenuClose) sideMenuClose.addEventListener('click', closeMenu);
+  if (sideMenuOverlay) sideMenuOverlay.addEventListener('click', closeMenu);
+
+  // Close menu with escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  // ==================== CALENDAR LOGIC ====================
   const calendarState = {
     currentDate: new Date(),
     selectedDate: null,

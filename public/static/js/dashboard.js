@@ -132,6 +132,17 @@ document.addEventListener('DOMContentLoaded', () => {
       renderInquiriesTable();
     } catch (error) {
       console.error('Failed to load inquiries:', error);
+      // Show error state
+      const tbody = document.getElementById('inquiriesTableBody');
+      if (tbody) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 40px; color: #ef4444;">
+              Failed to load inquiries. Please refresh the page.
+            </td>
+          </tr>
+        `;
+      }
     }
   }
 
@@ -144,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tbody.innerHTML = `
         <tr>
           <td colspan="6" style="text-align: center; padding: 40px; color: #86868b;">
-            No inquiries found
+            No inquiries found. New contact form submissions will appear here.
           </td>
         </tr>
       `;
@@ -369,15 +380,42 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const settings = await api.get('/email-settings');
       if (settings) {
-        document.getElementById('gmailEmail').value = settings.gmail_email || '';
-        document.getElementById('emailActive').checked = settings.is_active === 1;
+        const notificationEmail = document.getElementById('notificationEmail');
+        if (notificationEmail) notificationEmail.value = settings.gmail_email || '';
+        
+        const emailActive = document.getElementById('emailActive');
+        if (emailActive) emailActive.checked = settings.is_active === 1;
+        
+        // Show connected state if Gmail is configured
+        if (settings.gmail_email && settings.is_active) {
+          showGmailConnected(settings.gmail_email);
+        }
       }
     } catch (error) {
       console.error('Failed to load email settings:', error);
     }
   }
+  
+  // Gmail OAuth connection
+  function showGmailConnected(email) {
+    const notConnected = document.getElementById('gmailNotConnected');
+    const connected = document.getElementById('gmailConnected');
+    const connectedEmail = document.getElementById('connectedEmail');
+    
+    if (notConnected) notConnected.style.display = 'none';
+    if (connected) connected.style.display = 'block';
+    if (connectedEmail) connectedEmail.textContent = email;
+  }
+  
+  function showGmailNotConnected() {
+    const notConnected = document.getElementById('gmailNotConnected');
+    const connected = document.getElementById('gmailConnected');
+    
+    if (notConnected) notConnected.style.display = 'block';
+    if (connected) connected.style.display = 'none';
+  }
 
-  // Load content for CMS
+  // Load content for CMS - ENHANCED VERSION
   async function loadContent(page = 'home') {
     try {
       const content = await api.get(`/content/${page}`);
@@ -388,22 +426,111 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Render content editor
+  // ENHANCED: Render content editor with ALL editable fields
   function renderContentEditor(page) {
     const form = document.getElementById('contentEditForm');
     if (!form) return;
 
     const content = contentData[page] || {};
     
-    // Define editable sections for each page
+    // Define ALL editable sections for each page - comprehensive list
     const sections = page === 'home' ? {
-      hero: { title: 'Hero Section', fields: ['title', 'subtitle'] },
-      about: { title: 'About Section', fields: ['stats_projects', 'stats_satisfaction', 'stats_years'] },
-      services: { title: 'Services', fields: ['service1_title', 'service1_desc', 'service2_title', 'service2_desc'] },
-      footer: { title: 'Footer', fields: ['email', 'phone', 'address'] }
+      hero: { 
+        title: 'Hero Section', 
+        fields: [
+          { key: 'tagline', label: 'Tagline', type: 'text' }
+        ]
+      },
+      logo_scroll: {
+        title: 'Logo Scroll Section',
+        fields: [
+          { key: 'title', label: 'Section Title', type: 'text' },
+          { key: 'logo1_url', label: 'Brand Logo 1 (URL)', type: 'url' },
+          { key: 'logo2_url', label: 'Brand Logo 2 (URL)', type: 'url' },
+          { key: 'logo3_url', label: 'Brand Logo 3 (URL)', type: 'url' }
+        ]
+      },
+      services: {
+        title: 'Services Section',
+        fields: [
+          { key: 'title', label: 'Section Title', type: 'text' },
+          { key: 'service1_title', label: 'Service 1 Title', type: 'text' },
+          { key: 'service1_subtitle', label: 'Service 1 Description', type: 'text' },
+          { key: 'service1_image', label: 'Service 1 Image (URL)', type: 'url' },
+          { key: 'service2_title', label: 'Service 2 Title', type: 'text' },
+          { key: 'service2_subtitle', label: 'Service 2 Description', type: 'text' },
+          { key: 'service2_image', label: 'Service 2 Image (URL)', type: 'url' },
+          { key: 'service3_title', label: 'Service 3 Title', type: 'text' },
+          { key: 'service3_subtitle', label: 'Service 3 Description', type: 'text' },
+          { key: 'service3_image', label: 'Service 3 Image (URL)', type: 'url' },
+          { key: 'service4_title', label: 'Service 4 Title', type: 'text' },
+          { key: 'service4_subtitle', label: 'Service 4 Description', type: 'text' },
+          { key: 'service4_image', label: 'Service 4 Image (URL)', type: 'url' },
+          { key: 'service5_title', label: 'Service 5 Title', type: 'text' },
+          { key: 'service5_subtitle', label: 'Service 5 Description', type: 'text' },
+          { key: 'service5_image', label: 'Service 5 Image (URL)', type: 'url' },
+          { key: 'service6_title', label: 'Service 6 Title', type: 'text' },
+          { key: 'service6_subtitle', label: 'Service 6 Description', type: 'text' },
+          { key: 'service6_image', label: 'Service 6 Image (URL)', type: 'url' }
+        ]
+      },
+      about: {
+        title: 'About Section',
+        fields: [
+          { key: 'heading_line1', label: 'Heading Line 1', type: 'text' },
+          { key: 'heading_line2', label: 'Heading Line 2', type: 'text' },
+          { key: 'paragraph1', label: 'Paragraph 1', type: 'textarea' },
+          { key: 'paragraph2', label: 'Paragraph 2', type: 'textarea' },
+          { key: 'paragraph3', label: 'Paragraph 3', type: 'textarea' },
+          { key: 'stat1_number', label: 'Stat 1 Number', type: 'text' },
+          { key: 'stat1_label', label: 'Stat 1 Label', type: 'text' },
+          { key: 'stat2_number', label: 'Stat 2 Number', type: 'text' },
+          { key: 'stat2_label', label: 'Stat 2 Label', type: 'text' },
+          { key: 'stat3_number', label: 'Stat 3 Number', type: 'text' },
+          { key: 'stat3_label', label: 'Stat 3 Label', type: 'text' }
+        ]
+      },
+      social: {
+        title: 'Social Media Links',
+        fields: [
+          { key: 'twitter_handle', label: 'Twitter Handle', type: 'text' },
+          { key: 'twitter_url', label: 'Twitter URL', type: 'url' },
+          { key: 'instagram_handle', label: 'Instagram Handle', type: 'text' },
+          { key: 'instagram_url', label: 'Instagram URL', type: 'url' },
+          { key: 'linkedin_url', label: 'LinkedIn URL', type: 'url' }
+        ]
+      },
+      footer: {
+        title: 'Footer Section',
+        fields: [
+          { key: 'description', label: 'Company Description', type: 'textarea' },
+          { key: 'email', label: 'Contact Email', type: 'text' },
+          { key: 'phone', label: 'Phone Number', type: 'text' },
+          { key: 'location', label: 'Location', type: 'text' }
+        ]
+      },
+      branding: {
+        title: 'Branding & Logos',
+        fields: [
+          { key: 'main_logo', label: 'Main Logo (URL)', type: 'url' },
+          { key: 'favicon', label: 'Favicon (URL)', type: 'url' }
+        ]
+      }
     } : {
-      header: { title: 'Page Header', fields: ['title', 'subtitle'] },
-      footer: { title: 'Footer', fields: ['email', 'phone', 'address'] }
+      hero: {
+        title: 'Page Header',
+        fields: [
+          { key: 'title', label: 'Page Title', type: 'text' },
+          { key: 'subtitle', label: 'Page Subtitle', type: 'text' }
+        ]
+      },
+      form: {
+        title: 'Form Labels',
+        fields: [
+          { key: 'submit_button', label: 'Submit Button Text', type: 'text' },
+          { key: 'success_message', label: 'Success Message', type: 'text' }
+        ]
+      }
     };
 
     let html = '';
@@ -411,23 +538,72 @@ document.addEventListener('DOMContentLoaded', () => {
       html += `
         <div class="content-section">
           <h3 class="content-section-title">${sectionDef.title}</h3>
-          ${sectionDef.fields.map(field => `
-            <div class="content-field">
-              <label for="content_${sectionKey}_${field}">
-                ${field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                <small>(${sectionKey})</small>
-              </label>
-              <input 
-                type="text" 
-                id="content_${sectionKey}_${field}"
-                data-page="${page}"
-                data-section="${sectionKey}"
-                data-key="${field}"
-                value="${content[sectionKey]?.[field] || ''}"
-                placeholder="Enter ${field.replace(/_/g, ' ')}"
-              >
-            </div>
-          `).join('')}
+          ${sectionDef.fields.map(field => {
+            const value = content[sectionKey]?.[field.key] || '';
+            const inputType = field.type || 'text';
+            
+            if (inputType === 'textarea') {
+              return `
+                <div class="content-field">
+                  <label for="content_${sectionKey}_${field.key}">
+                    ${field.label}
+                    <small>(${sectionKey})</small>
+                  </label>
+                  <textarea 
+                    id="content_${sectionKey}_${field.key}"
+                    data-page="${page}"
+                    data-section="${sectionKey}"
+                    data-key="${field.key}"
+                    data-type="${inputType}"
+                    placeholder="Enter ${field.label.toLowerCase()}"
+                    rows="3"
+                  >${value}</textarea>
+                </div>
+              `;
+            } else if (inputType === 'url') {
+              return `
+                <div class="content-field">
+                  <label for="content_${sectionKey}_${field.key}">
+                    ${field.label}
+                    <small>(${sectionKey})</small>
+                  </label>
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <input 
+                      type="url" 
+                      id="content_${sectionKey}_${field.key}"
+                      data-page="${page}"
+                      data-section="${sectionKey}"
+                      data-key="${field.key}"
+                      data-type="${inputType}"
+                      value="${value}"
+                      placeholder="https://..."
+                      style="flex: 1;"
+                    >
+                    ${value ? `<img src="${value}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">` : ''}
+                  </div>
+                </div>
+              `;
+            } else {
+              return `
+                <div class="content-field">
+                  <label for="content_${sectionKey}_${field.key}">
+                    ${field.label}
+                    <small>(${sectionKey})</small>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="content_${sectionKey}_${field.key}"
+                    data-page="${page}"
+                    data-section="${sectionKey}"
+                    data-key="${field.key}"
+                    data-type="${inputType}"
+                    value="${value}"
+                    placeholder="Enter ${field.label.toLowerCase()}"
+                  >
+                </div>
+              `;
+            }
+          }).join('')}
         </div>
       `;
     }
@@ -437,22 +613,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Save all content
   async function saveContent() {
-    const inputs = document.querySelectorAll('#contentEditForm input');
+    const inputs = document.querySelectorAll('#contentEditForm input, #contentEditForm textarea');
     const items = [];
 
     inputs.forEach(input => {
+      const value = input.tagName === 'TEXTAREA' ? input.value : input.value;
       items.push({
         page: input.dataset.page,
         section: input.dataset.section,
         content_key: input.dataset.key,
-        content_value: input.value,
-        content_type: 'text'
+        content_value: value,
+        content_type: input.dataset.type || 'text'
       });
     });
 
     try {
       await api.post('/content/bulk', items);
-      alert('Content saved successfully!');
+      alert('Content saved successfully! Changes will reflect on the live site immediately.');
     } catch (error) {
       alert('Failed to save content');
     }
@@ -477,6 +654,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (page === 'content') {
         loadContent(selectedContentPage);
       }
+      
+      // Close mobile sidebar
+      document.getElementById('sidebar')?.classList.remove('active');
     });
   });
 
@@ -499,8 +679,8 @@ document.addEventListener('DOMContentLoaded', () => {
     statusFilter.addEventListener('change', () => {
       loadInquiries({
         status: statusFilter.value,
-        source: sourceFilter.value,
-        search: searchInput.value
+        source: sourceFilter?.value,
+        search: searchInput?.value
       });
     });
   }
@@ -508,9 +688,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sourceFilter) {
     sourceFilter.addEventListener('change', () => {
       loadInquiries({
-        status: statusFilter.value,
+        status: statusFilter?.value,
         source: sourceFilter.value,
-        search: searchInput.value
+        search: searchInput?.value
       });
     });
   }
@@ -521,8 +701,8 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
         loadInquiries({
-          status: statusFilter.value,
-          source: sourceFilter.value,
+          status: statusFilter?.value,
+          source: sourceFilter?.value,
           search: searchInput.value
         });
       }, 300);
@@ -644,21 +824,49 @@ document.addEventListener('DOMContentLoaded', () => {
   // Save content button
   document.getElementById('saveContentBtn')?.addEventListener('click', saveContent);
 
+  // Gmail Connect Button - One-Click OAuth
+  document.getElementById('gmailConnectBtn')?.addEventListener('click', () => {
+    // Open Google OAuth in a popup
+    const clientId = ''; // Would be configured in production
+    const redirectUri = encodeURIComponent(window.location.origin + '/api/gmail/callback');
+    const scope = encodeURIComponent('https://www.googleapis.com/auth/gmail.send');
+    
+    // For demo purposes, show a message about OAuth setup
+    alert('Gmail OAuth Setup Required:\n\n1. Go to Google Cloud Console\n2. Create OAuth 2.0 credentials\n3. Add the Client ID and Secret to your Cloudflare environment variables\n4. The redirect URI will be: ' + window.location.origin + '/api/gmail/callback\n\nOnce configured, clicking this button will open Google sign-in.');
+    
+    // In production, this would open the OAuth popup:
+    // const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+    // window.open(oauthUrl, 'gmail-oauth', 'width=500,height=600');
+  });
+  
+  // Gmail Disconnect Button
+  document.getElementById('gmailDisconnectBtn')?.addEventListener('click', async () => {
+    if (!confirm('Are you sure you want to disconnect Gmail?')) return;
+    
+    try {
+      await api.put('/email-settings', { is_active: false, gmail_email: '' });
+      showGmailNotConnected();
+    } catch (error) {
+      alert('Failed to disconnect Gmail');
+    }
+  });
+
   // Email settings form
   document.getElementById('emailSettingsForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const data = {
-      gmail_email: document.getElementById('gmailEmail').value,
-      gmail_client_id: document.getElementById('gmailClientId').value,
-      gmail_client_secret: document.getElementById('gmailClientSecret').value,
-      gmail_refresh_token: document.getElementById('gmailRefreshToken').value,
-      is_active: document.getElementById('emailActive').checked
+      gmail_email: document.getElementById('notificationEmail')?.value || '',
+      is_active: document.getElementById('emailActive')?.checked || false
     };
 
     try {
       await api.put('/email-settings', data);
       alert('Email settings saved successfully!');
+      
+      if (data.gmail_email && data.is_active) {
+        showGmailConnected(data.gmail_email);
+      }
     } catch (error) {
       alert('Failed to save email settings');
     }
