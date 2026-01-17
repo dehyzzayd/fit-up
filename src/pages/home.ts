@@ -545,6 +545,48 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
   </footer>
 
+  <!-- Let's Talk Floating Button & Chat Widget -->
+  <div class="lets-talk-widget">
+    <button class="lets-talk-btn" id="letsTalkBtn">
+      <svg class="chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      <span>Let's Talk</span>
+    </button>
+    
+    <div class="lets-talk-dialog" id="letsTalkDialog">
+      <div class="dialog-header">
+        <h3>Let's Talk</h3>
+        <p>Send us a quick message</p>
+      </div>
+      <form class="dialog-form" id="letsTalkForm">
+        <div class="dialog-field">
+          <input type="text" id="ltName" name="name" placeholder="Your full name *" required>
+        </div>
+        <div class="dialog-field">
+          <input type="tel" id="ltPhone" name="phone" placeholder="Phone number *" required>
+        </div>
+        <div class="dialog-field">
+          <textarea id="ltMessage" name="message" placeholder="How can we help? (optional)" rows="3"></textarea>
+        </div>
+        <button type="submit" class="dialog-submit">
+          <span>Send Message</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </form>
+      <div class="dialog-success" id="letsTalkSuccess" style="display:none;">
+        <div class="success-icon">✓</div>
+        <h4>Message Sent!</h4>
+        <p>We'll get back to you soon.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>

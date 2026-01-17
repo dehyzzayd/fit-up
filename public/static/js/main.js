@@ -455,3 +455,103 @@ function initTextAnimation() {
     }).play(i / nClones * 4);
   }
 }
+
+// ==================== LET'S TALK WIDGET ====================
+(function() {
+  const letsTalkBtn = document.getElementById('letsTalkBtn');
+  const letsTalkDialog = document.getElementById('letsTalkDialog');
+  const letsTalkForm = document.getElementById('letsTalkForm');
+  const letsTalkSuccess = document.getElementById('letsTalkSuccess');
+  
+  if (!letsTalkBtn || !letsTalkDialog) return;
+  
+  // Toggle dialog
+  letsTalkBtn.addEventListener('click', () => {
+    const isActive = letsTalkDialog.classList.contains('active');
+    
+    if (isActive) {
+      letsTalkDialog.classList.remove('active');
+      letsTalkBtn.classList.remove('active');
+    } else {
+      letsTalkDialog.classList.add('active');
+      letsTalkBtn.classList.add('active');
+      // Reset form if showing again after success
+      if (letsTalkSuccess.style.display !== 'none') {
+        letsTalkSuccess.style.display = 'none';
+        letsTalkForm.style.display = 'block';
+        letsTalkForm.reset();
+      }
+    }
+  });
+  
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!letsTalkBtn.contains(e.target) && !letsTalkDialog.contains(e.target)) {
+      letsTalkDialog.classList.remove('active');
+      letsTalkBtn.classList.remove('active');
+    }
+  });
+  
+  // Form submission
+  if (letsTalkForm) {
+    letsTalkForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = letsTalkForm.querySelector('.dialog-submit');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Sending...</span>';
+      
+      const name = document.getElementById('ltName').value.trim();
+      const phone = document.getElementById('ltPhone').value.trim();
+      const message = document.getElementById('ltMessage').value.trim();
+      
+      // Split name into first and last
+      const nameParts = name.split(' ');
+      const firstName = nameParts[0] || name;
+      const lastName = nameParts.slice(1).join(' ') || '';
+      
+      try {
+        const response = await fetch('/api/inquiries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            phone: phone,
+            email: '',
+            message: message || 'Quick inquiry from Let\'s Talk widget',
+            source: 'widget'
+          })
+        });
+        
+        if (response.ok) {
+          // Show success
+          letsTalkForm.style.display = 'none';
+          letsTalkSuccess.style.display = 'block';
+          
+          // Auto close after 3 seconds
+          setTimeout(() => {
+            letsTalkDialog.classList.remove('active');
+            letsTalkBtn.classList.remove('active');
+            // Reset for next time
+            setTimeout(() => {
+              letsTalkSuccess.style.display = 'none';
+              letsTalkForm.style.display = 'block';
+              letsTalkForm.reset();
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalText;
+            }, 300);
+          }, 3000);
+        } else {
+          throw new Error('Failed to submit');
+        }
+      } catch (error) {
+        console.error('Error submitting inquiry:', error);
+        alert('Failed to send message. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    });
+  }
+})();
