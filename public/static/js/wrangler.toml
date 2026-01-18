@@ -1,0 +1,9 @@
+name = "fitup-webapp"
+compatibility_date = "2026-01-17"
+pages_build_output_dir = "./dist"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "fitup-db"
+database_id = "0a304b5e-6bfa-45d5-9fd7-db16dbaac5c3"
