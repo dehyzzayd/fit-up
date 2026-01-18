@@ -257,9 +257,9 @@ api.post('/inquiries', async (c) => {
       budget, message, appointment_date, appointment_time, source
     } = data;
 
-    if (!first_name || !last_name || !email) {
-      return c.json({ error: 'First name, last name, and email are required' }, 400);
-    }
+   if (!first_name || !last_name) {
+  return c.json({ error: 'First name and last name are required' }, 400);
+}
 
     const result = await c.env.DB.prepare(`
       INSERT INTO inquiries (first_name, last_name, email, phone, company, job_title, budget, message, appointment_date, appointment_time, source)
