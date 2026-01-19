@@ -1,22 +1,15 @@
-# fitup · Unseen Media Agency
+# fitup · Unseen Agency
 
 A full-stack web application for a digital marketing agency with admin dashboard, CMS, and contact form management.
-
-## Live URLs
-
-- **Main Website**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai/
-- **Contact Page**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai/contact
-- **Admin Login**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai/admin
-- **Dashboard**: https://3000-iv667010tr7hx26xrakql-c07dda5e.sandbox.novita.ai/admin/dashboard
 
 ## Admin Credentials
 
 - **Email**: admin@fitup.ma
-- **Password**: admin123
+- **Password**: 
 
 ## Features
 
-### Main Website (Pixel-Perfect)
+### Main Website 
 - ✅ 3D hero animation with rotating torus (Three.js)
 - ✅ Animated logo carousel
 - ✅ Interactive expanding service cards
@@ -37,7 +30,7 @@ A full-stack web application for a digital marketing agency with admin dashboard
 
 ### Admin Dashboard
 - ✅ **Mobile-responsive design** - Works on all device sizes
-- ✅ **Real inquiry data** - Populated from database with 7 sample inquiries
+- ✅ **Real inquiry data** - Populated from database
 - ✅ KPI metrics (Total, This Week, Contacted, Converted)
 - ✅ Inquiry management (view, filter, status update, delete)
 - ✅ Export to CSV functionality
