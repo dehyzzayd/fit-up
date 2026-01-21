@@ -106,7 +106,8 @@ export function galleriePage(content: Record<string, Record<string, string>> = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallerie | fitup</title>
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles/main.css">
     <style>
         * {
             box-sizing: border-box;
@@ -235,341 +236,7 @@ export function galleriePage(content: Record<string, Record<string, string>> = {
             z-index: 0;
         }
 
-        /* ========== SIDE MENU ========== */
-        .side-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-            z-index: 1000;
-        }
-
-        .side-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .side-menu {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 400px;
-            max-width: 90vw;
-            height: 100%;
-            background: #0a0a0a;
-            z-index: 1001;
-            transition: right 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .side-menu.active {
-            right: 0;
-        }
-
-        .side-menu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px 32px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .side-menu-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .side-menu-logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .side-menu-logo span {
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .side-menu-close {
-            width: 40px;
-            height: 40px;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .side-menu-close:hover {
-            border-color: #B6FF5C;
-            background: rgba(182, 255, 92, 0.1);
-        }
-
-        .side-menu-close span {
-            position: absolute;
-            width: 16px;
-            height: 2px;
-            background: white;
-            top: 50%;
-            left: 50%;
-            transition: background 0.3s ease;
-        }
-
-        .side-menu-close:hover span {
-            background: #B6FF5C;
-        }
-
-        .side-menu-close span:first-child {
-            transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        .side-menu-close span:last-child {
-            transform: translate(-50%, -50%) rotate(-45deg);
-        }
-
-        .side-menu-nav {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 40px 32px;
-            gap: 8px;
-        }
-
-        .side-menu-link {
-            color: white;
-            text-decoration: none;
-            font-size: 28px;
-            font-weight: 300;
-            padding: 16px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .side-menu-link:hover,
-        .side-menu-link.active {
-            color: #B6FF5C;
-            padding-left: 16px;
-        }
-
-        .side-menu-link::after {
-            content: '→';
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: all 0.3s ease;
-        }
-
-        .side-menu-link:hover::after,
-        .side-menu-link.active::after {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .side-menu-footer {
-            padding: 32px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .side-menu-social {
-            display: flex;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .side-menu-social a {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .side-menu-social a:hover {
-            color: #B6FF5C;
-        }
-
-        .side-menu-email a {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .side-menu-email a:hover {
-            color: white;
-        }
-
-        /* ========== TOP NAVIGATION ========== */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            display: grid;
-            grid-template-columns: auto 1fr auto 1fr auto;
-            align-items: center;
-            padding: 32px 48px;
-            z-index: 999;
-            pointer-events: none;
-            font-family: 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
-        }
-
-        .top-nav > * {
-            pointer-events: auto;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: white;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-logo-img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .nav-center-left {
-            display: flex;
-            justify-content: flex-start;
-            padding-left: 40px;
-            gap: 32px;
-        }
-
-        .nav-menu-item {
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition: opacity 0.3s ease;
-        }
-
-        .nav-menu-item:hover {
-            opacity: 0.7;
-        }
         
-        .nav-menu-item.active {
-            color: #B6FF5C;
-        }
-
-        .nav-center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .nav-center-right {
-            display: flex;
-            justify-content: flex-end;
-            padding-right: 40px;
-        }
-
-        .nav-right {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .nav-menu-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            padding: 8px 0;
-            font-family: inherit;
-        }
-
-        .menu-text {
-            transition: opacity 0.3s ease;
-        }
-
-        .menu-icon {
-            position: relative;
-            width: 16px;
-            height: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .menu-line {
-            position: absolute;
-            background: white;
-            transition: transform 0.3s ease;
-        }
-
-        .menu-line-h {
-            width: 16px;
-            height: 2px;
-        }
-
-        .menu-line-v {
-            width: 2px;
-            height: 16px;
-        }
-
-        .nav-menu-btn:hover .menu-line {
-            transform: rotate(90deg);
-        }
-
-        /* WhatsApp Icon */
-        .whatsapp-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: #25D366;
-            border-radius: 50%;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .whatsapp-btn:hover {
-            background: #128C7E;
-            transform: scale(1.1);
-        }
-
-        .whatsapp-btn svg {
-            width: 22px;
-            height: 22px;
-            fill: white;
-        }
 
         /* ========== LED BOARD SECTION - GREEN #B6FF5C ========== */
         .board-section {
@@ -1727,33 +1394,38 @@ export function galleriePage(content: Record<string, Record<string, string>> = {
         </div>
     </aside>
 
-    <nav class="top-nav" id="topNav">
-        <div class="nav-left">
-            <a href="/" class="nav-logo">
-                <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup" class="nav-logo-img">
-                <span>© fitup</span>
-            </a>
+   <nav class="top-nav" id="topNav">
+    <div class="nav-left">
+        <a href="/" class="nav-logo">
+            <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup" class="nav-logo-img">
+            <span>© fitup</span>
+        </a>
+    </div>
+    
+    <div class="nav-center-left">
+        <a href="/contact" class="nav-menu-item">Contact Us</a>
+        <a href="/gallerie" class="nav-menu-item active">Gallerie</a>
+    </div>
+    
+    <div class="nav-center">
+        <div class="nav-stripe-cluster">
+            <div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div>
         </div>
-        
-        <div class="nav-center-left">
-            <a href="/contact" class="nav-menu-item">Contact Us</a>
-            <a href="/gallerie" class="nav-menu-item active">Gallerie</a>
-        </div>
-        
-        <div class="nav-center"></div>
-        
-        <div class="nav-center-right"></div>
-        
-        <div class="nav-right">
-            <button class="nav-menu-btn" id="menuBtn">
-                <span class="menu-text">MENU</span>
-                <span class="menu-icon">
-                    <span class="menu-line menu-line-h"></span>
-                    <span class="menu-line menu-line-v"></span>
-                </span>
-            </button>
-        </div>
-    </nav>
+    </div>
+    
+    <div class="nav-center-right"></div>
+    
+    <div class="nav-right">
+        <button class="nav-menu-btn" id="menuBtn">
+            <span class="menu-text">Menu</span>
+            <span class="menu-icon">
+                <span class="menu-line menu-line-h"></span>
+                <span class="menu-line menu-line-v"></span>
+            </span>
+        </button>
+    </div>
+</nav>
+
 
     <!-- LED Board Section - GREEN -->
     <section class="board-section">
