@@ -2229,6 +2229,35 @@ body {
   right: 24px;
   z-index: 1000;
   font-family: 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* WhatsApp Floating Button */
+.whatsapp-floating-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: #25D366;
+  border-radius: 50%;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.whatsapp-floating-btn:hover {
+  background: #128C7E;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5);
+}
+
+.whatsapp-floating-btn svg {
+  width: 28px;
+  height: 28px;
 }
 
 .lets-talk-btn {
@@ -2424,6 +2453,17 @@ body {
   .lets-talk-widget {
     bottom: 16px;
     right: 16px;
+    gap: 10px;
+  }
+  
+  .whatsapp-floating-btn {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .whatsapp-floating-btn svg {
+    width: 24px;
+    height: 24px;
   }
   
   .lets-talk-btn {
@@ -2443,6 +2483,6 @@ body {
   .lets-talk-dialog {
     width: calc(100vw - 32px);
     right: 0;
-    bottom: 65px;
+    bottom: 120px;
   }
 }
