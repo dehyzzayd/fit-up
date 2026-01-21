@@ -1069,7 +1069,7 @@ export function galleriePage(content: Record<string, Record<string, string>> = {
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .top-nav {
                 padding: 16px 20px;
                 grid-template-columns: auto 1fr auto;
