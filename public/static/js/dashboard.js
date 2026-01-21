@@ -844,6 +844,38 @@ document.addEventListener('DOMContentLoaded', () => {
           { key: 'subtitle', label: 'Page Subtitle', type: 'text', default: 'Choisissez un créneau qui vous convient' }
         ]
       },
+      gallerie: {
+  header: {
+    title: 'Gallery Header',
+    fields: [
+      { key: 'title', label: 'Page Title', type: 'text', default: 'moments captured' },
+      { key: 'subtitle', label: 'Page Subtitle', type: 'textarea', default: 'A visual journey through style, culture, and timeless elegance. Each frame tells a story of authenticity and creative expression.' }
+    ]
+  },
+  gallery: {
+    title: 'Gallery Settings',
+    fields: [
+      { key: 'row1_label', label: 'Row 1 Label', type: 'text', default: 'Featured Collection' },
+      { key: 'row2_label', label: 'Row 2 Label', type: 'text', default: 'L7erfa Collection' }
+    ],
+    dynamicField: {
+      key: 'featured',
+      label: 'Featured Gallery Items',
+      type: 'gallery_list',
+      default: [
+        { id: 1, number: '01', image: 'https://fitup.ma/Mediafitup/uploads/services/20260121_181607_L7erfa.21-04-2024.jpg', tag: 'Culture', title: "L7erfa Day", description: 'April 21st, 2024. A day when culture met creativity in perfect harmony.', link: '#' },
+        { id: 2, number: '02', image: 'https://fitup.ma/Mediafitup/uploads/services/20260121_181634_L7erfa_3.0...._morocco.jpg', tag: 'Style', title: 'Morocco 3.0', description: 'The next chapter of Moroccan style. Bold, authentic, and unapologetically unique.', link: '#' },
+        { id: 3, number: '03', image: 'https://fitup.ma/Mediafitup/uploads/services/20260121_181607_L7erfa.21-04-2024.jpg', tag: 'Heritage', title: 'Tribal Roots', description: 'Ancient traditions meet modern expression. Where heritage becomes innovation.', link: '#' }
+      ]
+    }
+  },
+  board: {
+    title: 'LED Board',
+    fields: [
+      { key: 'text', label: 'Board Text', type: 'text', default: "FITUP's Gallery" }
+    ]
+  }
+}
       form: {
         title: 'Form Labels',
         fields: [
