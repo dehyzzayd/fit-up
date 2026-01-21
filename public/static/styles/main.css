@@ -1337,10 +1337,13 @@ body {
 }
 
 .nav-center-left {
-  grid-column: 2;
-  justify-self: start;
-  padding-left: 60px;
-  gap: 32px;  /* Change this to increase space */
+    grid-column: 2;
+    justify-self: start;
+    padding-left: 60px;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    gap: 50px;
 }
 
 .nav-menu-item {
