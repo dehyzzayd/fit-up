@@ -285,6 +285,7 @@ export function dashboardPage(): string {
           <ul class="content-page-list">
             <li class="active" data-page="home">Homepage</li>
             <li data-page="contact">Contact Page</li>
+              <li data-page="gallerie">Gallery Page</li>
           </ul>
         </div>
 
