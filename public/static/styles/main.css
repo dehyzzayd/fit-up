@@ -2222,86 +2222,118 @@ body {
   }
 }
 
-/* ==================== LET'S TALK FLOATING WIDGET ==================== */
+/* Let's Talk Widget & WhatsApp - INLINE */
 .lets-talk-widget {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 1000;
-  font-family: 'Helvetica Neue', system-ui, -apple-system, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 998;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
 }
 
 /* WhatsApp Floating Button */
 .whatsapp-floating-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  background: #25D366;
-  border-radius: 50%;
-  text-decoration: none;
-  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    width: 56px;
+    height: 56px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .whatsapp-floating-btn:hover {
-  background: #128C7E;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5);
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
 }
 
 .whatsapp-floating-btn svg {
-  width: 28px;
-  height: 28px;
+    width: 28px;
+    height: 28px;
 }
 
+/* Let's Talk Button */
 .lets-talk-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 24px;
-  background: #B8FF5C;
-  color: #000;
-  border: none;
-  border-radius: 50px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(184, 255, 92, 0.4);
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 24px;
+    background: #B6FF5C;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 20px rgba(182, 255, 92, 0.3);
+    transition: all 0.3s ease;
 }
 
 .lets-talk-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(184, 255, 92, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(182, 255, 92, 0.5);
 }
 
 .lets-talk-btn svg {
-  width: 20px;
-  height: 20px;
-  stroke: #000;
+    width: 20px;
+    height: 20px;
 }
 
-.lets-talk-btn.active {
-  padding: 14px 20px;
-  border-radius: 50%;
-}
-
-.lets-talk-btn.active span {
-  display: none;
+.lets-talk-btn .close-icon {
+    display: none;
 }
 
 .lets-talk-btn.active .chat-icon {
-  display: none;
+    display: none;
 }
 
 .lets-talk-btn.active .close-icon {
-  display: block !important;
+    display: block;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .lets-talk-widget {
+        bottom: 20px;
+        right: 20px;
+        gap: 10px;
+    }
+    
+    .whatsapp-floating-btn {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .whatsapp-floating-btn svg {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .lets-talk-btn {
+        padding: 14px 20px;
+        font-size: 12px;
+    }
+    
+    .lets-talk-btn span {
+        display: none;
+    }
+    
+    .lets-talk-btn {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+    }
 }
 
 /* Dialog Box */
