@@ -1340,6 +1340,7 @@ body {
   grid-column: 2;
   justify-self: start;
   padding-left: 60px;
+  gap: 32px;  /* Change this to increase space */
 }
 
 .nav-menu-item {
