@@ -844,6 +844,13 @@ document.addEventListener('DOMContentLoaded', () => {
           { key: 'subtitle', label: 'Page Subtitle', type: 'text', default: 'Choisissez un créneau qui vous convient' }
         ]
       },
+      form: {
+        title: 'Form Labels',
+        fields: [
+          { key: 'submit_button', label: 'Submit Button Text', type: 'text', default: 'Envoyer' },
+          { key: 'success_message', label: 'Success Message', type: 'text', default: 'Merci ! Votre demande a été envoyée avec succès.' }
+        ]
+      },
       gallerie: {
   header: {
     title: 'Gallery Header',
@@ -875,15 +882,8 @@ document.addEventListener('DOMContentLoaded', () => {
       { key: 'text', label: 'Board Text', type: 'text', default: "FITUP's Gallery" }
     ]
   }
-}
-      form: {
-        title: 'Form Labels',
-        fields: [
-          { key: 'submit_button', label: 'Submit Button Text', type: 'text', default: 'Envoyer' },
-          { key: 'success_message', label: 'Success Message', type: 'text', default: 'Merci ! Votre demande a été envoyée avec succès.' }
-        ]
-      }
-    }
+},
+    
   };
 
   // Load content for CMS
