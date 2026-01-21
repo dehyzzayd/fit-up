@@ -21,22 +21,22 @@ function getCanvasHeight() {
 // Calculate responsive camera position based on screen size
 function getResponsiveCameraZ() {
   const width = window.innerWidth;
-  if (width <= 375) return 9;     // Very small phones (iPhone SE) - further back
-  if (width <= 480) return 8;     // Small phones - further back
-  if (width <= 600) return 7;     // Medium phones
-  if (width <= 768) return 6.5;   // Large phones / small tablets
-  if (width <= 1024) return 5.5;  // Tablets
-  return 5;                        // Desktop
+  if (width <= 375) return 6;      // Very small phones - closer
+  if (width <= 480) return 5.5;    // Small phones - closer
+  if (width <= 600) return 5.5;    // Medium phones
+  if (width <= 768) return 5.5;    // Large phones / small tablets
+  if (width <= 1024) return 5.5;   // Tablets
+  return 5;                         // Desktop
 }
 
 // Calculate responsive text size based on screen width
 function getResponsiveTextSize() {
   const width = window.innerWidth;
-  if (width <= 375) return 0.28;   // Very small phones - even smaller
-  if (width <= 480) return 0.35;   // Small phones - smaller
-  if (width <= 600) return 0.45;   // Medium phones
-  if (width <= 768) return 0.6;    // Large phones / small tablets
-  if (width <= 1024) return 0.8;   // Tablets
+  if (width <= 375) return 0.42;   // Very small phones - bigger
+  if (width <= 480) return 0.48;   // Small phones - bigger
+  if (width <= 600) return 0.55;   // Medium phones
+  if (width <= 768) return 0.7;    // Large phones / small tablets
+  if (width <= 1024) return 0.85;  // Tablets
   return 1;                         // Desktop
 }
 
