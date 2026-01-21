@@ -1340,7 +1340,7 @@ body {
     grid-column: 2;
     justify-self: start;
     padding-left: 60px;
-    display: flex !important;
+    display: flex;
     flex-direction: row;
     align-items: center;
     gap: 50px;
