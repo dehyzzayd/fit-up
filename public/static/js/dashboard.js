@@ -828,7 +828,7 @@ document.addEventListener('DOMContentLoaded', () => {
           { key: 'location', label: 'Location', type: 'text', default: 'Casablanca, Morocco' }
         ]
       },
-     Copy    branding: {
+    branding: {
       title: 'Branding & Logos',
       fields: [
         { key: 'main_logo', label: 'Main Logo (URL)', type: 'url', default: 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg' },
