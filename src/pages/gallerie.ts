@@ -125,6 +125,99 @@ export function galleriePage(content: Record<string, Record<string, string>> = {
             position: relative;
         }
 
+/* Let's Talk Widget & WhatsApp - INLINE */
+.lets-talk-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 998;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.whatsapp-floating-btn {
+    width: 56px;
+    height: 56px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.whatsapp-floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
+}
+
+.whatsapp-floating-btn svg {
+    width: 28px;
+    height: 28px;
+}
+
+.lets-talk-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 24px;
+    background: #B6FF5C;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 20px rgba(182, 255, 92, 0.3);
+    transition: all 0.3s ease;
+}
+
+.lets-talk-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(182, 255, 92, 0.5);
+}
+
+.lets-talk-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+@media (max-width: 480px) {
+    .lets-talk-widget {
+        bottom: 20px;
+        right: 20px;
+        gap: 10px;
+    }
+    
+    .whatsapp-floating-btn {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .lets-talk-btn {
+        padding: 14px 20px;
+        font-size: 12px;
+    }
+    
+    .lets-talk-btn span {
+        display: none;
+    }
+    
+    .lets-talk-btn {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+    }
+}
         /* Grid lines on whole page */
         body::before {
             --size: 45px;
