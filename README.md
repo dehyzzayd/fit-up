@@ -5,7 +5,7 @@ A full-stack web application for a digital marketing agency with admin dashboard
 ## Admin Credentials
 
 - **Email**: admin@fitup.ma
-- **Password**: 
+- **Password**: hashed
 
 ## Features
 
