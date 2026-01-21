@@ -6,6 +6,7 @@ import { contactPage } from './pages/contact';
 import { dashboardPage } from './pages/dashboard';
 import { loginPage } from './pages/login';
 import { blogListPage, blogPostPage, BlogPost } from './pages/blog';
+import { galleriePage } from './pages/gallerie';
 import type { Env } from './types';
 
 const app = new Hono<{ Bindings: Env }>();
@@ -57,6 +58,27 @@ app.get('/contact', async (c) => {
   }
   
   return c.html(contactPage(content));
+});
+
+app.get('/gallerie', async (c) => {
+  let content: Record<string, Record<string, string>> = {};
+  try {
+    // Fetch gallery page content AND menu items from home page
+    const { results } = await c.env.DB.prepare(
+      "SELECT * FROM content WHERE page = 'gallerie' OR (page = 'home' AND (section = 'menu' OR section = 'footer'))"
+    ).all<any>();
+    
+    for (const item of results || []) {
+      if (!content[item.section]) {
+        content[item.section] = {};
+      }
+      content[item.section][item.content_key] = item.content_value;
+    }
+  } catch (error) {
+    console.error('Failed to fetch content:', error);
+  }
+  
+  return c.html(galleriePage(content));
 });
 
 app.get('/admin', (c) => {

@@ -189,6 +189,7 @@ export function contactPage(content: Record<string, Record<string, string>> = {}
     
     <div class="nav-center-left">
       <a href="/" class="nav-menu-item">Accueil</a>
+      <a href="/gallerie" class="nav-menu-item">Gallerie</a>
     </div>
     
     <div class="nav-center">
