@@ -172,8 +172,7 @@
   margin-bottom: 0;
   text-transform: uppercase;
   color: #e0e0e0;
-  opacity: 0;
-  transition: opacity 1.5s ease-in;
+  opacity: 1;  /* Changed from 0 to 1 - always visible */
 }
 
 .hero-slogan span {
