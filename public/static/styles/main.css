@@ -145,10 +145,10 @@
   align-items: center;
   padding: 20px;
   text-align: center;
-  color: #e0e0e0;
-  opacity: 0;
+  color: #ffffff;
+  opacity: 1;  /* Change from 0 to 1 for testing */
   transition: opacity 1.5s ease-in;
-  z-index: 10;  /* INCREASE from 5 to 10 - higher than .hero-section (3) */
+  z-index: 100;  /* Increase significantly */
   pointer-events: none;
 }
 
@@ -175,8 +175,9 @@
   letter-spacing: -0.02em;
   margin-bottom: 0;
   text-transform: uppercase;
-  color: #e0e0e0;  /* Light gray - should be visible */
-  opacity: 1;
+  color: #ffffff !important;  /* Change to white with !important */
+  opacity: 1 !important;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.5);  /* Add shadow for visibility */
 }
 
 .hero-slogan span {
