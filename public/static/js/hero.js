@@ -95,8 +95,14 @@ camera.position.z = 20;
 preloader.updateProgress(2);
 
 // Enhanced renderer with transparency
+const canvas = document.querySelector(".webgl");
+if (!canvas) {
+  console.error("Canvas element not found!");
+  throw new Error("Canvas .webgl not found");
+}
+
 const renderer = new THREE.WebGLRenderer({
-  canvas: document.querySelector(".webgl"),
+  canvas: canvas,
   antialias: true,
   powerPreference: "high-performance",
   alpha: true,
@@ -105,13 +111,6 @@ const renderer = new THREE.WebGLRenderer({
   depth: true,
   preserveDrawingBuffer: false
 });
-
-const canvasHeight = initialCanvasHeight;
-renderer.setSize(window.innerWidth, canvasHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.9;
-renderer.setClearColor(0x000000, 0);
 
 // Canvas styling
 renderer.domElement.style.position = "absolute";
