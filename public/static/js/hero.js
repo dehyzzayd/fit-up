@@ -7,36 +7,55 @@ import { OutputPass } from "jsm/postprocessing/OutputPass.js";
 import { ShaderPass } from "jsm/postprocessing/ShaderPass.js";
 
 // Preloader management
-complete(canvas) {
-  if (this.isComplete) return;
-  this.isComplete = true;
+class PreloaderManager {
+  constructor() {
+    this.preloader = document.getElementById("preloader");
+    this.mainContent = document.getElementById("main-content");
+    this.progressBar = document.querySelector(".progress-bar");
+    this.loadingSteps = 0;
+    this.totalSteps = 5;
+    this.isComplete = false;
+  }
 
-  this.updateProgress(this.totalSteps);
+  updateProgress(step) {
+    this.loadingSteps = Math.min(step, this.totalSteps);
+    const percentage = (this.loadingSteps / this.totalSteps) * 100;
+    if (this.progressBar) {
+      this.progressBar.style.width = `${percentage}%`;
+    }
+  }
 
-  setTimeout(() => {
-    if (this.preloader) {
-      this.preloader.classList.add("fade-out");
-    }
-    
-    // Add fade-in to main content
-    if (this.mainContent) {
-      this.mainContent.classList.add("fade-in");
-    }
-    
-    // Also directly show the slogan
-    const slogan = document.querySelector('.hero-slogan');
-    if (slogan) {
-      slogan.style.opacity = '1';
-    }
-    
-    canvas.classList.add("fade-in");
+  complete(canvas) {
+    if (this.isComplete) return;
+    this.isComplete = true;
+
+    this.updateProgress(this.totalSteps);
 
     setTimeout(() => {
       if (this.preloader) {
-        this.preloader.style.display = "none";
+        this.preloader.classList.add("fade-out");
       }
-    }, 1000);
-  }, 1500);
+      
+      // Add fade-in to main content
+      if (this.mainContent) {
+        this.mainContent.classList.add("fade-in");
+      }
+      
+      // Also directly show the slogan
+      const slogan = document.querySelector('.hero-slogan');
+      if (slogan) {
+        slogan.style.opacity = '1';
+      }
+      
+      canvas.classList.add("fade-in");
+
+      setTimeout(() => {
+        if (this.preloader) {
+          this.preloader.style.display = "none";
+        }
+      }, 1000);
+    }, 1500);
+  }
 }
 
 // Initialize preloader
