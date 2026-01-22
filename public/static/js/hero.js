@@ -1,55 +1,80 @@
-// Three.js Hero Animation - Mobile Responsive Version
+// Ghost Hero Animation - Fitup
 import * as THREE from "three";
-import { FontLoader } from "jsm/loaders/FontLoader.js";
-import { TextGeometry } from "jsm/geometries/TextGeometry.js";
+import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "jsm/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "jsm/postprocessing/OutputPass.js";
+import { ShaderPass } from "jsm/postprocessing/ShaderPass.js";
 
+// Preloader management
+class PreloaderManager {
+  constructor() {
+    this.preloader = document.getElementById("preloader");
+    this.mainContent = document.getElementById("main-content");
+    this.progressBar = document.querySelector(".progress-bar");
+    this.loadingSteps = 0;
+    this.totalSteps = 5;
+    this.isComplete = false;
+  }
+
+  updateProgress(step) {
+    this.loadingSteps = Math.min(step, this.totalSteps);
+    const percentage = (this.loadingSteps / this.totalSteps) * 100;
+    if (this.progressBar) {
+      this.progressBar.style.width = `${percentage}%`;
+    }
+  }
+
+  complete(canvas) {
+    if (this.isComplete) return;
+    this.isComplete = true;
+
+    this.updateProgress(this.totalSteps);
+
+    setTimeout(() => {
+      if (this.preloader) {
+        this.preloader.classList.add("fade-out");
+      }
+      if (this.mainContent) {
+        this.mainContent.classList.add("fade-in");
+      }
+      canvas.classList.add("fade-in");
+
+      setTimeout(() => {
+        if (this.preloader) {
+          this.preloader.style.display = "none";
+        }
+      }, 1000);
+    }, 1500);
+  }
+}
+
+// Initialize preloader
+const preloader = new PreloaderManager();
+
+// Force browser to use GPU acceleration
+document.body.style.transform = "translateZ(0)";
+document.body.style.backfaceVisibility = "hidden";
+document.body.style.perspective = "1000px";
+
+preloader.updateProgress(1);
+
+// Create scene
 const scene = new THREE.Scene();
+scene.background = null;
 
-// Get the actual canvas container height based on CSS
+// Get canvas height based on viewport
 function getCanvasHeight() {
   const width = window.innerWidth;
   const fullHeight = window.innerHeight;
   
-  // Match CSS breakpoints for hero height
-  if (width <= 375) return fullHeight * 0.55;  // 55vh
-  if (width <= 480) return fullHeight * 0.65;  // 65vh  
-  if (width <= 768) return fullHeight * 0.75;  // 75vh
-  if (width <= 1024) return fullHeight * 0.85; // 85vh
-  return fullHeight;                            // 100vh
+  if (width <= 375) return fullHeight * 0.55;
+  if (width <= 480) return fullHeight * 0.65;
+  if (width <= 768) return fullHeight * 0.75;
+  if (width <= 1024) return fullHeight * 0.85;
+  return fullHeight;
 }
 
-// Calculate responsive camera position based on screen size
-function getResponsiveCameraZ() {
-  const width = window.innerWidth;
-  if (width <= 375) return 6;      // Very small phones - closer
-  if (width <= 480) return 5.5;    // Small phones - closer
-  if (width <= 600) return 5.5;    // Medium phones
-  if (width <= 768) return 5.5;    // Large phones / small tablets
-  if (width <= 1024) return 5.5;   // Tablets
-  return 5;                         // Desktop
-}
-
-// Calculate responsive text size based on screen width
-function getResponsiveTextSize() {
-  const width = window.innerWidth;
-  if (width <= 375) return 0.42;   // Very small phones - bigger
-  if (width <= 480) return 0.48;   // Small phones - bigger
-  if (width <= 600) return 0.55;   // Medium phones
-  if (width <= 768) return 0.7;    // Large phones / small tablets
-  if (width <= 1024) return 0.85;  // Tablets
-  return 1;                         // Desktop
-}
-
-// Calculate responsive torus size
-function getResponsiveTorusSize() {
-  const width = window.innerWidth;
-  if (width <= 375) return { radius: 0.3, tube: 0.18 };  // Even smaller
-  if (width <= 480) return { radius: 0.35, tube: 0.2 };  // Smaller
-  if (width <= 768) return { radius: 0.5, tube: 0.28 };
-  return { radius: 0.7, tube: 0.4 };
-}
-
-// Initial canvas height
 const initialCanvasHeight = getCanvasHeight();
 
 const camera = new THREE.PerspectiveCamera(
@@ -58,158 +83,821 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.z = getResponsiveCameraZ();
+camera.position.z = 20;
 
+preloader.updateProgress(2);
+
+// Enhanced renderer with transparency
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector(".webgl"),
   antialias: true,
-  alpha: true
+  powerPreference: "high-performance",
+  alpha: true,
+  premultipliedAlpha: false,
+  stencil: false,
+  depth: true,
+  preserveDrawingBuffer: false
 });
 
-// Set size to match CSS hero height
 const canvasHeight = initialCanvasHeight;
 renderer.setSize(window.innerWidth, canvasHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0x000000, 1);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.9;
+renderer.setClearColor(0x000000, 0);
 
-// Store text mesh reference for resizing
-let textMesh = null;
-let currentFont = null;
+// Canvas styling
+renderer.domElement.style.position = "absolute";
+renderer.domElement.style.top = "0";
+renderer.domElement.style.left = "0";
+renderer.domElement.style.zIndex = "2";
+renderer.domElement.style.pointerEvents = "auto";
+renderer.domElement.style.background = "transparent";
 
-// Create text with current font
-function createText(font, size) {
-  // Remove existing text
-  if (textMesh) {
-    scene.remove(textMesh);
-    textMesh.geometry.dispose();
-  }
-  
-  const textGeometry = new TextGeometry("Where Brands Win.", {
-    font,
-    size: size,
-    depth: 0,
-    curveSegments: 5,
-    bevelEnabled: true,
-    bevelThickness: 0,
-    bevelSize: 0,
-    bevelOffset: 0,
-    bevelSegments: 4,
-  });
-  textGeometry.computeBoundingBox();
-  textGeometry.center();
+// Store original bloom values
+const originalBloomSettings = {
+  strength: 0.3,
+  radius: 1.25,
+  threshold: 0.0
+};
 
-  const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-  textMesh = new THREE.Mesh(textGeometry, textMaterial);
-  scene.add(textMesh);
-}
+// Setup post-processing for bloom effects
+const composer = new EffectComposer(renderer);
+const renderPass = new RenderPass(scene, camera);
+composer.addPass(renderPass);
 
-// Load font and create text
-const fontLoader = new FontLoader();
-fontLoader.load(
-  "https://raw.githubusercontent.com/danielyl123/person/refs/heads/main/fonts/helvetiker_regular.typeface.json",
-  (font) => {
-    currentFont = font;
-    createText(font, getResponsiveTextSize());
-  }
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, canvasHeight),
+  originalBloomSettings.strength,
+  originalBloomSettings.radius,
+  originalBloomSettings.threshold
 );
+composer.addPass(bloomPass);
 
-// Create iridescent torus with responsive size
-const torusSizes = getResponsiveTorusSize();
-let torusGeometry = new THREE.TorusGeometry(torusSizes.radius, torusSizes.tube, 100, 60);
-const torusMaterial = new THREE.MeshPhysicalMaterial();
-torusMaterial.metalness = 0;
-torusMaterial.roughness = 0;
-torusMaterial.iridescence = 1;
-torusMaterial.iridescenceIOR = 1.5;
-torusMaterial.iridescenceThicknessRange = [100, 324];
-torusMaterial.transmission = 1;
-torusMaterial.ior = 1.2;
-torusMaterial.thickness = 0.8;
-let torus = new THREE.Mesh(torusGeometry, torusMaterial);
-torus.position.z = 1;
-scene.add(torus);
+preloader.updateProgress(3);
 
-// Function to update torus size
-function updateTorusSize() {
-  const sizes = getResponsiveTorusSize();
-  scene.remove(torus);
-  torusGeometry.dispose();
-  torusGeometry = new THREE.TorusGeometry(sizes.radius, sizes.tube, 100, 60);
-  torus = new THREE.Mesh(torusGeometry, torusMaterial);
-  torus.position.z = 1;
-  scene.add(torus);
-}
+// Analog Decay Shader
+const analogDecayShader = {
+  uniforms: {
+    tDiffuse: { value: null },
+    uTime: { value: 0.0 },
+    uResolution: {
+      value: new THREE.Vector2(window.innerWidth, canvasHeight)
+    },
+    uAnalogGrain: { value: 0.4 },
+    uAnalogBleeding: { value: 1.0 },
+    uAnalogVSync: { value: 1.0 },
+    uAnalogScanlines: { value: 1.0 },
+    uAnalogVignette: { value: 1.0 },
+    uAnalogJitter: { value: 0.4 },
+    uAnalogIntensity: { value: 0.6 },
+    uLimboMode: { value: 0.0 }
+  },
 
-// Lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 10);
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform float uTime;
+    uniform vec2 uResolution;
+    uniform float uAnalogGrain;
+    uniform float uAnalogBleeding;
+    uniform float uAnalogVSync;
+    uniform float uAnalogScanlines;
+    uniform float uAnalogVignette;
+    uniform float uAnalogJitter;
+    uniform float uAnalogIntensity;
+    uniform float uLimboMode;
+    
+    varying vec2 vUv;
+    
+    float random(vec2 st) {
+      return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+    }
+    
+    float random(float x) {
+      return fract(sin(x) * 43758.5453123);
+    }
+    
+    float gaussian(float z, float u, float o) {
+      return (1.0 / (o * sqrt(2.0 * 3.1415))) * exp(-(((z - u) * (z - u)) / (2.0 * (o * o))));
+    }
+    
+    vec3 grain(vec2 uv, float time, float intensity) {
+      float seed = dot(uv, vec2(12.9898, 78.233));
+      float noise = fract(sin(seed) * 43758.5453 + time * 2.0);
+      noise = gaussian(noise, 0.0, 0.5 * 0.5);
+      
+      return vec3(noise) * intensity;
+    }
+    
+    void main() {
+      vec2 uv = vUv;
+      float time = uTime * 1.8;
+      
+      vec2 jitteredUV = uv;
+      if (uAnalogJitter > 0.01) {
+        float jitterAmount = (random(vec2(floor(time * 60.0))) - 0.5) * 0.003 * uAnalogJitter * uAnalogIntensity;
+        jitteredUV.x += jitterAmount;
+        jitteredUV.y += (random(vec2(floor(time * 30.0) + 1.0)) - 0.5) * 0.001 * uAnalogJitter * uAnalogIntensity;
+      }
+      
+      if (uAnalogVSync > 0.01) {
+        float vsyncRoll = sin(time * 2.0 + uv.y * 100.0) * 0.02 * uAnalogVSync * uAnalogIntensity;
+        float vsyncChance = step(0.95, random(vec2(floor(time * 4.0))));
+        jitteredUV.y += vsyncRoll * vsyncChance;
+      }
+      
+      vec4 color = texture2D(tDiffuse, jitteredUV);
+      
+      if (uAnalogBleeding > 0.01) {
+        float bleedAmount = 0.012 * uAnalogBleeding * uAnalogIntensity;
+        float offsetPhase = time * 1.5 + uv.y * 20.0;
+        
+        vec2 redOffset = vec2(sin(offsetPhase) * bleedAmount, 0.0);
+        vec2 blueOffset = vec2(-sin(offsetPhase * 1.1) * bleedAmount * 0.8, 0.0);
+        
+        float r = texture2D(tDiffuse, jitteredUV + redOffset).r;
+        float g = texture2D(tDiffuse, jitteredUV).g;
+        float b = texture2D(tDiffuse, jitteredUV + blueOffset).b;
+        
+        color = vec4(r, g, b, color.a);
+      }
+      
+      if (uAnalogGrain > 0.01) {
+        vec3 grainEffect = grain(uv, time, 0.075 * uAnalogGrain * uAnalogIntensity);
+        grainEffect *= (1.0 - color.rgb);
+        color.rgb += grainEffect;
+      }
+      
+      if (uAnalogScanlines > 0.01) {
+        float scanlineFreq = 600.0 + uAnalogScanlines * 400.0;
+        float scanlinePattern = sin(uv.y * scanlineFreq) * 0.5 + 0.5;
+        float scanlineIntensity = 0.1 * uAnalogScanlines * uAnalogIntensity;
+        color.rgb *= (1.0 - scanlinePattern * scanlineIntensity);
+        
+        float horizontalLines = sin(uv.y * scanlineFreq * 0.1) * 0.02 * uAnalogScanlines * uAnalogIntensity;
+        color.rgb *= (1.0 - horizontalLines);
+      }
+      
+      if (uAnalogVignette > 0.01) {
+        vec2 vignetteUV = (uv - 0.5) * 2.0;
+        float vignette = 1.0 - dot(vignetteUV, vignetteUV) * 0.3 * uAnalogVignette * uAnalogIntensity;
+        color.rgb *= vignette;
+      }
+      
+      if (uLimboMode > 0.5) {
+        float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+        color.rgb = vec3(gray);
+      }
+      
+      gl_FragColor = color;
+    }
+  `
+};
+
+// Add analog decay pass
+const analogDecayPass = new ShaderPass(analogDecayShader);
+composer.addPass(analogDecayPass);
+
+const outputPass = new OutputPass();
+composer.addPass(outputPass);
+
+// Production parameters - GREEN THEME
+const params = {
+  bodyColor: 0x0f2027,
+  glowColor: "green",        // Changed to green
+  eyeGlowColor: "green",     // Changed to green
+  ghostOpacity: 0.88,
+  ghostScale: 2.4,
+  emissiveIntensity: 5.8,
+  pulseSpeed: 1.6,
+  pulseIntensity: 0.6,
+  eyeGlowIntensity: 4.5,
+  eyeGlowDecay: 0.95,
+  eyeGlowResponse: 0.31,
+  rimLightIntensity: 1.8,
+  followSpeed: 0.075,
+  wobbleAmount: 0.35,
+  floatSpeed: 1.6,
+  movementThreshold: 0.07,
+  particleCount: 250,
+  particleDecayRate: 0.005,
+  particleColor: "green",    // Changed to green
+  createParticlesOnlyWhenMoving: true,
+  particleCreationRate: 5,
+  revealRadius: 43,
+  fadeStrength: 2.2,
+  baseOpacity: 0.35,
+  revealOpacity: 0.0,
+  fireflyGlowIntensity: 2.6,
+  fireflySpeed: 0.04,
+  analogIntensity: 0.6,
+  analogGrain: 0.4,
+  analogBleeding: 1.0,
+  analogVSync: 1.0,
+  analogScanlines: 1.0,
+  analogVignette: 1.0,
+  analogJitter: 0.4,
+  limboMode: false
+};
+
+// Fluorescent color palette
+const fluorescentColors = {
+  cyan: 0x00ffff,
+  lime: 0x00ff00,
+  magenta: 0xff00ff,
+  yellow: 0xffff00,
+  orange: 0xff4500,
+  pink: 0xff1493,
+  purple: 0x9400d3,
+  blue: 0x0080ff,
+  green: 0x00ff80,
+  red: 0xff0040,
+  teal: 0x00ffaa,
+  violet: 0x8a2be2
+};
+
+// Create bloom-resistant atmosphere
+const atmosphereGeometry = new THREE.PlaneGeometry(300, 300);
+const atmosphereMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    ghostPosition: { value: new THREE.Vector3(0, 0, 0) },
+    revealRadius: { value: params.revealRadius },
+    fadeStrength: { value: params.fadeStrength },
+    baseOpacity: { value: params.baseOpacity },
+    revealOpacity: { value: params.revealOpacity },
+    time: { value: 0 }
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    varying vec3 vWorldPosition;
+    void main() {
+      vUv = uv;
+      vec4 worldPos = modelMatrix * vec4(position, 1.0);
+      vWorldPosition = worldPos.xyz;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 ghostPosition;
+    uniform float revealRadius;
+    uniform float fadeStrength;
+    uniform float baseOpacity;
+    uniform float revealOpacity;
+    uniform float time;
+    varying vec2 vUv;
+    varying vec3 vWorldPosition;
+    
+    void main() {
+      float dist = distance(vWorldPosition.xy, ghostPosition.xy);
+      float dynamicRadius = revealRadius + sin(time * 2.0) * 5.0;
+      float reveal = smoothstep(dynamicRadius * 0.2, dynamicRadius, dist);
+      reveal = pow(reveal, fadeStrength);
+      float opacity = mix(revealOpacity, baseOpacity, reveal);
+      gl_FragColor = vec4(0.001, 0.001, 0.002, opacity);
+    }
+  `,
+  transparent: true,
+  depthWrite: false
+});
+
+const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+atmosphere.position.z = -50;
+atmosphere.renderOrder = -100;
+scene.add(atmosphere);
+
+// Minimal ambient light
+const ambientLight = new THREE.AmbientLight(0x0a0a2e, 0.08);
 scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight(0xffffff, 10);
-pointLight.position.set(-1, 2, 0);
-scene.add(pointLight);
+// Create ghost group
+const ghostGroup = new THREE.Group();
+scene.add(ghostGroup);
 
-const pointLight2 = new THREE.PointLight(0xffffff, 10);
-pointLight2.position.set(-1, -2, 0);
-scene.add(pointLight2);
+// Enhanced ghost geometry
+const ghostGeometry = new THREE.SphereGeometry(2, 40, 40);
 
-const pointLight3 = new THREE.PointLight(0xffffff, 10);
-pointLight3.position.set(1, -2, 0);
-scene.add(pointLight3);
+// Create organic wavy bottom
+const positionAttribute = ghostGeometry.getAttribute("position");
+const positions = positionAttribute.array;
+for (let i = 0; i < positions.length; i += 3) {
+  if (positions[i + 1] < -0.2) {
+    const x = positions[i];
+    const z = positions[i + 2];
+    const noise1 = Math.sin(x * 5) * 0.35;
+    const noise2 = Math.cos(z * 4) * 0.25;
+    const noise3 = Math.sin((x + z) * 3) * 0.15;
+    const combinedNoise = noise1 + noise2 + noise3;
+    positions[i + 1] = -2.0 + combinedNoise;
+  }
+}
+ghostGeometry.computeVertexNormals();
 
-const pointLight4 = new THREE.PointLight(0xffffff, 10);
-pointLight4.position.set(1, 2, 0);
-scene.add(pointLight4);
+// Ghost material - GREEN GLOW
+const ghostMaterial = new THREE.MeshStandardMaterial({
+  color: params.bodyColor,
+  transparent: true,
+  opacity: params.ghostOpacity,
+  emissive: fluorescentColors[params.glowColor],
+  emissiveIntensity: params.emissiveIntensity,
+  roughness: 0.02,
+  metalness: 0.0,
+  side: THREE.DoubleSide,
+  alphaTest: 0.1
+});
 
-// Animation loop
-const clock = new THREE.Clock();
-const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
-  renderer.render(scene, camera);
-  torus.rotation.x = elapsedTime * 0.5;
-  torus.rotation.y = elapsedTime * 0.1;
-  requestAnimationFrame(tick);
-};
-tick();
+const ghostBody = new THREE.Mesh(ghostGeometry, ghostMaterial);
+ghostGroup.add(ghostBody);
 
-// Debounce function for resize
-let resizeTimeout;
-function debounce(func, wait) {
-  return function executedFunction(...args) {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => func.apply(this, args), wait);
+// Rim lights - green tinted
+const rimLight1 = new THREE.DirectionalLight(0x00ff80, params.rimLightIntensity);
+rimLight1.position.set(-8, 6, -4);
+scene.add(rimLight1);
+
+const rimLight2 = new THREE.DirectionalLight(0x00ffaa, params.rimLightIntensity * 0.7);
+rimLight2.position.set(8, -4, -6);
+scene.add(rimLight2);
+
+preloader.updateProgress(4);
+
+// Improved eyes function - GREEN EYES
+function createEyes() {
+  const eyeGroup = new THREE.Group();
+  ghostGroup.add(eyeGroup);
+
+  const socketGeometry = new THREE.SphereGeometry(0.45, 16, 16);
+  const socketMaterial = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: false
+  });
+
+  const leftSocket = new THREE.Mesh(socketGeometry, socketMaterial);
+  leftSocket.position.set(-0.7, 0.6, 1.9);
+  leftSocket.scale.set(1.1, 1.0, 0.6);
+  eyeGroup.add(leftSocket);
+
+  const rightSocket = new THREE.Mesh(socketGeometry, socketMaterial);
+  rightSocket.position.set(0.7, 0.6, 1.9);
+  rightSocket.scale.set(1.1, 1.0, 0.6);
+  eyeGroup.add(rightSocket);
+
+  const eyeGeometry = new THREE.SphereGeometry(0.3, 12, 12);
+
+  const leftEyeMaterial = new THREE.MeshBasicMaterial({
+    color: fluorescentColors[params.eyeGlowColor],
+    transparent: true,
+    opacity: 0
+  });
+  const leftEye = new THREE.Mesh(eyeGeometry, leftEyeMaterial);
+  leftEye.position.set(-0.7, 0.6, 2.0);
+  eyeGroup.add(leftEye);
+
+  const rightEyeMaterial = new THREE.MeshBasicMaterial({
+    color: fluorescentColors[params.eyeGlowColor],
+    transparent: true,
+    opacity: 0
+  });
+  const rightEye = new THREE.Mesh(eyeGeometry, rightEyeMaterial);
+  rightEye.position.set(0.7, 0.6, 2.0);
+  eyeGroup.add(rightEye);
+
+  const outerGlowGeometry = new THREE.SphereGeometry(0.525, 12, 12);
+
+  const leftOuterGlowMaterial = new THREE.MeshBasicMaterial({
+    color: fluorescentColors[params.eyeGlowColor],
+    transparent: true,
+    opacity: 0,
+    side: THREE.BackSide
+  });
+  const leftOuterGlow = new THREE.Mesh(outerGlowGeometry, leftOuterGlowMaterial);
+  leftOuterGlow.position.set(-0.7, 0.6, 1.95);
+  eyeGroup.add(leftOuterGlow);
+
+  const rightOuterGlowMaterial = new THREE.MeshBasicMaterial({
+    color: fluorescentColors[params.eyeGlowColor],
+    transparent: true,
+    opacity: 0,
+    side: THREE.BackSide
+  });
+  const rightOuterGlow = new THREE.Mesh(outerGlowGeometry, rightOuterGlowMaterial);
+  rightOuterGlow.position.set(0.7, 0.6, 1.95);
+  eyeGroup.add(rightOuterGlow);
+
+  return {
+    leftEye,
+    rightEye,
+    leftEyeMaterial,
+    rightEyeMaterial,
+    leftOuterGlow,
+    rightOuterGlow,
+    leftOuterGlowMaterial,
+    rightOuterGlowMaterial
   };
 }
 
-// Resize handler with debounce
-const handleResize = debounce(() => {
-  const newHeight = getCanvasHeight();
-  
-  // Update camera
-  camera.aspect = window.innerWidth / newHeight;
-  camera.position.z = getResponsiveCameraZ();
-  camera.updateProjectionMatrix();
-  
-  // Update renderer to match CSS hero height
-  renderer.setSize(window.innerWidth, newHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  
-  // Update text size if font is loaded
-  if (currentFont) {
-    createText(currentFont, getResponsiveTextSize());
+const eyes = createEyes();
+
+// Create fireflies - GREEN
+const fireflies = [];
+const fireflyGroup = new THREE.Group();
+scene.add(fireflyGroup);
+
+function createFireflies() {
+  for (let i = 0; i < 20; i++) {
+    const fireflyGeometry = new THREE.SphereGeometry(0.02, 2, 2);
+    const fireflyMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00ff80,  // Green
+      transparent: true,
+      opacity: 0.9
+    });
+
+    const firefly = new THREE.Mesh(fireflyGeometry, fireflyMaterial);
+
+    firefly.position.set(
+      (Math.random() - 0.5) * 40,
+      (Math.random() - 0.5) * 30,
+      (Math.random() - 0.5) * 20
+    );
+
+    const glowGeometry = new THREE.SphereGeometry(0.08, 8, 8);
+    const glowMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00ffaa,  // Green glow
+      transparent: true,
+      opacity: 0.4,
+      side: THREE.BackSide
+    });
+
+    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+    firefly.add(glow);
+
+    const fireflyLight = new THREE.PointLight(0x00ff80, 0.8, 3, 2);
+    firefly.add(fireflyLight);
+
+    firefly.userData = {
+      velocity: new THREE.Vector3(
+        (Math.random() - 0.5) * params.fireflySpeed,
+        (Math.random() - 0.5) * params.fireflySpeed,
+        (Math.random() - 0.5) * params.fireflySpeed
+      ),
+      basePosition: firefly.position.clone(),
+      phase: Math.random() * Math.PI * 2,
+      pulseSpeed: 2 + Math.random() * 3,
+      glow: glow,
+      glowMaterial: glowMaterial,
+      fireflyMaterial: fireflyMaterial,
+      light: fireflyLight
+    };
+
+    fireflyGroup.add(firefly);
+    fireflies.push(firefly);
   }
-  
-  // Update torus size
-  updateTorusSize();
-}, 250);
+}
 
-window.addEventListener("resize", handleResize);
+createFireflies();
 
-// Also handle orientation change
-window.addEventListener("orientationchange", () => {
-  setTimeout(handleResize, 100);
+// Particle system - GREEN
+const particles = [];
+const particleGroup = new THREE.Group();
+scene.add(particleGroup);
+
+const particlePool = [];
+const particleGeometries = [
+  new THREE.SphereGeometry(0.05, 6, 6),
+  new THREE.TetrahedronGeometry(0.04, 0),
+  new THREE.OctahedronGeometry(0.045, 0)
+];
+
+const particleBaseMaterial = new THREE.MeshBasicMaterial({
+  color: fluorescentColors[params.particleColor],
+  transparent: true,
+  opacity: 0,
+  alphaTest: 0.1
 });
 
-// Scroll fade effect
+function initParticlePool(count) {
+  for (let i = 0; i < count; i++) {
+    const geomIndex = Math.floor(Math.random() * particleGeometries.length);
+    const geometry = particleGeometries[geomIndex];
+    const material = particleBaseMaterial.clone();
+    const particle = new THREE.Mesh(geometry, material);
+    particle.visible = false;
+    particleGroup.add(particle);
+    particlePool.push(particle);
+  }
+}
+
+initParticlePool(100);
+
+function createParticle() {
+  let particle;
+  if (particlePool.length > 0) {
+    particle = particlePool.pop();
+    particle.visible = true;
+  } else if (particles.length < params.particleCount) {
+    const geomIndex = Math.floor(Math.random() * particleGeometries.length);
+    const geometry = particleGeometries[geomIndex];
+    const material = particleBaseMaterial.clone();
+    particle = new THREE.Mesh(geometry, material);
+    particleGroup.add(particle);
+  } else {
+    return null;
+  }
+
+  const particleColor = new THREE.Color(fluorescentColors[params.particleColor]);
+  const hue = Math.random() * 0.1 - 0.05;
+  particleColor.offsetHSL(hue, 0, 0);
+  particle.material.color = particleColor;
+
+  particle.position.copy(ghostGroup.position);
+  particle.position.z -= 0.8 + Math.random() * 0.6;
+
+  const scatterRange = 3.5;
+  particle.position.x += (Math.random() - 0.5) * scatterRange;
+  particle.position.y += (Math.random() - 0.5) * scatterRange - 0.8;
+
+  const sizeVariation = 0.6 + Math.random() * 0.7;
+  particle.scale.set(sizeVariation, sizeVariation, sizeVariation);
+
+  particle.rotation.set(
+    Math.random() * Math.PI * 2,
+    Math.random() * Math.PI * 2,
+    Math.random() * Math.PI * 2
+  );
+
+  particle.userData.life = 1.0;
+  particle.userData.decay = Math.random() * 0.003 + params.particleDecayRate;
+  particle.userData.rotationSpeed = {
+    x: (Math.random() - 0.5) * 0.015,
+    y: (Math.random() - 0.5) * 0.015,
+    z: (Math.random() - 0.5) * 0.015
+  };
+  particle.userData.velocity = {
+    x: (Math.random() - 0.5) * 0.012,
+    y: (Math.random() - 0.5) * 0.012 - 0.002,
+    z: (Math.random() - 0.5) * 0.012 - 0.006
+  };
+
+  particle.material.opacity = Math.random() * 0.9;
+  particles.push(particle);
+  return particle;
+}
+
+// Window resize handler
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  if (resizeTimeout) clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    const newHeight = getCanvasHeight();
+    camera.aspect = window.innerWidth / newHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, newHeight);
+    composer.setSize(window.innerWidth, newHeight);
+
+    bloomPass.setSize(window.innerWidth, newHeight);
+    analogDecayPass.uniforms.uResolution.value.set(window.innerWidth, newHeight);
+  }, 250);
+});
+
+// Mouse tracking
+const mouse = new THREE.Vector2();
+const prevMouse = new THREE.Vector2();
+const mouseSpeed = new THREE.Vector2();
+let lastMouseUpdate = 0;
+let isMouseMoving = false;
+let mouseMovementTimer = null;
+
+window.addEventListener("mousemove", (e) => {
+  const now = performance.now();
+  if (now - lastMouseUpdate > 16) {
+    prevMouse.x = mouse.x;
+    prevMouse.y = mouse.y;
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    mouseSpeed.x = mouse.x - prevMouse.x;
+    mouseSpeed.y = mouse.y - prevMouse.y;
+    isMouseMoving = true;
+
+    if (mouseMovementTimer) {
+      clearTimeout(mouseMovementTimer);
+    }
+    mouseMovementTimer = setTimeout(() => {
+      isMouseMoving = false;
+    }, 80);
+
+    lastMouseUpdate = now;
+  }
+});
+
+// Touch support for mobile
+window.addEventListener("touchmove", (e) => {
+  if (e.touches.length > 0) {
+    const touch = e.touches[0];
+    const now = performance.now();
+    if (now - lastMouseUpdate > 16) {
+      prevMouse.x = mouse.x;
+      prevMouse.y = mouse.y;
+      mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+      mouseSpeed.x = mouse.x - prevMouse.x;
+      mouseSpeed.y = mouse.y - prevMouse.y;
+      isMouseMoving = true;
+
+      if (mouseMovementTimer) {
+        clearTimeout(mouseMovementTimer);
+      }
+      mouseMovementTimer = setTimeout(() => {
+        isMouseMoving = false;
+      }, 80);
+
+      lastMouseUpdate = now;
+    }
+  }
+});
+
+// Animation loop
+let lastParticleTime = 0;
+let time = 0;
+let currentMovement = 0;
+let lastFrameTime = 0;
+let isInitialized = false;
+let frameCount = 0;
+
+function forceInitialRender() {
+  for (let i = 0; i < 3; i++) {
+    composer.render();
+  }
+
+  for (let i = 0; i < 10; i++) {
+    createParticle();
+  }
+  composer.render();
+  isInitialized = true;
+
+  preloader.complete(renderer.domElement);
+}
+
+preloader.updateProgress(5);
+setTimeout(forceInitialRender, 100);
+
+function animate(timestamp) {
+  requestAnimationFrame(animate);
+  if (!isInitialized) return;
+
+  const deltaTime = timestamp - lastFrameTime;
+  lastFrameTime = timestamp;
+  if (deltaTime > 100) return;
+
+  const timeIncrement = (deltaTime / 16.67) * 0.01;
+  time += timeIncrement;
+  frameCount++;
+
+  atmosphereMaterial.uniforms.time.value = time;
+  analogDecayPass.uniforms.uTime.value = time;
+  analogDecayPass.uniforms.uLimboMode.value = params.limboMode ? 1.0 : 0.0;
+
+  const targetX = mouse.x * 11;
+  const targetY = mouse.y * 7;
+  const prevGhostPosition = ghostGroup.position.clone();
+
+  ghostGroup.position.x += (targetX - ghostGroup.position.x) * params.followSpeed;
+  ghostGroup.position.y += (targetY - ghostGroup.position.y) * params.followSpeed;
+
+  atmosphereMaterial.uniforms.ghostPosition.value.copy(ghostGroup.position);
+
+  const movementAmount = prevGhostPosition.distanceTo(ghostGroup.position);
+  currentMovement = currentMovement * params.eyeGlowDecay + movementAmount * (1 - params.eyeGlowDecay);
+
+  const float1 = Math.sin(time * params.floatSpeed * 1.5) * 0.03;
+  const float2 = Math.cos(time * params.floatSpeed * 0.7) * 0.018;
+  const float3 = Math.sin(time * params.floatSpeed * 2.3) * 0.008;
+  ghostGroup.position.y += float1 + float2 + float3;
+
+  const pulse1 = Math.sin(time * params.pulseSpeed) * params.pulseIntensity;
+  const breathe = Math.sin(time * 0.6) * 0.12;
+
+  ghostMaterial.emissiveIntensity = params.emissiveIntensity + pulse1 + breathe;
+
+  // Update fireflies
+  fireflies.forEach((firefly) => {
+    const userData = firefly.userData;
+
+    const pulsePhase = time + userData.phase;
+    const pulse = Math.sin(pulsePhase * userData.pulseSpeed) * 0.4 + 0.6;
+
+    userData.glowMaterial.opacity = params.fireflyGlowIntensity * 0.4 * pulse;
+    userData.fireflyMaterial.opacity = params.fireflyGlowIntensity * 0.9 * pulse;
+    userData.light.intensity = params.fireflyGlowIntensity * 0.8 * pulse;
+
+    userData.velocity.x += (Math.random() - 0.5) * 0.001;
+    userData.velocity.y += (Math.random() - 0.5) * 0.001;
+    userData.velocity.z += (Math.random() - 0.5) * 0.001;
+
+    userData.velocity.clampLength(0, params.fireflySpeed);
+
+    firefly.position.add(userData.velocity);
+
+    if (Math.abs(firefly.position.x) > 30) userData.velocity.x *= -0.5;
+    if (Math.abs(firefly.position.y) > 20) userData.velocity.y *= -0.5;
+    if (Math.abs(firefly.position.z) > 15) userData.velocity.z *= -0.5;
+  });
+
+  // Body animations
+  const mouseDirection = new THREE.Vector2(
+    targetX - ghostGroup.position.x,
+    targetY - ghostGroup.position.y
+  ).normalize();
+
+  const tiltStrength = 0.1 * params.wobbleAmount;
+  const tiltDecay = 0.95;
+  ghostBody.rotation.z = ghostBody.rotation.z * tiltDecay + -mouseDirection.x * tiltStrength * (1 - tiltDecay);
+  ghostBody.rotation.x = ghostBody.rotation.x * tiltDecay + mouseDirection.y * tiltStrength * (1 - tiltDecay);
+  ghostBody.rotation.y = Math.sin(time * 1.4) * 0.05 * params.wobbleAmount;
+
+  const scaleVariation = 1 + Math.sin(time * 2.1) * 0.025 * params.wobbleAmount + pulse1 * 0.015;
+  const scaleBreath = 1 + Math.sin(time * 0.8) * 0.012;
+  const finalScale = scaleVariation * scaleBreath;
+  ghostBody.scale.set(finalScale, finalScale, finalScale);
+
+  // Eye glow animation
+  const normalizedMouseSpeed = Math.sqrt(mouseSpeed.x * mouseSpeed.x + mouseSpeed.y * mouseSpeed.y) * 8;
+  const isMoving = currentMovement > params.movementThreshold;
+  const targetGlow = isMoving ? 1.0 : 0.0;
+
+  const glowChangeSpeed = isMoving ? params.eyeGlowResponse * 2 : params.eyeGlowResponse;
+
+  const newOpacity = eyes.leftEyeMaterial.opacity + (targetGlow - eyes.leftEyeMaterial.opacity) * glowChangeSpeed;
+
+  eyes.leftEyeMaterial.opacity = newOpacity;
+  eyes.rightEyeMaterial.opacity = newOpacity;
+  eyes.leftOuterGlowMaterial.opacity = newOpacity * 0.3;
+  eyes.rightOuterGlowMaterial.opacity = newOpacity * 0.3;
+
+  // Particle creation
+  const shouldCreateParticles = params.createParticlesOnlyWhenMoving
+    ? currentMovement > 0.005 && isMouseMoving
+    : currentMovement > 0.005;
+
+  if (shouldCreateParticles && timestamp - lastParticleTime > 100) {
+    const speedRate = Math.floor(normalizedMouseSpeed * 3);
+    const particleRate = Math.min(params.particleCreationRate, Math.max(1, speedRate));
+    for (let i = 0; i < particleRate; i++) {
+      createParticle();
+    }
+    lastParticleTime = timestamp;
+  }
+
+  // Particle updates
+  const particlesToUpdate = Math.min(particles.length, 60);
+  for (let i = 0; i < particlesToUpdate; i++) {
+    const index = (frameCount + i) % particles.length;
+    if (index < particles.length) {
+      const particle = particles[index];
+      particle.userData.life -= particle.userData.decay;
+      particle.material.opacity = particle.userData.life * 0.85;
+
+      if (particle.userData.velocity) {
+        particle.position.x += particle.userData.velocity.x;
+        particle.position.y += particle.userData.velocity.y;
+        particle.position.z += particle.userData.velocity.z;
+
+        const swirl = Math.cos(time * 1.8 + particle.position.y) * 0.0008;
+        particle.position.x += swirl;
+      }
+
+      if (particle.userData.rotationSpeed) {
+        particle.rotation.x += particle.userData.rotationSpeed.x;
+        particle.rotation.y += particle.userData.rotationSpeed.y;
+        particle.rotation.z += particle.userData.rotationSpeed.z;
+      }
+
+      if (particle.userData.life <= 0) {
+        particle.visible = false;
+        particle.material.opacity = 0;
+        particlePool.push(particle);
+        particles.splice(index, 1);
+        i--;
+      }
+    }
+  }
+
+  composer.render();
+}
+
+// Initialize
+const fakeEvent = new MouseEvent("mousemove", {
+  clientX: window.innerWidth / 2,
+  clientY: window.innerHeight / 2
+});
+window.dispatchEvent(fakeEvent);
+
+// GSAP scroll fade (keep existing)
 gsap.registerPlugin(ScrollTrigger);
 
 const fadeTL = gsap.timeline({
@@ -232,4 +920,6 @@ fadeTL.to('#blackFadeOverlay', {
   ease: 'none'
 }, 0);
 
-console.log("Three.js hero loaded (mobile responsive)");
+animate(0);
+
+console.log("Ghost hero loaded (green theme)");
