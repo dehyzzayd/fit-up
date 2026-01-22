@@ -1,4 +1,4 @@
-// Ghost Hero Animation - Fitup
+/ Ghost Hero Animation - Fitup
 import * as THREE from "three";
 import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "jsm/postprocessing/RenderPass.js";
@@ -35,17 +35,19 @@ class PreloaderManager {
       if (this.preloader) {
         this.preloader.classList.add("fade-out");
       }
-      
+
       if (this.mainContent) {
         this.mainContent.classList.add("fade-in");
       }
-      
-      const slogan = document.querySelector('.hero-slogan');
+
+      const slogan = document.querySelector(".hero-slogan");
       if (slogan) {
-        slogan.style.opacity = '1';
+        slogan.style.opacity = "1";
       }
-      
-      canvas.classList.add("fade-in");
+
+      if (canvas && canvas.classList) {
+        canvas.classList.add("fade-in");
+      }
 
       setTimeout(() => {
         if (this.preloader) {
@@ -74,7 +76,7 @@ scene.background = null;
 function getCanvasHeight() {
   const width = window.innerWidth;
   const fullHeight = window.innerHeight;
-  
+
   if (width <= 375) return fullHeight * 0.55;
   if (width <= 480) return fullHeight * 0.65;
   if (width <= 768) return fullHeight * 0.75;
@@ -94,13 +96,15 @@ camera.position.z = 20;
 
 preloader.updateProgress(2);
 
-// Enhanced renderer with transparency
+// Get canvas element with safety check
 const canvas = document.querySelector(".webgl");
 if (!canvas) {
-  console.error("Canvas element not found!");
-  throw new Error("Canvas .webgl not found");
+  console.error("Canvas element .webgl not found!");
+  preloader.complete(null);
+  throw new Error("Canvas .webgl not found - stopping hero animation");
 }
 
+// Enhanced renderer with transparency
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: true,
@@ -109,8 +113,15 @@ const renderer = new THREE.WebGLRenderer({
   premultipliedAlpha: false,
   stencil: false,
   depth: true,
-  preserveDrawingBuffer: false
+  preserveDrawingBuffer: false,
 });
+
+const canvasHeight = initialCanvasHeight;
+renderer.setSize(window.innerWidth, canvasHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.9;
+renderer.setClearColor(0x000000, 0);
 
 // Canvas styling
 renderer.domElement.style.position = "absolute";
@@ -124,7 +135,7 @@ renderer.domElement.style.background = "transparent";
 const originalBloomSettings = {
   strength: 0.3,
   radius: 1.25,
-  threshold: 0.0
+  threshold: 0.0,
 };
 
 // Setup post-processing for bloom effects
@@ -148,7 +159,7 @@ const analogDecayShader = {
     tDiffuse: { value: null },
     uTime: { value: 0.0 },
     uResolution: {
-      value: new THREE.Vector2(window.innerWidth, canvasHeight)
+      value: new THREE.Vector2(window.innerWidth, canvasHeight),
     },
     uAnalogGrain: { value: 0.4 },
     uAnalogBleeding: { value: 1.0 },
@@ -157,7 +168,7 @@ const analogDecayShader = {
     uAnalogVignette: { value: 1.0 },
     uAnalogJitter: { value: 0.4 },
     uAnalogIntensity: { value: 0.6 },
-    uLimboMode: { value: 0.0 }
+    uLimboMode: { value: 0.0 },
   },
 
   vertexShader: `
@@ -256,7 +267,7 @@ const analogDecayShader = {
       
       gl_FragColor = color;
     }
-  `
+  `,
 };
 
 // Add analog decay pass
@@ -302,7 +313,7 @@ const params = {
   analogScanlines: 1.0,
   analogVignette: 1.0,
   analogJitter: 0.4,
-  limboMode: false
+  limboMode: false,
 };
 
 // Fluorescent color palette
@@ -318,7 +329,7 @@ const fluorescentColors = {
   green: 0x00ff80,
   red: 0xff0040,
   teal: 0x00ffaa,
-  violet: 0x8a2be2
+  violet: 0x8a2be2,
 };
 
 // Create bloom-resistant atmosphere
@@ -330,7 +341,7 @@ const atmosphereMaterial = new THREE.ShaderMaterial({
     fadeStrength: { value: params.fadeStrength },
     baseOpacity: { value: params.baseOpacity },
     revealOpacity: { value: params.revealOpacity },
-    time: { value: 0 }
+    time: { value: 0 },
   },
   vertexShader: `
     varying vec2 vUv;
@@ -362,7 +373,7 @@ const atmosphereMaterial = new THREE.ShaderMaterial({
     }
   `,
   transparent: true,
-  depthWrite: false
+  depthWrite: false,
 });
 
 const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
@@ -407,7 +418,7 @@ const ghostMaterial = new THREE.MeshStandardMaterial({
   roughness: 0.02,
   metalness: 0.0,
   side: THREE.DoubleSide,
-  alphaTest: 0.1
+  alphaTest: 0.1,
 });
 
 const ghostBody = new THREE.Mesh(ghostGeometry, ghostMaterial);
@@ -418,7 +429,10 @@ const rimLight1 = new THREE.DirectionalLight(0x00ff80, params.rimLightIntensity)
 rimLight1.position.set(-8, 6, -4);
 scene.add(rimLight1);
 
-const rimLight2 = new THREE.DirectionalLight(0x00ffaa, params.rimLightIntensity * 0.7);
+const rimLight2 = new THREE.DirectionalLight(
+  0x00ffaa,
+  params.rimLightIntensity * 0.7
+);
 rimLight2.position.set(8, -4, -6);
 scene.add(rimLight2);
 
@@ -432,7 +446,7 @@ function createEyes() {
   const socketGeometry = new THREE.SphereGeometry(0.45, 16, 16);
   const socketMaterial = new THREE.MeshBasicMaterial({
     color: 0x000000,
-    transparent: false
+    transparent: false,
   });
 
   const leftSocket = new THREE.Mesh(socketGeometry, socketMaterial);
@@ -450,7 +464,7 @@ function createEyes() {
   const leftEyeMaterial = new THREE.MeshBasicMaterial({
     color: fluorescentColors[params.eyeGlowColor],
     transparent: true,
-    opacity: 0
+    opacity: 0,
   });
   const leftEye = new THREE.Mesh(eyeGeometry, leftEyeMaterial);
   leftEye.position.set(-0.7, 0.6, 2.0);
@@ -459,7 +473,7 @@ function createEyes() {
   const rightEyeMaterial = new THREE.MeshBasicMaterial({
     color: fluorescentColors[params.eyeGlowColor],
     transparent: true,
-    opacity: 0
+    opacity: 0,
   });
   const rightEye = new THREE.Mesh(eyeGeometry, rightEyeMaterial);
   rightEye.position.set(0.7, 0.6, 2.0);
@@ -471,7 +485,7 @@ function createEyes() {
     color: fluorescentColors[params.eyeGlowColor],
     transparent: true,
     opacity: 0,
-    side: THREE.BackSide
+    side: THREE.BackSide,
   });
   const leftOuterGlow = new THREE.Mesh(outerGlowGeometry, leftOuterGlowMaterial);
   leftOuterGlow.position.set(-0.7, 0.6, 1.95);
@@ -481,9 +495,12 @@ function createEyes() {
     color: fluorescentColors[params.eyeGlowColor],
     transparent: true,
     opacity: 0,
-    side: THREE.BackSide
+    side: THREE.BackSide,
   });
-  const rightOuterGlow = new THREE.Mesh(outerGlowGeometry, rightOuterGlowMaterial);
+  const rightOuterGlow = new THREE.Mesh(
+    outerGlowGeometry,
+    rightOuterGlowMaterial
+  );
   rightOuterGlow.position.set(0.7, 0.6, 1.95);
   eyeGroup.add(rightOuterGlow);
 
@@ -495,7 +512,7 @@ function createEyes() {
     leftOuterGlow,
     rightOuterGlow,
     leftOuterGlowMaterial,
-    rightOuterGlowMaterial
+    rightOuterGlowMaterial,
   };
 }
 
@@ -512,7 +529,7 @@ function createFireflies() {
     const fireflyMaterial = new THREE.MeshBasicMaterial({
       color: 0x00ff80,
       transparent: true,
-      opacity: 0.9
+      opacity: 0.9,
     });
 
     const firefly = new THREE.Mesh(fireflyGeometry, fireflyMaterial);
@@ -528,7 +545,7 @@ function createFireflies() {
       color: 0x00ffaa,
       transparent: true,
       opacity: 0.4,
-      side: THREE.BackSide
+      side: THREE.BackSide,
     });
 
     const glow = new THREE.Mesh(glowGeometry, glowMaterial);
@@ -549,7 +566,7 @@ function createFireflies() {
       glow: glow,
       glowMaterial: glowMaterial,
       fireflyMaterial: fireflyMaterial,
-      light: fireflyLight
+      light: fireflyLight,
     };
 
     fireflyGroup.add(firefly);
@@ -568,14 +585,14 @@ const particlePool = [];
 const particleGeometries = [
   new THREE.SphereGeometry(0.05, 6, 6),
   new THREE.TetrahedronGeometry(0.04, 0),
-  new THREE.OctahedronGeometry(0.045, 0)
+  new THREE.OctahedronGeometry(0.045, 0),
 ];
 
 const particleBaseMaterial = new THREE.MeshBasicMaterial({
   color: fluorescentColors[params.particleColor],
   transparent: true,
   opacity: 0,
-  alphaTest: 0.1
+  alphaTest: 0.1,
 });
 
 function initParticlePool(count) {
@@ -633,12 +650,12 @@ function createParticle() {
   particle.userData.rotationSpeed = {
     x: (Math.random() - 0.5) * 0.015,
     y: (Math.random() - 0.5) * 0.015,
-    z: (Math.random() - 0.5) * 0.015
+    z: (Math.random() - 0.5) * 0.015,
   };
   particle.userData.velocity = {
     x: (Math.random() - 0.5) * 0.012,
     y: (Math.random() - 0.5) * 0.012 - 0.002,
-    z: (Math.random() - 0.5) * 0.012 - 0.006
+    z: (Math.random() - 0.5) * 0.012 - 0.006,
   };
 
   particle.material.opacity = Math.random() * 0.9;
@@ -657,7 +674,10 @@ window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, newHeight);
     composer.setSize(window.innerWidth, newHeight);
     bloomPass.setSize(window.innerWidth, newHeight);
-    analogDecayPass.uniforms.uResolution.value.set(window.innerWidth, newHeight);
+    analogDecayPass.uniforms.uResolution.value.set(
+      window.innerWidth,
+      newHeight
+    );
   }, 250);
 });
 
@@ -762,13 +782,17 @@ function animate(timestamp) {
   const targetY = mouse.y * 7;
   const prevGhostPosition = ghostGroup.position.clone();
 
-  ghostGroup.position.x += (targetX - ghostGroup.position.x) * params.followSpeed;
-  ghostGroup.position.y += (targetY - ghostGroup.position.y) * params.followSpeed;
+  ghostGroup.position.x +=
+    (targetX - ghostGroup.position.x) * params.followSpeed;
+  ghostGroup.position.y +=
+    (targetY - ghostGroup.position.y) * params.followSpeed;
 
   atmosphereMaterial.uniforms.ghostPosition.value.copy(ghostGroup.position);
 
   const movementAmount = prevGhostPosition.distanceTo(ghostGroup.position);
-  currentMovement = currentMovement * params.eyeGlowDecay + movementAmount * (1 - params.eyeGlowDecay);
+  currentMovement =
+    currentMovement * params.eyeGlowDecay +
+    movementAmount * (1 - params.eyeGlowDecay);
 
   const float1 = Math.sin(time * params.floatSpeed * 1.5) * 0.03;
   const float2 = Math.cos(time * params.floatSpeed * 0.7) * 0.018;
@@ -812,23 +836,33 @@ function animate(timestamp) {
 
   const tiltStrength = 0.1 * params.wobbleAmount;
   const tiltDecay = 0.95;
-  ghostBody.rotation.z = ghostBody.rotation.z * tiltDecay + -mouseDirection.x * tiltStrength * (1 - tiltDecay);
-  ghostBody.rotation.x = ghostBody.rotation.x * tiltDecay + mouseDirection.y * tiltStrength * (1 - tiltDecay);
+  ghostBody.rotation.z =
+    ghostBody.rotation.z * tiltDecay +
+    -mouseDirection.x * tiltStrength * (1 - tiltDecay);
+  ghostBody.rotation.x =
+    ghostBody.rotation.x * tiltDecay +
+    mouseDirection.y * tiltStrength * (1 - tiltDecay);
   ghostBody.rotation.y = Math.sin(time * 1.4) * 0.05 * params.wobbleAmount;
 
-  const scaleVariation = 1 + Math.sin(time * 2.1) * 0.025 * params.wobbleAmount + pulse1 * 0.015;
+  const scaleVariation =
+    1 + Math.sin(time * 2.1) * 0.025 * params.wobbleAmount + pulse1 * 0.015;
   const scaleBreath = 1 + Math.sin(time * 0.8) * 0.012;
   const finalScale = scaleVariation * scaleBreath;
   ghostBody.scale.set(finalScale, finalScale, finalScale);
 
   // Eye glow animation
-  const normalizedMouseSpeed = Math.sqrt(mouseSpeed.x * mouseSpeed.x + mouseSpeed.y * mouseSpeed.y) * 8;
+  const normalizedMouseSpeed =
+    Math.sqrt(mouseSpeed.x * mouseSpeed.x + mouseSpeed.y * mouseSpeed.y) * 8;
   const isMoving = currentMovement > params.movementThreshold;
   const targetGlow = isMoving ? 1.0 : 0.0;
 
-  const glowChangeSpeed = isMoving ? params.eyeGlowResponse * 2 : params.eyeGlowResponse;
+  const glowChangeSpeed = isMoving
+    ? params.eyeGlowResponse * 2
+    : params.eyeGlowResponse;
 
-  const newOpacity = eyes.leftEyeMaterial.opacity + (targetGlow - eyes.leftEyeMaterial.opacity) * glowChangeSpeed;
+  const newOpacity =
+    eyes.leftEyeMaterial.opacity +
+    (targetGlow - eyes.leftEyeMaterial.opacity) * glowChangeSpeed;
 
   eyes.leftEyeMaterial.opacity = newOpacity;
   eyes.rightEyeMaterial.opacity = newOpacity;
@@ -842,7 +876,10 @@ function animate(timestamp) {
 
   if (shouldCreateParticles && timestamp - lastParticleTime > 100) {
     const speedRate = Math.floor(normalizedMouseSpeed * 3);
-    const particleRate = Math.min(params.particleCreationRate, Math.max(1, speedRate));
+    const particleRate = Math.min(
+      params.particleCreationRate,
+      Math.max(1, speedRate)
+    );
     for (let i = 0; i < particleRate; i++) {
       createParticle();
     }
@@ -886,36 +923,49 @@ function animate(timestamp) {
   composer.render();
 }
 
-// Initialize
+// Initialize mouse position
 const fakeEvent = new MouseEvent("mousemove", {
   clientX: window.innerWidth / 2,
-  clientY: window.innerHeight / 2
+  clientY: window.innerHeight / 2,
 });
 window.dispatchEvent(fakeEvent);
 
 // GSAP scroll fade - with safety check
-if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 
   const fadeTL = gsap.timeline({
     scrollTrigger: {
-      trigger: '#s1',
-      start: 'top top',
-      endTrigger: '#s2',
-      end: 'top bottom',
-      scrub: true
-    }
+      trigger: "#s1",
+      start: "top top",
+      endTrigger: "#s2",
+      end: "top bottom",
+      scrub: true,
+    },
   });
 
-  fadeTL.to('.webgl', {
-    opacity: 0,
-    ease: 'none'
-  }, 0);
+  fadeTL.to(
+    ".webgl",
+    {
+      opacity: 0,
+      ease: "none",
+    },
+    0
+  );
 
-  fadeTL.to('#blackFadeOverlay', {
-    opacity: 1,
-    ease: 'none'
-  }, 0);
+  fadeTL.to(
+    "#blackFadeOverlay",
+    {
+      opacity: 1,
+      ease: "none",
+    },
+    0
+  );
 } else {
-  console.warn("GSAP or ScrollTrigger not loaded");
+  console.warn("GSAP or ScrollTrigger not loaded - scroll fade disabled");
 }
+
+// Start animation
+animate(0);
+
+console.log("Ghost hero loaded (green theme)");
