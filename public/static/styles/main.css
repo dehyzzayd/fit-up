@@ -149,7 +149,7 @@
   color: #e0e0e0;
   opacity: 0;
   transition: opacity 1.5s ease-in;
-  z-index: 100;
+  z-index: 5;  /* Changed from 100 to 5 - now BEHIND canvas */
   pointer-events: none;
   overflow: hidden;
 }
@@ -408,7 +408,7 @@ body {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  z-index: 1;
+  z-index: 50;  /* Changed from 1 to 50 */
   margin: 0 !important;
   padding: 0 !important;
   pointer-events: none;
