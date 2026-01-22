@@ -86,7 +86,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
   
-  <script type="importmap">
+ <script type="importmap">
     {
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
