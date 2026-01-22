@@ -130,11 +130,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
   </aside>
 
-  <!-- Hero 3D Canvas -->
-  <canvas class="webgl"></canvas>
-  
-  <!-- Black Fade Overlay -->
-  <div id="blackFadeOverlay"></div>
+
 
   <!-- Top Navigation -->
   <nav class="top-nav" id="topNav">
