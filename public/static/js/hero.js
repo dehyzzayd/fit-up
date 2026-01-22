@@ -7,46 +7,36 @@ import { OutputPass } from "jsm/postprocessing/OutputPass.js";
 import { ShaderPass } from "jsm/postprocessing/ShaderPass.js";
 
 // Preloader management
-class PreloaderManager {
-  constructor() {
-    this.preloader = document.getElementById("preloader");
-    this.mainContent = document.getElementById("main-content");
-    this.progressBar = document.querySelector(".progress-bar");
-    this.loadingSteps = 0;
-    this.totalSteps = 5;
-    this.isComplete = false;
-  }
+complete(canvas) {
+  if (this.isComplete) return;
+  this.isComplete = true;
 
-  updateProgress(step) {
-    this.loadingSteps = Math.min(step, this.totalSteps);
-    const percentage = (this.loadingSteps / this.totalSteps) * 100;
-    if (this.progressBar) {
-      this.progressBar.style.width = `${percentage}%`;
+  this.updateProgress(this.totalSteps);
+
+  setTimeout(() => {
+    if (this.preloader) {
+      this.preloader.classList.add("fade-out");
     }
-  }
-
-  complete(canvas) {
-    if (this.isComplete) return;
-    this.isComplete = true;
-
-    this.updateProgress(this.totalSteps);
+    
+    // Add fade-in to main content
+    if (this.mainContent) {
+      this.mainContent.classList.add("fade-in");
+    }
+    
+    // Also directly show the slogan
+    const slogan = document.querySelector('.hero-slogan');
+    if (slogan) {
+      slogan.style.opacity = '1';
+    }
+    
+    canvas.classList.add("fade-in");
 
     setTimeout(() => {
       if (this.preloader) {
-        this.preloader.classList.add("fade-out");
+        this.preloader.style.display = "none";
       }
-      if (this.mainContent) {
-        this.mainContent.classList.add("fade-in");
-      }
-      canvas.classList.add("fade-in");
-
-      setTimeout(() => {
-        if (this.preloader) {
-          this.preloader.style.display = "none";
-        }
-      }, 1000);
-    }, 1500);
-  }
+    }, 1000);
+  }, 1500);
 }
 
 // Initialize preloader
