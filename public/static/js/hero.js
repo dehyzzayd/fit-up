@@ -1,4 +1,4 @@
-/ Ghost Hero Animation - Fitup
+// Ghost Hero Animation - Fitup
 import * as THREE from "three";
 import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "jsm/postprocessing/RenderPass.js";
