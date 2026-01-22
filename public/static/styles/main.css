@@ -152,11 +152,13 @@
   pointer-events: none;
 }
 
-#main-content.fade-in {
-  opacity: 1 !important;  /* Add !important to ensure it overrides */
+#main-content.fade-in .hero-slogan {
+  opacity: 1 !important;
 }
 
 .hero-text-container {
+  position: relative;
+  z-index: 10;
   max-width: 90%;
   overflow: hidden;
 }
@@ -170,10 +172,18 @@
   margin-bottom: 0;
   text-transform: uppercase;
   color: #e0e0e0;
+  opacity: 0;
+  transition: opacity 1.5s ease-in;
 }
 
 .hero-slogan span {
   display: block;
+}
+
+/* When preloader completes, show slogan */
+.fade-in .hero-slogan,
+.hero.fade-in .hero-slogan {
+  opacity: 1 !important;
 }
 
 /* Responsive adjustments */
