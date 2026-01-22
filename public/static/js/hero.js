@@ -893,29 +893,29 @@ const fakeEvent = new MouseEvent("mousemove", {
 });
 window.dispatchEvent(fakeEvent);
 
-// GSAP scroll fade
-gsap.registerPlugin(ScrollTrigger);
+// GSAP scroll fade - with safety check
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
 
-const fadeTL = gsap.timeline({
-  scrollTrigger: {
-    trigger: '#s1',
-    start: 'top top',
-    endTrigger: '#s2',
-    end: 'top bottom',
-    scrub: true
-  }
-});
+  const fadeTL = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#s1',
+      start: 'top top',
+      endTrigger: '#s2',
+      end: 'top bottom',
+      scrub: true
+    }
+  });
 
-fadeTL.to('.webgl', {
-  opacity: 0,
-  ease: 'none'
-}, 0);
+  fadeTL.to('.webgl', {
+    opacity: 0,
+    ease: 'none'
+  }, 0);
 
-fadeTL.to('#blackFadeOverlay', {
-  opacity: 1,
-  ease: 'none'
-}, 0);
-
-animate(0);
-
-console.log("Ghost hero loaded (green theme)");
+  fadeTL.to('#blackFadeOverlay', {
+    opacity: 1,
+    ease: 'none'
+  }, 0);
+} else {
+  console.warn("GSAP or ScrollTrigger not loaded");
+}
