@@ -22,7 +22,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     return [
       { url: 'https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971', name: 'Fedaura', round: false },
       { url: 'https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg', name: 'Brand', round: true },
-      { url: 'https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg', name: 'fitup', round: true }
+      { url: 'https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg', name: 'fitup', round: true }
     ];
   };
   
@@ -107,7 +107,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <aside class="side-menu" id="sideMenu">
     <div class="side-menu-header">
       <div class="side-menu-logo">
-        <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+        <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
         <span>fitup</span>
       </div>
       <button class="side-menu-close" id="sideMenuClose">
@@ -136,7 +136,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <nav class="top-nav" id="topNav">
     <div class="nav-left">
       <a href="#" class="nav-logo">
-        <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup" class="nav-logo-img">
+        <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup" class="nav-logo-img">
         <span>© fitup</span>
       </a>
     </div>
@@ -230,7 +230,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service1_title">${getContent('services', 'service1_title', 'Strategic Consulting')}</div>
@@ -243,7 +243,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service2_title">${getContent('services', 'service2_title', 'Media Buying')}</div>
@@ -256,7 +256,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service3_title">${getContent('services', 'service3_title', 'Video Production')}</div>
@@ -269,7 +269,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service4_title">${getContent('services', 'service4_title', 'Social Media Management')}</div>
@@ -282,7 +282,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service5_title">${getContent('services', 'service5_title', 'Graphic Design')}</div>
@@ -295,7 +295,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service6_title">${getContent('services', 'service6_title', 'Data Analytics')}</div>
@@ -530,7 +530,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     <div class="footer-content">
       <div class="footer-brand">
         <div class="footer-logo">
-          <img src="https://i.ibb.co/VWs7tk3q/605997942-17850007239614033-1994629091166485047-n.jpg" alt="fitup">
+          <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
           <span>fitup</span>
         </div>
         <p class="footer-description" data-content="footer.description">${getContent('footer', 'description', 'Where brands win. We help businesses grow through strategic marketing, creative content, and data-driven decisions.')}</p>
