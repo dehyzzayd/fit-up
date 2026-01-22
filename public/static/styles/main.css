@@ -1,4 +1,177 @@
 /* EXACT CSS FROM ORIGINAL FITUP MAIN HTML */
+/* ============================================
+   PRELOADER STYLES
+   ============================================ */
+
+@font-face {
+  font-family: "PPSupplyMono";
+  src: url("https://assets.codepen.io/7558/PPSupplyMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+/* Preloader */
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}
+
+.preloader.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.preloader-content {
+  text-align: center;
+  color: #e0e0e0;
+}
+
+.ghost-loader {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ghost-svg {
+  filter: drop-shadow(0 0 20px rgba(0, 255, 128, 0.5));
+  animation: ghostFloat 3s ease-in-out infinite;
+}
+
+.ghost-body {
+  fill: white;
+  opacity: 0.9;
+}
+
+.ghost-eye {
+  fill: #00ff80;
+  animation: eyePulse 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.left-eye {
+  animation-delay: 0s;
+}
+
+.right-eye {
+  animation-delay: 0.1s;
+}
+
+@keyframes ghostFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes eyePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+.loading-text {
+  font-family: "PPSupplyMono", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  opacity: 1;
+  margin-bottom: 12px;
+  animation: textPulse 2s ease-in-out infinite;
+  color: #00ff80;
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+.loading-progress {
+  width: 96px;
+  height: 1px;
+  margin: 0 auto;
+  border-radius: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff80, #00cc66);
+  width: 0%;
+  transition: width 0.8s ease;
+}
+
+/* Main content initially hidden */
+#main-content {
+  opacity: 0;
+  transition: opacity 1.5s ease-in;
+}
+
+#main-content.fade-in {
+  opacity: 1;
+}
+
+/* Canvas initially hidden */
+canvas.webgl {
+  opacity: 0 !important;
+  transition: opacity 2s ease-in;
+}
+
+canvas.webgl.fade-in {
+  opacity: 1 !important;
+}
+
+/* ============================================
+   HERO TEXT STYLES (for the slogan)
+   ============================================ */
+
+.hero-text-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hero-slogan {
+  font-family: 'Rubik Mono One', monospace;
+  font-size: clamp(1.5rem, 5vw, 3.5rem);
+  color: #ffffff;
+  text-transform: uppercase;
+  line-height: 1.3;
+  text-shadow: 0 0 30px rgba(0, 255, 128, 0.5);
+  letter-spacing: 0.05em;
+}
+
+.hero-slogan span {
+  display: block;
+}
+
+/* Rest of your existing main.css styles below... */
 * {
   box-sizing: border-box;
   margin: 0;
