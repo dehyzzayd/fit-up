@@ -127,7 +127,7 @@ renderer.setClearColor(0x000000, 0);
 renderer.domElement.style.position = "absolute";
 renderer.domElement.style.top = "0";
 renderer.domElement.style.left = "0";
-renderer.domElement.style.zIndex = "2";
+renderer.domElement.style.zIndex = "50";
 renderer.domElement.style.pointerEvents = "auto";
 renderer.domElement.style.background = "transparent";
 
