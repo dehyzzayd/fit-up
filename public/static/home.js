@@ -1,421 +1,936 @@
-// Home page JavaScript - All interactions and animations
+// Ghost Hero Animation - Fitup
+import * as THREE from "three";
+import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "jsm/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "jsm/postprocessing/OutputPass.js";
+import { ShaderPass } from "jsm/postprocessing/ShaderPass.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-  const topNav = document.getElementById('topNav');
-  const menuBtn = document.getElementById('menuBtn');
-  const sideMenu = document.getElementById('sideMenu');
-  const sideMenuOverlay = document.getElementById('sideMenuOverlay');
-  const sideMenuClose = document.getElementById('sideMenuClose');
-
-  // Side Menu Toggle
-  function openMenu() {
-    sideMenu.classList.add('active');
-    sideMenuOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
+// Preloader management
+class PreloaderManager {
+  constructor() {
+    this.preloader = document.getElementById("preloader");
+    this.mainContent = document.getElementById("main-content");
+    this.progressBar = document.querySelector(".progress-bar");
+    this.loadingSteps = 0;
+    this.totalSteps = 5;
+    this.isComplete = false;
   }
 
-  function closeMenu() {
-    sideMenu.classList.remove('active');
-    sideMenuOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  menuBtn.addEventListener('click', openMenu);
-  sideMenuClose.addEventListener('click', closeMenu);
-  sideMenuOverlay.addEventListener('click', closeMenu);
-
-  // Close menu on link click
-  document.querySelectorAll('.side-menu-link').forEach(link => {
-    link.addEventListener('click', () => {
-      closeMenu();
-    });
-  });
-
-  // Close menu on escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeMenu();
+  updateProgress(step) {
+    this.loadingSteps = Math.min(step, this.totalSteps);
+    const percentage = (this.loadingSteps / this.totalSteps) * 100;
+    if (this.progressBar) {
+      this.progressBar.style.width = `${percentage}%`;
     }
-  });
-
-  // Scroll behavior for nav
-  if (topNav) {
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY;
-      const switchPoint = window.innerHeight * 0.8;
-
-      if (scrollY > switchPoint) {
-        topNav.classList.add('scrolled');
-      } else {
-        topNav.classList.remove('scrolled');
-      }
-    });
   }
 
-  // Expanding cards functionality
-  const options = document.querySelectorAll(".option");
-  options.forEach(option => {
-    option.addEventListener("click", () => {
-      options.forEach(opt => opt.classList.remove("active"));
-      option.classList.add("active");
-    });
-  });
+  complete(canvas) {
+    if (this.isComplete) return;
+    this.isComplete = true;
 
-  // Initialize FITUP display
-  initFitupDisplay();
+    this.updateProgress(this.totalSteps);
 
-  // Initialize text animation
-  initTextAnimation();
+    setTimeout(() => {
+      if (this.preloader) {
+        this.preloader.classList.add("fade-out");
+      }
+      
+      if (this.mainContent) {
+        this.mainContent.classList.add("fade-in");
+      }
+      
+      const slogan = document.querySelector('.hero-slogan');
+      if (slogan) {
+        slogan.style.opacity = '1';
+      }
+      
+      if (canvas && canvas.classList) {
+        canvas.classList.add("fade-in");
+      }
 
-  // Initialize FAQ accordion
-  initFaqAccordion();
+      setTimeout(() => {
+        if (this.preloader) {
+          this.preloader.style.display = "none";
+        }
+      }, 1000);
+    }, 1500);
+  }
+}
 
-  console.log("fitup home loaded");
+// Initialize preloader
+const preloader = new PreloaderManager();
+
+// Force browser to use GPU acceleration
+document.body.style.transform = "translateZ(0)";
+document.body.style.backfaceVisibility = "hidden";
+document.body.style.perspective = "1000px";
+
+preloader.updateProgress(1);
+
+// Create scene
+const scene = new THREE.Scene();
+scene.background = null;
+
+// Get canvas height based on viewport
+function getCanvasHeight() {
+  const width = window.innerWidth;
+  const fullHeight = window.innerHeight;
+  
+  if (width <= 375) return fullHeight * 0.55;
+  if (width <= 480) return fullHeight * 0.65;
+  if (width <= 768) return fullHeight * 0.75;
+  if (width <= 1024) return fullHeight * 0.85;
+  return fullHeight;
+}
+
+const initialCanvasHeight = getCanvasHeight();
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / initialCanvasHeight,
+  0.1,
+  1000
+);
+camera.position.z = 20;
+
+preloader.updateProgress(2);
+
+// Get canvas element with safety check
+const canvas = document.querySelector(".webgl");
+if (!canvas) {
+  console.error("Canvas element .webgl not found!");
+  preloader.complete(null);
+  throw new Error("Canvas .webgl not found - stopping hero animation");
+}
+
+// Enhanced renderer with transparency
+const renderer = new THREE.WebGLRenderer({
+  canvas: canvas,
+  antialias: true,
+  powerPreference: "high-performance",
+  alpha: true,
+  premultipliedAlpha: false,
+  stencil: false,
+  depth: true,
+  preserveDrawingBuffer: false
 });
 
-// --- FITUP GAME LOGIC ---
-const TARGET_WORD = 'FITUP';
-let tilesOrder = [];
-let tileNodes = [];
-let hasWon = false;
-let dragTile = null;
-let dragStartIndex = null;
-let dragStartX = 0;
-let pointerStartX = 0;
+const canvasHeight = initialCanvasHeight;
+renderer.setSize(window.innerWidth, canvasHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.9;
+renderer.setClearColor(0x000000, 0);
 
-function initFitupDisplay() {
-  const slots = document.querySelector('.slots');
-  const tiles = document.querySelector('.tiles');
-  const gameSvg = document.getElementById('gameSvg');
+// Canvas styling
+renderer.domElement.style.position = "absolute";
+renderer.domElement.style.top = "0";
+renderer.domElement.style.left = "0";
+renderer.domElement.style.zIndex = "2";
+renderer.domElement.style.pointerEvents = "auto";
+renderer.domElement.style.background = "transparent";
 
-  if (!slots || !tiles || !gameSvg) return;
+// Store original bloom values
+const originalBloomSettings = {
+  strength: 0.3,
+  radius: 1.25,
+  threshold: 0.0
+};
 
-  const shuffled = TARGET_WORD
-    .split('')
-    .sort(() => Math.random() - 0.5);
+// Setup post-processing for bloom effects
+const composer = new EffectComposer(renderer);
+const renderPass = new RenderPass(scene, camera);
+composer.addPass(renderPass);
 
-  tilesOrder = [...shuffled];
-  tileNodes = [];
-  hasWon = false;
-  dragTile = null;
-  dragStartIndex = null;
-  gameSvg.classList.remove('clicked');
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, canvasHeight),
+  originalBloomSettings.strength,
+  originalBloomSettings.radius,
+  originalBloomSettings.threshold
+);
+composer.addPass(bloomPass);
 
-  slots.innerHTML = '';
-  tiles.innerHTML = '';
-  
-  const gameInitialMessage = document.getElementById('gameInitialMessage');
-  const winMessage = document.getElementById('winMessage');
-  if (gameInitialMessage) gameInitialMessage.style.display = 'block';
-  if (winMessage) winMessage.classList.remove('show');
+preloader.updateProgress(3);
 
-  shuffled.forEach((char, i) => {
-    const tile = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    const shadow = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+// Analog Decay Shader
+const analogDecayShader = {
+  uniforms: {
+    tDiffuse: { value: null },
+    uTime: { value: 0.0 },
+    uResolution: {
+      value: new THREE.Vector2(window.innerWidth, canvasHeight)
+    },
+    uAnalogGrain: { value: 0.4 },
+    uAnalogBleeding: { value: 1.0 },
+    uAnalogVSync: { value: 1.0 },
+    uAnalogScanlines: { value: 1.0 },
+    uAnalogVignette: { value: 1.0 },
+    uAnalogJitter: { value: 0.4 },
+    uAnalogIntensity: { value: 0.6 },
+    uLimboMode: { value: 0.0 }
+  },
 
-    tiles.append(tile);
-    tile.append(shadow);
-    tile.append(bg);
-    tile.append(txt);
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
 
-    gsap.set(tile, {
-      attr: { 
-        class: 'tile', 
-        'data-index': i,
-        'data-letter': char
-      },
-      transformOrigin: '25 25',
-      x: i * 60,
-      y: 140
-    });
-
-    gsap.set(shadow, {
-      transformOrigin: '25 25',
-      attr: { class: 'shadow', width: 50, height: 50, opacity: 0.5 }
-    });
-
-    gsap.set(bg, {
-      attr: { class: 'tileBg', width: 50, height: 50, fill: '#333' }
-    });
-
-    gsap.set(txt, {
-      innerHTML: char,
-      attr: {
-        class: 'tileTxt',
-        'text-anchor': 'middle',
-        'alignment-baseline': 'center',
-        fill: '#fff',
-        x: 25,
-        y: 35
-      }
-    });
-
-    const slot = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    slots.append(slot);
-
-    gsap.set(slot, {
-      attr: {
-        class: 'slot',
-        fill: '#222',
-        width: 52,
-        height: 52,
-        x: -1,
-        y: -1
-      },
-      x: i * 60,
-      y: 140
-    });
-
-    tileNodes.push(tile);
-    tile.addEventListener('pointerdown', (e) => startDrag(e, tile));
-  });
-
-  gsap.set([tiles, slots], { x: 10 });
-
-  const svg = document.getElementById('gameSvg');
-  svg.addEventListener('pointermove', onDragMove);
-  svg.addEventListener('pointerup', endDrag);
-  svg.addEventListener('pointerleave', endDrag);
-}
-
-function startDrag(e, tile) {
-  if (hasWon) return;
-
-  e.preventDefault();
-  dragTile = tile;
-  dragStartIndex = parseInt(tile.getAttribute('data-index'), 10);
-  dragStartX = dragStartIndex * 60;
-  pointerStartX = e.clientX;
-
-  dragTile.parentNode.appendChild(dragTile);
-  gsap.to(dragTile, { scale: 1.15, duration: 0.15, ease: 'power2.out' });
-}
-
-function onDragMove(e) {
-  if (!dragTile) return;
-
-  const deltaX = e.clientX - pointerStartX;
-  const newX = dragStartX + deltaX;
-
-  gsap.set(dragTile, { x: newX });
-}
-
-function endDrag() {
-  if (!dragTile) return;
-
-  const transform = dragTile.transform.baseVal.consolidate();
-  const currentX = transform ? transform.matrix.e : dragStartX;
-  const localX = currentX;
-
-  let targetIndex = Math.round(localX / 60);
-  const maxIndex = tilesOrder.length - 1;
-  if (targetIndex < 0) targetIndex = 0;
-  if (targetIndex > maxIndex) targetIndex = maxIndex;
-
-  if (targetIndex !== dragStartIndex) {
-    const letter = tilesOrder.splice(dragStartIndex, 1)[0];
-    tilesOrder.splice(targetIndex, 0, letter);
-
-    const tileNode = tileNodes.splice(dragStartIndex, 1)[0];
-    tileNodes.splice(targetIndex, 0, tileNode);
-  }
-
-  tileNodes.forEach((tile, i) => {
-    tile.setAttribute('data-index', i);
-    gsap.to(tile, { 
-      x: i * 60, 
-      scale: 1, 
-      duration: 0.2, 
-      ease: 'power2.out' 
-    });
-  });
-
-  dragTile = null;
-  dragStartIndex = null;
-
-  checkWinCondition();
-}
-
-function checkWinCondition() {
-  const currentWord = tilesOrder.join('');
-  if (currentWord === TARGET_WORD && !hasWon) {
-    hasWon = true;
-    triggerWinAnimation();
-  }
-}
-
-function triggerWinAnimation() {
-  const gameSvg = document.getElementById('gameSvg');
-  gameSvg.classList.add('clicked');
-
-  tileNodes.forEach(tile => {
-    tile.style.pointerEvents = 'none';
-  });
-
-  gsap.timeline()
-    .to('.tileBg', { 
-      attr: { fill: '#B8FF5C' }, 
-      ease: 'power2.inOut',
-      stagger: 0.1
-    }, 0)
-    .to('.tile', { 
-      duration: 0.5, 
-      scale: 1.3, 
-      ease: 'back.out(2)',
-      stagger: 0.1
-    }, 0)
-    .to('.tile', { 
-      duration: 0.3, 
-      scale: 1, 
-      ease: 'power2.inOut',
-      stagger: 0.1
-    }, 0.6)
-    .to('.tile', {
-      duration: 0.4,
-      y: 120,
-      ease: 'back.out(1.5)',
-      stagger: 0.05
-    }, 0.9)
-    .to('.tileTxt', {
-      fill: '#000',
-      duration: 0.3
-    }, 0)
-    .add(() => {
-      const gameInitialMessage = document.getElementById('gameInitialMessage');
-      const winMessage = document.getElementById('winMessage');
-      if (gameInitialMessage) gameInitialMessage.style.display = 'none';
-      if (winMessage) winMessage.classList.add('show');
-    }, 1.3);
-}
-
-// Social Stories Slider
-class SocialSlideStories {
-  constructor(id) {
-    this.slide = document.querySelector(`[data-slide="${id}"]`);
-    if (!this.slide) return;
-    this.active = 0;
-    this.init();
-  }
-
-  activeSlide(index) {
-    this.active = index;
-    this.items.forEach((item) => {
-      item.classList.remove("active");
-    });
-    this.items[index].classList.add("active");
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform float uTime;
+    uniform vec2 uResolution;
+    uniform float uAnalogGrain;
+    uniform float uAnalogBleeding;
+    uniform float uAnalogVSync;
+    uniform float uAnalogScanlines;
+    uniform float uAnalogVignette;
+    uniform float uAnalogJitter;
+    uniform float uAnalogIntensity;
+    uniform float uLimboMode;
     
-    this.thumbItems.forEach((item, i) => {
-      item.classList.remove("active");
-      item.classList.remove("done");
-      if (i < index) {
-        item.classList.add("done");
+    varying vec2 vUv;
+    
+    float random(vec2 st) {
+      return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+    }
+    
+    float gaussian(float z, float u, float o) {
+      return (1.0 / (o * sqrt(2.0 * 3.1415))) * exp(-(((z - u) * (z - u)) / (2.0 * (o * o))));
+    }
+    
+    vec3 grain(vec2 uv, float time, float intensity) {
+      float seed = dot(uv, vec2(12.9898, 78.233));
+      float noise = fract(sin(seed) * 43758.5453 + time * 2.0);
+      noise = gaussian(noise, 0.0, 0.5 * 0.5);
+      return vec3(noise) * intensity;
+    }
+    
+    void main() {
+      vec2 uv = vUv;
+      float time = uTime * 1.8;
+      
+      vec2 jitteredUV = uv;
+      if (uAnalogJitter > 0.01) {
+        float jitterAmount = (random(vec2(floor(time * 60.0))) - 0.5) * 0.003 * uAnalogJitter * uAnalogIntensity;
+        jitteredUV.x += jitterAmount;
+        jitteredUV.y += (random(vec2(floor(time * 30.0) + 1.0)) - 0.5) * 0.001 * uAnalogJitter * uAnalogIntensity;
       }
+      
+      if (uAnalogVSync > 0.01) {
+        float vsyncRoll = sin(time * 2.0 + uv.y * 100.0) * 0.02 * uAnalogVSync * uAnalogIntensity;
+        float vsyncChance = step(0.95, random(vec2(floor(time * 4.0))));
+        jitteredUV.y += vsyncRoll * vsyncChance;
+      }
+      
+      vec4 color = texture2D(tDiffuse, jitteredUV);
+      
+      if (uAnalogBleeding > 0.01) {
+        float bleedAmount = 0.012 * uAnalogBleeding * uAnalogIntensity;
+        float offsetPhase = time * 1.5 + uv.y * 20.0;
+        vec2 redOffset = vec2(sin(offsetPhase) * bleedAmount, 0.0);
+        vec2 blueOffset = vec2(-sin(offsetPhase * 1.1) * bleedAmount * 0.8, 0.0);
+        float r = texture2D(tDiffuse, jitteredUV + redOffset).r;
+        float g = texture2D(tDiffuse, jitteredUV).g;
+        float b = texture2D(tDiffuse, jitteredUV + blueOffset).b;
+        color = vec4(r, g, b, color.a);
+      }
+      
+      if (uAnalogGrain > 0.01) {
+        vec3 grainEffect = grain(uv, time, 0.075 * uAnalogGrain * uAnalogIntensity);
+        grainEffect *= (1.0 - color.rgb);
+        color.rgb += grainEffect;
+      }
+      
+      if (uAnalogScanlines > 0.01) {
+        float scanlineFreq = 600.0 + uAnalogScanlines * 400.0;
+        float scanlinePattern = sin(uv.y * scanlineFreq) * 0.5 + 0.5;
+        float scanlineIntensity = 0.1 * uAnalogScanlines * uAnalogIntensity;
+        color.rgb *= (1.0 - scanlinePattern * scanlineIntensity);
+        float horizontalLines = sin(uv.y * scanlineFreq * 0.1) * 0.02 * uAnalogScanlines * uAnalogIntensity;
+        color.rgb *= (1.0 - horizontalLines);
+      }
+      
+      if (uAnalogVignette > 0.01) {
+        vec2 vignetteUV = (uv - 0.5) * 2.0;
+        float vignette = 1.0 - dot(vignetteUV, vignetteUV) * 0.3 * uAnalogVignette * uAnalogIntensity;
+        color.rgb *= vignette;
+      }
+      
+      if (uLimboMode > 0.5) {
+        float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+        color.rgb = vec3(gray);
+      }
+      
+      gl_FragColor = color;
+    }
+  `
+};
+
+// Add analog decay pass
+const analogDecayPass = new ShaderPass(analogDecayShader);
+composer.addPass(analogDecayPass);
+
+const outputPass = new OutputPass();
+composer.addPass(outputPass);
+
+// Production parameters - GREEN THEME
+const params = {
+  bodyColor: 0x0f2027,
+  glowColor: "green",
+  eyeGlowColor: "green",
+  ghostOpacity: 0.88,
+  ghostScale: 2.4,
+  emissiveIntensity: 5.8,
+  pulseSpeed: 1.6,
+  pulseIntensity: 0.6,
+  eyeGlowIntensity: 4.5,
+  eyeGlowDecay: 0.95,
+  eyeGlowResponse: 0.31,
+  rimLightIntensity: 1.8,
+  followSpeed: 0.075,
+  wobbleAmount: 0.35,
+  floatSpeed: 1.6,
+  movementThreshold: 0.07,
+  particleCount: 250,
+  particleDecayRate: 0.005,
+  particleColor: "green",
+  createParticlesOnlyWhenMoving: true,
+  particleCreationRate: 5,
+  revealRadius: 43,
+  fadeStrength: 2.2,
+  baseOpacity: 0.35,
+  revealOpacity: 0.0,
+  fireflyGlowIntensity: 2.6,
+  fireflySpeed: 0.04,
+  analogIntensity: 0.6,
+  analogGrain: 0.4,
+  analogBleeding: 1.0,
+  analogVSync: 1.0,
+  analogScanlines: 1.0,
+  analogVignette: 1.0,
+  analogJitter: 0.4,
+  limboMode: false
+};
+
+// Fluorescent color palette
+const fluorescentColors = {
+  cyan: 0x00ffff,
+  lime: 0x00ff00,
+  magenta: 0xff00ff,
+  yellow: 0xffff00,
+  orange: 0xff4500,
+  pink: 0xff1493,
+  purple: 0x9400d3,
+  blue: 0x0080ff,
+  green: 0x00ff80,
+  red: 0xff0040,
+  teal: 0x00ffaa,
+  violet: 0x8a2be2
+};
+
+// Create bloom-resistant atmosphere
+const atmosphereGeometry = new THREE.PlaneGeometry(300, 300);
+const atmosphereMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    ghostPosition: { value: new THREE.Vector3(0, 0, 0) },
+    revealRadius: { value: params.revealRadius },
+    fadeStrength: { value: params.fadeStrength },
+    baseOpacity: { value: params.baseOpacity },
+    revealOpacity: { value: params.revealOpacity },
+    time: { value: 0 }
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    varying vec3 vWorldPosition;
+    void main() {
+      vUv = uv;
+      vec4 worldPos = modelMatrix * vec4(position, 1.0);
+      vWorldPosition = worldPos.xyz;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 ghostPosition;
+    uniform float revealRadius;
+    uniform float fadeStrength;
+    uniform float baseOpacity;
+    uniform float revealOpacity;
+    uniform float time;
+    varying vec2 vUv;
+    varying vec3 vWorldPosition;
+    
+    void main() {
+      float dist = distance(vWorldPosition.xy, ghostPosition.xy);
+      float dynamicRadius = revealRadius + sin(time * 2.0) * 5.0;
+      float reveal = smoothstep(dynamicRadius * 0.2, dynamicRadius, dist);
+      reveal = pow(reveal, fadeStrength);
+      float opacity = mix(revealOpacity, baseOpacity, reveal);
+      gl_FragColor = vec4(0.001, 0.001, 0.002, opacity);
+    }
+  `,
+  transparent: true,
+  depthWrite: false
+});
+
+const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+atmosphere.position.z = -50;
+atmosphere.renderOrder = -100;
+scene.add(atmosphere);
+
+// Minimal ambient light
+const ambientLight = new THREE.AmbientLight(0x0a0a2e, 0.08);
+scene.add(ambientLight);
+
+// Create ghost group
+const ghostGroup = new THREE.Group();
+scene.add(ghostGroup);
+
+// Enhanced ghost geometry
+const ghostGeometry = new THREE.SphereGeometry(2, 40, 40);
+
+// Create organic wavy bottom
+const positionAttribute = ghostGeometry.getAttribute("position");
+const positions = positionAttribute.array;
+for (let i = 0; i < positions.length; i += 3) {
+  if (positions[i + 1] < -0.2) {
+    const x = positions[i];
+    const z = positions[i + 2];
+    const noise1 = Math.sin(x * 5) * 0.35;
+    const noise2 = Math.cos(z * 4) * 0.25;
+    const noise3 = Math.sin((x + z) * 3) * 0.15;
+    const combinedNoise = noise1 + noise2 + noise3;
+    positions[i + 1] = -2.0 + combinedNoise;
+  }
+}
+ghostGeometry.computeVertexNormals();
+
+// Ghost material - GREEN GLOW
+const ghostMaterial = new THREE.MeshStandardMaterial({
+  color: params.bodyColor,
+  transparent: true,
+  opacity: params.ghostOpacity,
+  emissive: fluorescentColors[params.glowColor],
+  emissiveIntensity: params.emissiveIntensity,
+  roughness: 0.02,
+  metalness: 0.0,
+  side: THREE.DoubleSide,
+  alphaTest: 0.1
+});
+
+const ghostBody = new THREE.Mesh(ghostGeometry, ghostMaterial);
+ghostGroup.add(ghostBody);
+
+// Rim lights - green tinted
+const rimLight1 = new THREE.DirectionalLight(0x00ff80, params.rimLightIntensity);
+rimLight1.position.set(-8, 6, -4);
+scene.add(rimLight1);
+
+const rimLight2 = new THREE.DirectionalLight(0x00ffaa, params.rimLightIntensity * 0.7);
+rimLight2.position.set(8, -4, -6);
+scene.add(rimLight2);
+
+preloader.updateProgress(4);
+
+// Improved eyes function - GREEN EYES
+function createEyes() {
+  const eyeGroup = new THREE.Group();
+  ghostGroup.add(eyeGroup);
+
+  const socketGeometry = new THREE.SphereGeometry(0.45, 16, 16);
+  const socketMaterial = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: false
+  });
+
+  const leftSocket = new THREE.Mesh(socketGeometry, socketMaterial);
+  leftSocket.position.set(-0.7, 0.6, 1.9);
+  leftSocket.scale.set(1.1, 1.0, 0.6);
+  eyeGroup.add(leftSocket);
+
+  const rightSocket = new THREE.Mesh(socketGeometry, socketMaterial);
+  rightSocket.position.set(0.7, 0.6, 1.9);
+  rightSocket.scale.set(1.1, 1.0, 0.6);
+  eyeGroup.add(rightSocket);
+
+  const eyeGeometry = new THREE.SphereGeometry(0.3, 12, 12);
+
+  const leftEyeMaterial = new THREE.MeshBasicMaterial({
+    color: fluorescentColors[params.eyeGlowColor],
+    transparent: true,
+    opacity: 0
+  });
+  const leftEye = new THREE.Mesh(eyeGeometry, leftEyeMaterial);
+  leftEye.position.set(-0.7, 0.6, 2.0);
+  eyeGroup.add(leftEye);
+
+  const rightEyeMaterial = new THREE.MeshBasicMaterial({
+    color: fluorescentColors[params.eyeGlowColor],
+    transparent: true,
+    opacity: 0
+  });
+  const rightEye = new THREE.Mesh(eyeGeometry, rightEyeMaterial);
+  rightEye.position.set(0.7, 0.6, 2.0);
+  eyeGroup.add(rightEye);
+
+  const outerGlowGeometry = new THREE.SphereGeometry(0.525, 12, 12);
+
+  const leftOuterGlowMaterial = new THREE.MeshBasicMaterial({
+    color: fluorescentColors[params.eyeGlowColor],
+    transparent: true,
+    opacity: 0,
+    side: THREE.BackSide
+  });
+  const leftOuterGlow = new THREE.Mesh(outerGlowGeometry, leftOuterGlowMaterial);
+  leftOuterGlow.position.set(-0.7, 0.6, 1.95);
+  eyeGroup.add(leftOuterGlow);
+
+  const rightOuterGlowMaterial = new THREE.MeshBasicMaterial({
+    color: fluorescentColors[params.eyeGlowColor],
+    transparent: true,
+    opacity: 0,
+    side: THREE.BackSide
+  });
+  const rightOuterGlow = new THREE.Mesh(outerGlowGeometry, rightOuterGlowMaterial);
+  rightOuterGlow.position.set(0.7, 0.6, 1.95);
+  eyeGroup.add(rightOuterGlow);
+
+  return {
+    leftEye,
+    rightEye,
+    leftEyeMaterial,
+    rightEyeMaterial,
+    leftOuterGlow,
+    rightOuterGlow,
+    leftOuterGlowMaterial,
+    rightOuterGlowMaterial
+  };
+}
+
+const eyes = createEyes();
+
+// Create fireflies - GREEN
+const fireflies = [];
+const fireflyGroup = new THREE.Group();
+scene.add(fireflyGroup);
+
+function createFireflies() {
+  for (let i = 0; i < 20; i++) {
+    const fireflyGeometry = new THREE.SphereGeometry(0.02, 2, 2);
+    const fireflyMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00ff80,
+      transparent: true,
+      opacity: 0.9
     });
-    this.thumbItems[index].classList.add("active");
-    this.autoSlide();
-  }
 
-  prev() {
-    if (this.active > 0) {
-      this.activeSlide(this.active - 1);
-    } else {
-      this.activeSlide(this.items.length - 1);
-    }
-  }
+    const firefly = new THREE.Mesh(fireflyGeometry, fireflyMaterial);
 
-  next() {
-    if (this.active < this.items.length - 1) {
-      this.activeSlide(this.active + 1);
-    } else {
-      this.activeSlide(0);
-    }
-  }
+    firefly.position.set(
+      (Math.random() - 0.5) * 40,
+      (Math.random() - 0.5) * 30,
+      (Math.random() - 0.5) * 20
+    );
 
-  addNavigation() {
-    const nextBtn = this.slide.querySelector(".social-slide-next");
-    const prevBtn = this.slide.querySelector(".social-slide-prev");
-    if (nextBtn) nextBtn.addEventListener("click", this.next);
-    if (prevBtn) prevBtn.addEventListener("click", this.prev);
-  }
+    const glowGeometry = new THREE.SphereGeometry(0.08, 8, 8);
+    const glowMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00ffaa,
+      transparent: true,
+      opacity: 0.4,
+      side: THREE.BackSide
+    });
 
-  addThumbItems() {
-    this.items.forEach(() => (this.thumb.innerHTML += `<span></span>`));
-    this.thumbItems = Array.from(this.thumb.children);
-  }
+    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+    firefly.add(glow);
 
-  autoSlide() {
-    clearTimeout(this.timeout);
-    this.timeout = setTimeout(this.next, 5000);
-  }
+    const fireflyLight = new THREE.PointLight(0x00ff80, 0.8, 3, 2);
+    firefly.add(fireflyLight);
 
-  init() {
-    this.next = this.next.bind(this);
-    this.prev = this.prev.bind(this);
-    this.items = this.slide.querySelectorAll(".social-slide-items > *");
-    this.thumb = this.slide.querySelector(".social-slide-thumb");
-    this.addThumbItems();
-    this.activeSlide(0);
-    this.addNavigation();
+    firefly.userData = {
+      velocity: new THREE.Vector3(
+        (Math.random() - 0.5) * params.fireflySpeed,
+        (Math.random() - 0.5) * params.fireflySpeed,
+        (Math.random() - 0.5) * params.fireflySpeed
+      ),
+      basePosition: firefly.position.clone(),
+      phase: Math.random() * Math.PI * 2,
+      pulseSpeed: 2 + Math.random() * 3,
+      glow: glow,
+      glowMaterial: glowMaterial,
+      fireflyMaterial: fireflyMaterial,
+      light: fireflyLight
+    };
+
+    fireflyGroup.add(firefly);
+    fireflies.push(firefly);
   }
 }
 
-// Initialize sliders
-new SocialSlideStories("twitter-slide");
-new SocialSlideStories("instagram-slide");
+createFireflies();
 
-// FAQ Accordion
-function initFaqAccordion() {
-  const faqItems = document.querySelectorAll('.faq-item');
-  
-  faqItems.forEach(item => {
-    const header = item.querySelector('.faq-item-header');
-    
-    if (header) {
-      header.addEventListener('click', () => {
-        const isActive = item.classList.contains('active');
-        
-        faqItems.forEach(faqItem => {
-          faqItem.classList.remove('active');
-        });
-        
-        if (!isActive) {
-          item.classList.add('active');
-        }
-      });
+// Particle system - GREEN
+const particles = [];
+const particleGroup = new THREE.Group();
+scene.add(particleGroup);
+
+const particlePool = [];
+const particleGeometries = [
+  new THREE.SphereGeometry(0.05, 6, 6),
+  new THREE.TetrahedronGeometry(0.04, 0),
+  new THREE.OctahedronGeometry(0.045, 0)
+];
+
+const particleBaseMaterial = new THREE.MeshBasicMaterial({
+  color: fluorescentColors[params.particleColor],
+  transparent: true,
+  opacity: 0,
+  alphaTest: 0.1
+});
+
+function initParticlePool(count) {
+  for (let i = 0; i < count; i++) {
+    const geomIndex = Math.floor(Math.random() * particleGeometries.length);
+    const geometry = particleGeometries[geomIndex];
+    const material = particleBaseMaterial.clone();
+    const particle = new THREE.Mesh(geometry, material);
+    particle.visible = false;
+    particleGroup.add(particle);
+    particlePool.push(particle);
+  }
+}
+
+initParticlePool(100);
+
+function createParticle() {
+  let particle;
+  if (particlePool.length > 0) {
+    particle = particlePool.pop();
+    particle.visible = true;
+  } else if (particles.length < params.particleCount) {
+    const geomIndex = Math.floor(Math.random() * particleGeometries.length);
+    const geometry = particleGeometries[geomIndex];
+    const material = particleBaseMaterial.clone();
+    particle = new THREE.Mesh(geometry, material);
+    particleGroup.add(particle);
+  } else {
+    return null;
+  }
+
+  const particleColor = new THREE.Color(fluorescentColors[params.particleColor]);
+  const hue = Math.random() * 0.1 - 0.05;
+  particleColor.offsetHSL(hue, 0, 0);
+  particle.material.color = particleColor;
+
+  particle.position.copy(ghostGroup.position);
+  particle.position.z -= 0.8 + Math.random() * 0.6;
+
+  const scatterRange = 3.5;
+  particle.position.x += (Math.random() - 0.5) * scatterRange;
+  particle.position.y += (Math.random() - 0.5) * scatterRange - 0.8;
+
+  const sizeVariation = 0.6 + Math.random() * 0.7;
+  particle.scale.set(sizeVariation, sizeVariation, sizeVariation);
+
+  particle.rotation.set(
+    Math.random() * Math.PI * 2,
+    Math.random() * Math.PI * 2,
+    Math.random() * Math.PI * 2
+  );
+
+  particle.userData.life = 1.0;
+  particle.userData.decay = Math.random() * 0.003 + params.particleDecayRate;
+  particle.userData.rotationSpeed = {
+    x: (Math.random() - 0.5) * 0.015,
+    y: (Math.random() - 0.5) * 0.015,
+    z: (Math.random() - 0.5) * 0.015
+  };
+  particle.userData.velocity = {
+    x: (Math.random() - 0.5) * 0.012,
+    y: (Math.random() - 0.5) * 0.012 - 0.002,
+    z: (Math.random() - 0.5) * 0.012 - 0.006
+  };
+
+  particle.material.opacity = Math.random() * 0.9;
+  particles.push(particle);
+  return particle;
+}
+
+// Window resize handler
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  if (resizeTimeout) clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    const newHeight = getCanvasHeight();
+    camera.aspect = window.innerWidth / newHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, newHeight);
+    composer.setSize(window.innerWidth, newHeight);
+    bloomPass.setSize(window.innerWidth, newHeight);
+    analogDecayPass.uniforms.uResolution.value.set(window.innerWidth, newHeight);
+  }, 250);
+});
+
+// Mouse tracking
+const mouse = new THREE.Vector2();
+const prevMouse = new THREE.Vector2();
+const mouseSpeed = new THREE.Vector2();
+let lastMouseUpdate = 0;
+let isMouseMoving = false;
+let mouseMovementTimer = null;
+
+window.addEventListener("mousemove", (e) => {
+  const now = performance.now();
+  if (now - lastMouseUpdate > 16) {
+    prevMouse.x = mouse.x;
+    prevMouse.y = mouse.y;
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    mouseSpeed.x = mouse.x - prevMouse.x;
+    mouseSpeed.y = mouse.y - prevMouse.y;
+    isMouseMoving = true;
+
+    if (mouseMovementTimer) {
+      clearTimeout(mouseMovementTimer);
+    }
+    mouseMovementTimer = setTimeout(() => {
+      isMouseMoving = false;
+    }, 80);
+
+    lastMouseUpdate = now;
+  }
+});
+
+// Touch support for mobile
+window.addEventListener("touchmove", (e) => {
+  if (e.touches.length > 0) {
+    const touch = e.touches[0];
+    const now = performance.now();
+    if (now - lastMouseUpdate > 16) {
+      prevMouse.x = mouse.x;
+      prevMouse.y = mouse.y;
+      mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+      mouseSpeed.x = mouse.x - prevMouse.x;
+      mouseSpeed.y = mouse.y - prevMouse.y;
+      isMouseMoving = true;
+
+      if (mouseMovementTimer) {
+        clearTimeout(mouseMovementTimer);
+      }
+      mouseMovementTimer = setTimeout(() => {
+        isMouseMoving = false;
+      }, 80);
+
+      lastMouseUpdate = now;
+    }
+  }
+});
+
+// Animation loop
+let lastParticleTime = 0;
+let time = 0;
+let currentMovement = 0;
+let lastFrameTime = 0;
+let isInitialized = false;
+let frameCount = 0;
+
+function forceInitialRender() {
+  for (let i = 0; i < 3; i++) {
+    composer.render();
+  }
+
+  for (let i = 0; i < 10; i++) {
+    createParticle();
+  }
+  composer.render();
+  isInitialized = true;
+
+  preloader.complete(renderer.domElement);
+}
+
+preloader.updateProgress(5);
+setTimeout(forceInitialRender, 100);
+
+function animate(timestamp) {
+  requestAnimationFrame(animate);
+  if (!isInitialized) return;
+
+  const deltaTime = timestamp - lastFrameTime;
+  lastFrameTime = timestamp;
+  if (deltaTime > 100) return;
+
+  const timeIncrement = (deltaTime / 16.67) * 0.01;
+  time += timeIncrement;
+  frameCount++;
+
+  atmosphereMaterial.uniforms.time.value = time;
+  analogDecayPass.uniforms.uTime.value = time;
+  analogDecayPass.uniforms.uLimboMode.value = params.limboMode ? 1.0 : 0.0;
+
+  const targetX = mouse.x * 11;
+  const targetY = mouse.y * 7;
+  const prevGhostPosition = ghostGroup.position.clone();
+
+  ghostGroup.position.x += (targetX - ghostGroup.position.x) * params.followSpeed;
+  ghostGroup.position.y += (targetY - ghostGroup.position.y) * params.followSpeed;
+
+  atmosphereMaterial.uniforms.ghostPosition.value.copy(ghostGroup.position);
+
+  const movementAmount = prevGhostPosition.distanceTo(ghostGroup.position);
+  currentMovement = currentMovement * params.eyeGlowDecay + movementAmount * (1 - params.eyeGlowDecay);
+
+  const float1 = Math.sin(time * params.floatSpeed * 1.5) * 0.03;
+  const float2 = Math.cos(time * params.floatSpeed * 0.7) * 0.018;
+  const float3 = Math.sin(time * params.floatSpeed * 2.3) * 0.008;
+  ghostGroup.position.y += float1 + float2 + float3;
+
+  const pulse1 = Math.sin(time * params.pulseSpeed) * params.pulseIntensity;
+  const breathe = Math.sin(time * 0.6) * 0.12;
+
+  ghostMaterial.emissiveIntensity = params.emissiveIntensity + pulse1 + breathe;
+
+  // Update fireflies
+  fireflies.forEach((firefly) => {
+    const userData = firefly.userData;
+
+    const pulsePhase = time + userData.phase;
+    const pulse = Math.sin(pulsePhase * userData.pulseSpeed) * 0.4 + 0.6;
+
+    userData.glowMaterial.opacity = params.fireflyGlowIntensity * 0.4 * pulse;
+    userData.fireflyMaterial.opacity = params.fireflyGlowIntensity * 0.9 * pulse;
+    userData.light.intensity = params.fireflyGlowIntensity * 0.8 * pulse;
+
+    userData.velocity.x += (Math.random() - 0.5) * 0.001;
+    userData.velocity.y += (Math.random() - 0.5) * 0.001;
+    userData.velocity.z += (Math.random() - 0.5) * 0.001;
+
+    userData.velocity.clampLength(0, params.fireflySpeed);
+
+    firefly.position.add(userData.velocity);
+
+    if (Math.abs(firefly.position.x) > 30) userData.velocity.x *= -0.5;
+    if (Math.abs(firefly.position.y) > 20) userData.velocity.y *= -0.5;
+    if (Math.abs(firefly.position.z) > 15) userData.velocity.z *= -0.5;
+  });
+
+  // Body animations
+  const mouseDirection = new THREE.Vector2(
+    targetX - ghostGroup.position.x,
+    targetY - ghostGroup.position.y
+  ).normalize();
+
+  const tiltStrength = 0.1 * params.wobbleAmount;
+  const tiltDecay = 0.95;
+  ghostBody.rotation.z = ghostBody.rotation.z * tiltDecay + -mouseDirection.x * tiltStrength * (1 - tiltDecay);
+  ghostBody.rotation.x = ghostBody.rotation.x * tiltDecay + mouseDirection.y * tiltStrength * (1 - tiltDecay);
+  ghostBody.rotation.y = Math.sin(time * 1.4) * 0.05 * params.wobbleAmount;
+
+  const scaleVariation = 1 + Math.sin(time * 2.1) * 0.025 * params.wobbleAmount + pulse1 * 0.015;
+  const scaleBreath = 1 + Math.sin(time * 0.8) * 0.012;
+  const finalScale = scaleVariation * scaleBreath;
+  ghostBody.scale.set(finalScale, finalScale, finalScale);
+
+  // Eye glow animation
+  const normalizedMouseSpeed = Math.sqrt(mouseSpeed.x * mouseSpeed.x + mouseSpeed.y * mouseSpeed.y) * 8;
+  const isMoving = currentMovement > params.movementThreshold;
+  const targetGlow = isMoving ? 1.0 : 0.0;
+
+  const glowChangeSpeed = isMoving ? params.eyeGlowResponse * 2 : params.eyeGlowResponse;
+
+  const newOpacity = eyes.leftEyeMaterial.opacity + (targetGlow - eyes.leftEyeMaterial.opacity) * glowChangeSpeed;
+
+  eyes.leftEyeMaterial.opacity = newOpacity;
+  eyes.rightEyeMaterial.opacity = newOpacity;
+  eyes.leftOuterGlowMaterial.opacity = newOpacity * 0.3;
+  eyes.rightOuterGlowMaterial.opacity = newOpacity * 0.3;
+
+  // Particle creation
+  const shouldCreateParticles = params.createParticlesOnlyWhenMoving
+    ? currentMovement > 0.005 && isMouseMoving
+    : currentMovement > 0.005;
+
+  if (shouldCreateParticles && timestamp - lastParticleTime > 100) {
+    const speedRate = Math.floor(normalizedMouseSpeed * 3);
+    const particleRate = Math.min(params.particleCreationRate, Math.max(1, speedRate));
+    for (let i = 0; i < particleRate; i++) {
+      createParticle();
+    }
+    lastParticleTime = timestamp;
+  }
+
+  // Particle updates
+  const particlesToUpdate = Math.min(particles.length, 60);
+  for (let i = 0; i < particlesToUpdate; i++) {
+    const index = (frameCount + i) % particles.length;
+    if (index < particles.length) {
+      const particle = particles[index];
+      particle.userData.life -= particle.userData.decay;
+      particle.material.opacity = particle.userData.life * 0.85;
+
+      if (particle.userData.velocity) {
+        particle.position.x += particle.userData.velocity.x;
+        particle.position.y += particle.userData.velocity.y;
+        particle.position.z += particle.userData.velocity.z;
+
+        const swirl = Math.cos(time * 1.8 + particle.position.y) * 0.0008;
+        particle.position.x += swirl;
+      }
+
+      if (particle.userData.rotationSpeed) {
+        particle.rotation.x += particle.userData.rotationSpeed.x;
+        particle.rotation.y += particle.userData.rotationSpeed.y;
+        particle.rotation.z += particle.userData.rotationSpeed.z;
+      }
+
+      if (particle.userData.life <= 0) {
+        particle.visible = false;
+        particle.material.opacity = 0;
+        particlePool.push(particle);
+        particles.splice(index, 1);
+        i--;
+      }
+    }
+  }
+
+  composer.render();
+}
+
+// Initialize
+const fakeEvent = new MouseEvent("mousemove", {
+  clientX: window.innerWidth / 2,
+  clientY: window.innerHeight / 2
+});
+window.dispatchEvent(fakeEvent);
+
+// GSAP scroll fade - with safety check
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const fadeTL = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#s1',
+      start: 'top top',
+      endTrigger: '#s2',
+      end: 'top bottom',
+      scrub: true
     }
   });
+
+  fadeTL.to('.webgl', {
+    opacity: 0,
+    ease: 'none'
+  }, 0);
+
+  fadeTL.to('#blackFadeOverlay', {
+    opacity: 1,
+    ease: 'none'
+  }, 0);
+} else {
+  console.warn("GSAP or ScrollTrigger not loaded - scroll fade disabled");
 }
 
-// Text animation for 20% OFF
-function initTextAnimation() {
-  const bg = document.querySelector('.animation-bg');
-  const word = document.querySelector('.animation-word');
-  
-  if (!bg || !word) return;
-  
-  const nClones = 8;
+animate(0);
 
-  for (let i = 0; i < nClones; i++) {
-    const clone1 = word.cloneNode(true);
-    const clone2 = word.cloneNode(true);
-    clone1.classList.add('animation-clone');
-    clone2.classList.add('animation-clone');
-    bg.prepend(clone1);
-    bg.prepend(clone2);
-
-    gsap.timeline({
-      repeat: -1,
-      onRepeat: () => { bg.append(clone1); bg.append(clone2); }
-    }).fromTo([clone1, clone2], {
-      position: 'absolute',
-      scaleY: 0.7
-    }, {
-      duration: 4,
-      y: (j) => (j % 2) ? 100 : -100,
-      scaleY: 1.2,
-      ease: 'power3'
-    }).play(i / nClones * 4);
-  }
-}
+console.log("Ghost hero loaded (green theme)");
