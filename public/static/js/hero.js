@@ -36,12 +36,10 @@ class PreloaderManager {
         this.preloader.classList.add("fade-out");
       }
       
-      // Add fade-in to main content
       if (this.mainContent) {
         this.mainContent.classList.add("fade-in");
       }
       
-      // Also directly show the slogan
       const slogan = document.querySelector('.hero-slogan');
       if (slogan) {
         slogan.style.opacity = '1';
@@ -190,10 +188,6 @@ const analogDecayShader = {
       return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
     }
     
-    float random(float x) {
-      return fract(sin(x) * 43758.5453123);
-    }
-    
     float gaussian(float z, float u, float o) {
       return (1.0 / (o * sqrt(2.0 * 3.1415))) * exp(-(((z - u) * (z - u)) / (2.0 * (o * o))));
     }
@@ -202,7 +196,6 @@ const analogDecayShader = {
       float seed = dot(uv, vec2(12.9898, 78.233));
       float noise = fract(sin(seed) * 43758.5453 + time * 2.0);
       noise = gaussian(noise, 0.0, 0.5 * 0.5);
-      
       return vec3(noise) * intensity;
     }
     
@@ -228,14 +221,11 @@ const analogDecayShader = {
       if (uAnalogBleeding > 0.01) {
         float bleedAmount = 0.012 * uAnalogBleeding * uAnalogIntensity;
         float offsetPhase = time * 1.5 + uv.y * 20.0;
-        
         vec2 redOffset = vec2(sin(offsetPhase) * bleedAmount, 0.0);
         vec2 blueOffset = vec2(-sin(offsetPhase * 1.1) * bleedAmount * 0.8, 0.0);
-        
         float r = texture2D(tDiffuse, jitteredUV + redOffset).r;
         float g = texture2D(tDiffuse, jitteredUV).g;
         float b = texture2D(tDiffuse, jitteredUV + blueOffset).b;
-        
         color = vec4(r, g, b, color.a);
       }
       
@@ -250,7 +240,6 @@ const analogDecayShader = {
         float scanlinePattern = sin(uv.y * scanlineFreq) * 0.5 + 0.5;
         float scanlineIntensity = 0.1 * uAnalogScanlines * uAnalogIntensity;
         color.rgb *= (1.0 - scanlinePattern * scanlineIntensity);
-        
         float horizontalLines = sin(uv.y * scanlineFreq * 0.1) * 0.02 * uAnalogScanlines * uAnalogIntensity;
         color.rgb *= (1.0 - horizontalLines);
       }
@@ -281,8 +270,8 @@ composer.addPass(outputPass);
 // Production parameters - GREEN THEME
 const params = {
   bodyColor: 0x0f2027,
-  glowColor: "green",        // Changed to green
-  eyeGlowColor: "green",     // Changed to green
+  glowColor: "green",
+  eyeGlowColor: "green",
   ghostOpacity: 0.88,
   ghostScale: 2.4,
   emissiveIntensity: 5.8,
@@ -298,7 +287,7 @@ const params = {
   movementThreshold: 0.07,
   particleCount: 250,
   particleDecayRate: 0.005,
-  particleColor: "green",    // Changed to green
+  particleColor: "green",
   createParticlesOnlyWhenMoving: true,
   particleCreationRate: 5,
   revealRadius: 43,
@@ -522,7 +511,7 @@ function createFireflies() {
   for (let i = 0; i < 20; i++) {
     const fireflyGeometry = new THREE.SphereGeometry(0.02, 2, 2);
     const fireflyMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00ff80,  // Green
+      color: 0x00ff80,
       transparent: true,
       opacity: 0.9
     });
@@ -537,7 +526,7 @@ function createFireflies() {
 
     const glowGeometry = new THREE.SphereGeometry(0.08, 8, 8);
     const glowMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00ffaa,  // Green glow
+      color: 0x00ffaa,
       transparent: true,
       opacity: 0.4,
       side: THREE.BackSide
@@ -668,7 +657,6 @@ window.addEventListener("resize", () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, newHeight);
     composer.setSize(window.innerWidth, newHeight);
-
     bloomPass.setSize(window.innerWidth, newHeight);
     analogDecayPass.uniforms.uResolution.value.set(window.innerWidth, newHeight);
   }, 250);
@@ -906,7 +894,7 @@ const fakeEvent = new MouseEvent("mousemove", {
 });
 window.dispatchEvent(fakeEvent);
 
-// GSAP scroll fade (keep existing)
+// GSAP scroll fade
 gsap.registerPlugin(ScrollTrigger);
 
 const fadeTL = gsap.timeline({
