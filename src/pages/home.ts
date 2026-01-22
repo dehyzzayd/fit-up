@@ -621,11 +621,11 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
   </div>
 
-<!-- GSAP - Must load BEFORE hero.js -->
+<!-- GSAP - Must load before hero.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   
-  <!-- Hero animation - loads after GSAP -->
+  <!-- Hero animation -->
   <script type="module" src="/static/js/hero.js"></script>
   
   <!-- Main JS -->
