@@ -148,7 +148,7 @@
   color: #e0e0e0;
   opacity: 0;
   transition: opacity 1.5s ease-in;
-  z-index: 5;
+  z-index: 10;  /* INCREASE from 5 to 10 - higher than .hero-section (3) */
   pointer-events: none;
 }
 
