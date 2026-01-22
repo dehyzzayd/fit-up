@@ -152,6 +152,10 @@
   pointer-events: none;
 }
 
+#main-content.fade-in {
+  opacity: 1;
+}
+
 #main-content.fade-in .hero-slogan {
   opacity: 1 !important;
 }
