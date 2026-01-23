@@ -1757,19 +1757,20 @@ body {
   background: white;
 }
 
-/* ============================================
+Copy/* ============================================
    LET'S TALK FLOATING WIDGET - FIXED BOTTOM RIGHT
    ============================================ */
 
 .lets-talk-widget {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 9999;
+  position: fixed !important;
+  bottom: 30px !important;
+  right: 30px !important;
+  z-index: 99999 !important;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 12px;
+  pointer-events: auto;
 }
 
 /* WhatsApp Floating Button */
@@ -1842,7 +1843,7 @@ body {
   display: none;
 }
 
-/* Dialog Box - Dark Theme */
+/* Dialog Box */
 .lets-talk-dialog {
   position: absolute;
   bottom: 130px;
@@ -1942,19 +1943,12 @@ body {
   transform: translateY(-1px);
 }
 
-.dialog-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
 .dialog-submit svg {
   width: 18px;
   height: 18px;
   stroke: #000;
 }
 
-/* Success State */
 .dialog-success {
   padding: 40px 24px;
   text-align: center;
@@ -1986,6 +1980,59 @@ body {
   margin: 0;
 }
 
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .lets-talk-widget {
+    bottom: 20px !important;
+    right: 20px !important;
+  }
+
+  .lets-talk-btn span {
+    display: none;
+  }
+
+  .lets-talk-btn {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+  }
+
+  .lets-talk-dialog {
+    width: calc(100vw - 40px);
+    right: 0;
+    bottom: 130px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lets-talk-widget {
+    bottom: 16px !important;
+    right: 16px !important;
+    gap: 10px;
+  }
+
+  .whatsapp-floating-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .whatsapp-floating-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .lets-talk-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .lets-talk-dialog {
+    width: calc(100vw - 32px);
+    bottom: 120px;
+  }
+}
 /* ============================================
    RESPONSIVE STYLES
    ============================================ */
