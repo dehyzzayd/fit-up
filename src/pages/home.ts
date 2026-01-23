@@ -25,6 +25,52 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
       { url: 'https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg', name: 'fitup', round: true }
     ];
   };
+
+
+  <link rel="stylesheet" href="/static/styles/main.css">
+    <style>
+  /* WIDGET FIX */
+  .lets-talk-widget {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 99999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 12px !important;
+    transform: none !important;
+  }
+  .whatsapp-floating-btn {
+    width: 56px !important;
+    height: 56px !important;
+    background: #25D366 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
+  }
+  .lets-talk-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 14px 24px !important;
+    background: #B8FF5C !important;
+    color: #000 !important;
+    border: none !important;
+    border-radius: 50px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+  @media (max-width: 768px) {
+    .lets-talk-widget { bottom: 20px !important; right: 20px !important; }
+    .lets-talk-btn { width: 56px !important; height: 56px !important; padding: 0 !important; border-radius: 50% !important; justify-content: center !important; }
+    .lets-talk-btn span { display: none !important; }
+  }
+</style>
   
   // Get custom CSS
   const getCustomCSS = (): string => {
