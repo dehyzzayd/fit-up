@@ -1757,7 +1757,7 @@ body {
   background: white;
 }
 
-Copy/* ============================================
+/* ============================================
    LET'S TALK FLOATING WIDGET - FIXED BOTTOM RIGHT
    ============================================ */
 
@@ -1765,16 +1765,18 @@ Copy/* ============================================
   position: fixed !important;
   bottom: 30px !important;
   right: 30px !important;
+  left: auto !important;
+  top: auto !important;
   z-index: 99999 !important;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
   gap: 12px;
   pointer-events: auto;
+  transform: none !important;
 }
 
-/* WhatsApp Floating Button */
-.whatsapp-floating-btn {
+.lets-talk-widget .whatsapp-floating-btn {
   width: 56px;
   height: 56px;
   background: #25D366;
@@ -1785,20 +1787,20 @@ Copy/* ============================================
   box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
   transition: all 0.3s ease;
   text-decoration: none;
+  position: relative;
 }
 
-.whatsapp-floating-btn:hover {
+.lets-talk-widget .whatsapp-floating-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
 }
 
-.whatsapp-floating-btn svg {
+.lets-talk-widget .whatsapp-floating-btn svg {
   width: 28px;
   height: 28px;
 }
 
-/* Let's Talk Button */
-.lets-talk-btn {
+.lets-talk-widget .lets-talk-btn {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1814,37 +1816,37 @@ Copy/* ============================================
   letter-spacing: 0.05em;
   box-shadow: 0 4px 20px rgba(184, 255, 92, 0.3);
   transition: all 0.3s ease;
+  position: relative;
 }
 
-.lets-talk-btn:hover {
+.lets-talk-widget .lets-talk-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(184, 255, 92, 0.5);
   background: #c9ff7d;
 }
 
-.lets-talk-btn svg {
+.lets-talk-widget .lets-talk-btn svg {
   width: 20px;
   height: 20px;
 }
 
-.lets-talk-btn .close-icon {
+.lets-talk-widget .lets-talk-btn .close-icon {
   display: none;
 }
 
-.lets-talk-btn.active .chat-icon {
+.lets-talk-widget .lets-talk-btn.active .chat-icon {
   display: none;
 }
 
-.lets-talk-btn.active .close-icon {
+.lets-talk-widget .lets-talk-btn.active .close-icon {
   display: block;
 }
 
-.lets-talk-btn.active span {
+.lets-talk-widget .lets-talk-btn.active span {
   display: none;
 }
 
-/* Dialog Box */
-.lets-talk-dialog {
+.lets-talk-widget .lets-talk-dialog {
   position: absolute;
   bottom: 130px;
   right: 0;
@@ -1859,40 +1861,40 @@ Copy/* ============================================
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.lets-talk-dialog.active {
+.lets-talk-widget .lets-talk-dialog.active {
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
 }
 
-.dialog-header {
+.lets-talk-widget .dialog-header {
   padding: 24px 24px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.dialog-header h3 {
+.lets-talk-widget .dialog-header h3 {
   font-size: 20px;
   font-weight: 600;
   color: #fff;
   margin: 0 0 4px;
 }
 
-.dialog-header p {
+.lets-talk-widget .dialog-header p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   margin: 0;
 }
 
-.dialog-form {
+.lets-talk-widget .dialog-form {
   padding: 20px 24px 24px;
 }
 
-.dialog-field {
+.lets-talk-widget .dialog-field {
   margin-bottom: 14px;
 }
 
-.dialog-field input,
-.dialog-field textarea {
+.lets-talk-widget .dialog-field input,
+.lets-talk-widget .dialog-field textarea {
   width: 100%;
   padding: 14px 16px;
   background: rgba(255, 255, 255, 0.05);
@@ -1904,23 +1906,23 @@ Copy/* ============================================
   transition: all 0.2s ease;
 }
 
-.dialog-field input::placeholder,
-.dialog-field textarea::placeholder {
+.lets-talk-widget .dialog-field input::placeholder,
+.lets-talk-widget .dialog-field textarea::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
 
-.dialog-field input:focus,
-.dialog-field textarea:focus {
+.lets-talk-widget .dialog-field input:focus,
+.lets-talk-widget .dialog-field textarea:focus {
   outline: none;
   border-color: #B8FF5C;
   background: rgba(184, 255, 92, 0.05);
 }
 
-.dialog-field textarea {
+.lets-talk-widget .dialog-field textarea {
   resize: none;
 }
 
-.dialog-submit {
+.lets-talk-widget .dialog-submit {
   width: 100%;
   display: flex;
   align-items: center;
@@ -1938,23 +1940,29 @@ Copy/* ============================================
   margin-top: 6px;
 }
 
-.dialog-submit:hover {
+.lets-talk-widget .dialog-submit:hover {
   background: #c9ff7d;
   transform: translateY(-1px);
 }
 
-.dialog-submit svg {
+.lets-talk-widget .dialog-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.lets-talk-widget .dialog-submit svg {
   width: 18px;
   height: 18px;
   stroke: #000;
 }
 
-.dialog-success {
+.lets-talk-widget .dialog-success {
   padding: 40px 24px;
   text-align: center;
 }
 
-.dialog-success .success-icon {
+.lets-talk-widget .dialog-success .success-icon {
   width: 60px;
   height: 60px;
   background: #B8FF5C;
@@ -1967,31 +1975,30 @@ Copy/* ============================================
   margin: 0 auto 16px;
 }
 
-.dialog-success h4 {
+.lets-talk-widget .dialog-success h4 {
   font-size: 18px;
   font-weight: 600;
   color: #fff;
   margin: 0 0 8px;
 }
 
-.dialog-success p {
+.lets-talk-widget .dialog-success p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   margin: 0;
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .lets-talk-widget {
     bottom: 20px !important;
     right: 20px !important;
   }
 
-  .lets-talk-btn span {
+  .lets-talk-widget .lets-talk-btn span {
     display: none;
   }
 
-  .lets-talk-btn {
+  .lets-talk-widget .lets-talk-btn {
     width: 56px;
     height: 56px;
     padding: 0;
@@ -1999,7 +2006,7 @@ Copy/* ============================================
     justify-content: center;
   }
 
-  .lets-talk-dialog {
+  .lets-talk-widget .lets-talk-dialog {
     width: calc(100vw - 40px);
     right: 0;
     bottom: 130px;
@@ -2013,699 +2020,25 @@ Copy/* ============================================
     gap: 10px;
   }
 
-  .whatsapp-floating-btn {
+  .lets-talk-widget .whatsapp-floating-btn {
     width: 50px;
     height: 50px;
   }
 
-  .whatsapp-floating-btn svg {
+  .lets-talk-widget .whatsapp-floating-btn svg {
     width: 24px;
     height: 24px;
   }
 
-  .lets-talk-btn {
+  .lets-talk-widget .lets-talk-btn {
     width: 50px;
     height: 50px;
   }
 
-  .lets-talk-dialog {
+  .lets-talk-widget .lets-talk-dialog {
     width: calc(100vw - 32px);
     bottom: 120px;
   }
-}
-/* ============================================
-   RESPONSIVE STYLES
-   ============================================ */
-
-@media screen and (max-width: 1200px) {
-  .options {
-    height: 450px;
-  }
-  
-  .logo-scroll-section {
-    margin-top: 0;
-  }
-
-  .footer-content {
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .top-nav {
-    padding: 28px 32px;
-    grid-template-columns: auto 1fr auto;
-  }
-  
-  .nav-center-left {
-    display: none;
-  }
-  
-  .nav-center {
-    display: none;
-  }
-  
-  .nav-center-right {
-    grid-column: 2;
-    justify-self: end;
-    padding-right: 0;
-  }
-
-  .logo-scroll-track {
-    gap: 50px;
-  }
-
-  .logo-item {
-    height: 40px;
-  }
-
-  .logo-item.round img {
-    height: 40px;
-    width: 40px;
-  }
-  
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 50px;
-  }
-
-  .about-heading {
-    font-size: 56px;
-  }
-
-  .curve-container {
-    height: 200px;
-  }
-  
-  .social-wrapper {
-    gap: 40px;
-  }
-  
-  .social-item {
-    gap: 25px;
-  }
-  
-  .social-title {
-    font-size: 2.5rem;
-  }
-  
-  .social-slide {
-    width: 160px;
-    height: 340px;
-  }
-  
-  .faq-container {
-    grid-template-columns: 1fr;
-    gap: 50px;
-  }
-
-  .faq-title {
-    font-size: 42px;
-  }
-
-  .faq-section {
-    padding: 80px 32px;
-  }
-  
-  /* Hero responsive */
-  .webgl {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 85vh;
-    height: 85dvh;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .hero-section {
-    min-height: 85vh;
-    min-height: 85dvh;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .hero {
-    height: 85vh;
-    height: 85dvh;
-    padding: 0 16px;
-    margin: 0;
-  }
-  
-  .hero-cta-btn {
-    bottom: 12%;
-    padding: 14px 28px;
-    font-size: 13px;
-  }
-  
-  .logo-scroll-section {
-    margin-top: 0;
-    padding-top: 40px;
-  }
-}
-
-@media screen and (max-width: 900px) {
-  .options {
-    height: 400px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .game-container {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .game-right {
-    order: -1;
-  }
-
-  .animation-stage {
-    height: 150px;
-    margin-bottom: 30px;
-  }
-
-  .animation-word, .animation-clone {
-    font-size: 28px;
-    line-height: 32px;
-  }
-
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .about-content {
-    padding: 80px 24px 60px;
-  }
-
-  .about-heading {
-    font-size: 42px;
-  }
-
-  .about-text {
-    font-size: 16px;
-  }
-
-  .about-stats {
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .stat-number {
-    font-size: 36px;
-  }
-
-  .curve-container {
-    height: 150px;
-  }
-  
-  .social-wrapper {
-    grid-template-columns: 1fr;
-    gap: 50px;
-  }
-
-  .social-item,
-  .social-item.reverse {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .social-text-content,
-  .social-item.reverse .social-text-content {
-    text-align: center;
-    min-width: auto;
-  }
-
-  .social-title {
-    font-size: 2.5rem;
-  }
-
-  .social-handle {
-    font-size: 1.1rem;
-  }
-
-  .social-slide {
-    width: 170px;
-    height: 360px;
-  }
-  
-  .faq-item-header {
-    grid-template-columns: 50px 1fr 35px;
-    gap: 15px;
-  }
-
-  .faq-answer {
-    grid-template-columns: 50px 1fr 35px;
-    gap: 15px;
-  }
-
-  .faq-question {
-    font-size: 18px;
-  }
-
-  .faq-title {
-    font-size: 36px;
-  }
-
-  .faq-section {
-    padding: 60px 20px;
-  }
-  
-  /* Hero responsive */
-  .webgl {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 75vh;
-    height: 75dvh;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .hero-section {
-    min-height: 75vh;
-    min-height: 75dvh;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .hero {
-    height: 75vh;
-    height: 75dvh;
-    padding: 0 12px;
-    margin: 0;
-  }
-  
-  .logo-scroll-section {
-    padding: 30px 0;
-    margin-top: 0;
-  }
-  
-  .services-section {
-    padding: 40px 0;
-    min-height: auto;
-    margin-top: 0;
-  }
-  
-  .game-section {
-    padding: 40px 20px;
-    min-height: auto;
-  }
-  
-  .about-transition-section {
-    margin-top: 80px;
-  }
-  
-  /* Let's Talk Widget responsive */
-  .lets-talk-widget {
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .lets-talk-dialog {
-    width: calc(100vw - 40px);
-    right: -10px;
-    bottom: 120px;
-  }
-
-  .lets-talk-btn span {
-    display: none;
-  }
-
-  .lets-talk-btn {
-    width: 56px;
-    height: 56px;
-    padding: 0;
-    border-radius: 50%;
-    justify-content: center;
-  }
-}
-
-@media screen and (max-width: 720px) {
-  .top-nav {
-    padding: 24px 28px;
-  }
-  
-  .nav-logo {
-    font-size: 12px;
-  }
-
-  .nav-logo-img {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .nav-lang-toggle {
-    font-size: 12px;
-  }
-  
-  .menu-text {
-    font-size: 12px;
-  }
-  
-  .menu-icon {
-    width: 18px;
-    height: 18px;
-  }
-  
-  .menu-line-h {
-    width: 14px;
-  }
-  
-  .menu-line-v {
-    height: 14px;
-  }
-
-  .logo-scroll-section {
-    padding: 40px 0;
-  }
-
-  .logo-scroll-title {
-    font-size: 12px;
-    margin-bottom: 30px;
-  }
-
-  .logo-scroll-track {
-    gap: 40px;
-  }
-
-  .logo-item {
-    height: 35px;
-  }
-
-  .logo-item.round img {
-    height: 35px;
-    width: 35px;
-  }
-
-  .services-section {
-    padding: 60px 0;
-  }
-
-  .services-title {
-    font-size: 12px;
-    margin-bottom: 40px;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  /* Services - vertical layout on mobile */
-  .options {
-    flex-direction: column;
-    height: auto;
-    gap: 12px;
-    padding: 0 16px;
-  }
-  
-  .option {
-    min-width: 100% !important;
-    width: 100%;
-    height: 200px;
-    min-height: 200px;
-    margin: 0;
-    flex-grow: 0 !important;
-  }
-  
-  .option.active {
-    flex-grow: 0 !important;
-    min-width: 100% !important;
-    height: 280px;
-  }
-  
-  .option .label .info .main {
-    font-size: 1.1rem;
-  }
-  
-  .option .label .info .sub {
-    font-size: 0.85rem;
-  }
-  
-  .option .label .icon {
-    min-width: 40px;
-    max-width: 40px;
-    height: 40px;
-  }
-  
-  .option .label {
-    bottom: 15px !important;
-    left: 15px !important;
-    opacity: 1 !important;
-  }
-  
-  .option .label .info > div {
-    transform: translateX(0) !important;
-    opacity: 1 !important;
-  }
-
-  .game-cta-text {
-    font-size: 20px;
-  }
-
-  .game-svg {
-    max-width: 280px;
-  }
-
-  .side-menu-link {
-    font-size: 24px;
-    padding: 16px 0;
-  }
-
-  .footer {
-    padding: 60px 20px 30px;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .options {
-    height: auto;
-    min-width: auto;
-    gap: 10px;
-  }
-  
-  .option {
-    height: 180px;
-    min-height: 180px;
-    border-radius: 16px;
-  }
-  
-  .option.active {
-    border-radius: 20px;
-    height: 240px;
-  }
-  
-  .option.active .label {
-    bottom: 15px;
-    left: 15px;
-  }
-
-  .animation-word, .animation-clone {
-    font-size: 22px;
-    line-height: 26px;
-  }
-
-  .game-win-title {
-    font-size: 24px;
-  }
-  
-  .about-heading {
-    font-size: 32px;
-  }
-
-  .curve-container {
-    height: 120px;
-  }
-  
-  .social-title {
-    font-size: 2rem;
-  }
-
-  .social-slide {
-    width: 150px;
-    height: 320px;
-    border-radius: 30px;
-  }
-
-  .social-section {
-    padding: 30px 20px 50px;
-  }
-  
-  .faq-item-header {
-    grid-template-columns: 40px 1fr 30px;
-    gap: 10px;
-  }
-
-  .faq-answer {
-    grid-template-columns: 40px 1fr 30px;
-    gap: 10px;
-  }
-
-  .faq-question {
-    font-size: 16px;
-  }
-
-  .faq-number {
-    font-size: 12px;
-  }
-
-  .faq-title {
-    font-size: 28px;
-  }
-
-  .faq-icon {
-    width: 30px;
-    height: 30px;
-  }
-
-  .faq-icon svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .webgl {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 65vh;
-    height: 65dvh;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .hero-section {
-    min-height: 65vh;
-    min-height: 65dvh;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .hero {
-    height: 65vh;
-    height: 65dvh;
-    padding: 0 10px;
-    margin: 0;
-  }
-  
-  .hero-cta-btn {
-    bottom: 10%;
-    padding: 12px 24px;
-    font-size: 12px;
-    gap: 8px;
-  }
-  
-  .hero-cta-btn .btn-arrow {
-    font-size: 14px;
-  }
-  
-  .logo-scroll-section {
-    padding: 25px 0;
-    margin-top: 0;
-  }
-  
-  .services-section {
-    padding: 30px 0;
-    min-height: auto;
-    margin-top: 0;
-  }
-  
-  .services-title {
-    margin-bottom: 20px;
-  }
-  
-  .game-section {
-    padding: 30px 16px;
-    min-height: auto;
-  }
-  
-  .about-transition-section {
-    margin-top: 60px;
-  }
-  
-  .curve-container {
-    height: 80px;
-  }
-  
-  /* Side menu small screens */
-  .side-menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 400px;
-    max-width: 90vw;
-    height: 100vh;
-    height: 100dvh;
-    background: #0a0a0a;
-    z-index: 1001;
-    transform: translateX(100%);
-    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  
-  .side-menu-header {
-    padding: 20px 24px;
-  }
-  
-  .side-menu-nav {
-    padding: 24px;
-  }
-  
-  .side-menu-link {
-    font-size: 20px;
-    padding: 14px 0;
-  }
-  
-  .side-menu-footer {
-    padding: 24px;
-  }
-  
-  /* Let's Talk Widget small screens */
-  .lets-talk-widget {
-    bottom: 16px;
-    right: 16px;
-    gap: 10px;
-  }
-  
-  .whatsapp-floating-btn {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .whatsapp-floating-btn svg {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .lets-talk-btn {
-    width: 50px;
-    height: 50px;
-    padding: 0;
-    border-radius: 50%;
-    justify-content: center;
-  }
-  
-  .lets-talk-dialog {
-    width: calc(100vw - 32px);
-    right: 0;
-    bottom: 120px;
-  }
-}
 
 @media screen and (max-width: 375px) {
   .webgl {
