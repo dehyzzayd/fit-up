@@ -2132,3 +2132,76 @@ body {
     padding: 10px 0;
   }
 }
+
+/* ============================================
+   WIDGET FIX - ADD THIS AT THE VERY END
+   ============================================ */
+
+.lets-talk-widget {
+  position: fixed !important;
+  bottom: 30px !important;
+  right: 30px !important;
+  left: auto !important;
+  top: auto !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 12px !important;
+  transform: none !important;
+}
+
+.whatsapp-floating-btn {
+  position: relative !important;
+  width: 56px !important;
+  height: 56px !important;
+  background: #25D366 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
+}
+
+.lets-talk-btn {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 14px 24px !important;
+  background: #B8FF5C !important;
+  color: #000 !important;
+  border: none !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.lets-talk-dialog {
+  position: absolute !important;
+  bottom: 130px !important;
+  right: 0 !important;
+  width: 340px !important;
+  background: #111 !important;
+  border-radius: 20px !important;
+}
+
+@media (max-width: 768px) {
+  .lets-talk-widget {
+    bottom: 20px !important;
+    right: 20px !important;
+  }
+  
+  .lets-talk-btn {
+    width: 56px !important;
+    height: 56px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    justify-content: center !important;
+  }
+  
+  .lets-talk-btn span {
+    display: none !important;
+  }
+}
