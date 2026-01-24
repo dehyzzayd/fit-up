@@ -78,7 +78,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>fitup · Unseen Media Agency</title>
+  <title>fitup · Media Buying Agency</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
@@ -104,7 +104,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <aside class="side-menu" id="sideMenu">
     <div class="side-menu-header">
       <div class="side-menu-logo">
-        <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+        <img src="https://raw.githubusercontent.com/dehyzzayd/fit-up/refs/heads/main/public/static/images/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
         <span>fitup</span>
       </div>
       <button class="side-menu-close" id="sideMenuClose">
