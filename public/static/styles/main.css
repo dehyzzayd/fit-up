@@ -2153,3 +2153,91 @@ body {
 .lets-talk-widget * {
     pointer-events: auto !important;
 }
+
+/* ============================================
+   SCROLL TEXT ANIMATION SECTION
+   ============================================ */
+
+.scroll-text-section {
+  position: relative;
+  width: 100%;
+  background: #000;
+  z-index: 10;
+  min-height: 200vh;
+}
+
+.scroll-text-container {
+  display: flex;
+  width: 100%;
+  padding-left: 5rem;
+  line-height: 1.25;
+}
+
+.scroll-text-sticky {
+  position: sticky;
+  top: calc(50vh - 0.6em);
+  height: fit-content;
+  z-index: 2;
+}
+
+.scroll-text-prefix {
+  font-family: 'Roboto', sans-serif;
+  font-size: clamp(2rem, 8vw, 6rem);
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.scroll-text-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-top: 40vh;
+  padding-bottom: 40vh;
+}
+
+.scroll-text-list li {
+  font-family: 'Roboto', sans-serif;
+  font-size: clamp(2rem, 8vw, 6rem);
+  font-weight: 700;
+  line-height: 1.4;
+  opacity: 0.15;
+  transition: opacity 0.3s ease, color 0.3s ease;
+  color: #B8FF5C;
+}
+
+.scroll-text-list li:last-child {
+  color: #fff;
+}
+
+.scroll-text-list li.active {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .scroll-text-container {
+    padding-left: 2rem;
+    flex-direction: column;
+  }
+  
+  .scroll-text-sticky {
+    position: relative;
+    top: 0;
+    padding-top: 20vh;
+  }
+  
+  .scroll-text-prefix {
+    font-size: clamp(1.5rem, 10vw, 3rem);
+  }
+  
+  .scroll-text-list {
+    padding-top: 2rem;
+    padding-bottom: 30vh;
+  }
+  
+  .scroll-text-list li {
+    font-size: clamp(1.5rem, 10vw, 3rem);
+  }
+}
