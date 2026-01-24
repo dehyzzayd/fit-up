@@ -582,34 +582,43 @@ function initScrollTextAnimation() {
   });
 
   let currentIndex = 0;
+  let lastChangeTime = 0;
+  const BUFFER_MS = 150; // minimum ms between word changes
 
   // Pin the section and cycle words on scroll
   ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: () => `+=${items.length * 150}`,
+    end: () => `+=${items.length * 80}`, // reduced from 150 to minimize gap
     pin: true,
-    scrub: 0.3,
+    pinSpacing: true,
+    scrub: 0.5, // slightly smoother
     onUpdate: (self) => {
+      const now = Date.now();
       const progress = self.progress;
       const newIndex = Math.min(
         Math.floor(progress * items.length),
         items.length - 1
       );
       
-      if (newIndex !== currentIndex) {
-        console.log('[ScrollText] Word:', items[currentIndex].textContent, '->', items[newIndex].textContent);
+      // Buffer: only change if enough time passed
+      if (newIndex !== currentIndex && (now - lastChangeTime) > BUFFER_MS) {
+        console.log('[ScrollText]', currentIndex, '->', newIndex, '|', items[newIndex].textContent, '| buffer ok');
         gsap.to(items[currentIndex], { opacity: 0, duration: 0.2 });
         gsap.to(items[newIndex], { opacity: 1, duration: 0.2 });
         currentIndex = newIndex;
+        lastChangeTime = now;
+      } else if (newIndex !== currentIndex) {
+        console.log('[ScrollText] blocked by buffer, wait', BUFFER_MS - (now - lastChangeTime), 'ms');
       }
     },
-    onLeave: () => console.log('[ScrollText] Section complete, unpinning'),
-    onEnterBack: () => console.log('[ScrollText] Re-entering section')
+    onLeave: () => console.log('[ScrollText] Complete, going to next section'),
+    onEnterBack: () => console.log('[ScrollText] Back in section')
   });
 
-  console.log('[ScrollText] Ready - scroll to cycle words');
+  console.log('[ScrollText] Ready - scroll distance:', items.length * 80, 'px');
 }
+
 
 // ==================== FIX WIDGET POSITION ====================
 // Remove body transforms that break position:fixed for widgets
