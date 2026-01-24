@@ -561,34 +561,54 @@ function initTextAnimation() {
 
 // ==================== SCROLL TEXT ANIMATION ====================
 function initScrollTextAnimation() {
+  const section = document.querySelector('.scroll-text-section');
   const items = gsap.utils.toArray('.scroll-text-list li');
-  if (!items.length) return;
+  
+  if (!section || !items.length) {
+    console.log('[ScrollText] Missing section or items');
+    return;
+  }
+
+  console.log('[ScrollText] Init with', items.length, 'words');
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Set initial state: only first word visible, rest completely hidden
+  // Set initial state: first word visible, rest hidden
   gsap.set(items, { 
-    opacity: (i) => (i === 0 ? 1 : 0)
+    opacity: (i) => (i === 0 ? 1 : 0),
+    position: 'absolute',
+    top: 0,
+    left: 0
   });
 
-  // Create scroll-triggered swap for each word
-  items.forEach((item, i) => {
-    if (i === items.length - 1) return;
+  let currentIndex = 0;
 
-    ScrollTrigger.create({
-      trigger: item,
-      start: 'center center',
-      end: 'center center-=1',
-      onEnter: () => {
-        gsap.to(items[i], { opacity: 0, duration: 0.15 });
-        gsap.to(items[i + 1], { opacity: 1, duration: 0.15 });
-      },
-      onLeaveBack: () => {
-        gsap.to(items[i], { opacity: 1, duration: 0.15 });
-        gsap.to(items[i + 1], { opacity: 0, duration: 0.15 });
+  // Pin the section and cycle words on scroll
+  ScrollTrigger.create({
+    trigger: section,
+    start: 'top top',
+    end: () => `+=${items.length * 150}`,
+    pin: true,
+    scrub: 0.3,
+    onUpdate: (self) => {
+      const progress = self.progress;
+      const newIndex = Math.min(
+        Math.floor(progress * items.length),
+        items.length - 1
+      );
+      
+      if (newIndex !== currentIndex) {
+        console.log('[ScrollText] Word:', items[currentIndex].textContent, '->', items[newIndex].textContent);
+        gsap.to(items[currentIndex], { opacity: 0, duration: 0.2 });
+        gsap.to(items[newIndex], { opacity: 1, duration: 0.2 });
+        currentIndex = newIndex;
       }
-    });
+    },
+    onLeave: () => console.log('[ScrollText] Section complete, unpinning'),
+    onEnterBack: () => console.log('[ScrollText] Re-entering section')
   });
+
+  console.log('[ScrollText] Ready - scroll to cycle words');
 }
 
 // ==================== FIX WIDGET POSITION ====================
