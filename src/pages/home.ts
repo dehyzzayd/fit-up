@@ -83,14 +83,14 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
   
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
-        "jsm/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"
-      }
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
+      "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"
     }
-  </script>
+  }
+</script>
   
   <link rel="stylesheet" href="/static/styles/main.css">
   ${getCustomCSS()}
@@ -604,7 +604,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   
   <!-- Hero animation -->
-<script type="module" src="/static/js/hero.js?v=3"></script>
+<script type="module" src="/static/js/hero.js"></script>
   
   <!-- Main JS -->
   <script src="/static/js/main.js"></script>
