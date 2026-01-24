@@ -297,12 +297,10 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
   </section>
 
-<!-- Scroll Text Animation Section -->
+ <!-- Scroll Text Animation Section -->
   <section class="scroll-text-section" id="scroll-text">
-    <div class="scroll-text-container">
-      <div class="scroll-text-sticky">
-        <h2 class="scroll-text-prefix">We can&nbsp;</h2>
-      </div>
+    <div class="scroll-text-content">
+      <h2 class="scroll-text-prefix">We can&nbsp;</h2>
       <ul class="scroll-text-list" style="--count: 12">
         <li style="--i: 0">strategize.</li>
         <li style="--i: 1">create.</li>
