@@ -26,8 +26,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     ];
   };
 
-
- 
   // Get custom CSS
   const getCustomCSS = (): string => {
     const enabled = content['custom_css']?.['enabled'];
@@ -73,9 +71,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
       <img src="${logo.url}" alt="${logo.name || 'Brand'}" loading="lazy">
     </div>
   `).join('');
-  // For seamless infinite scroll, we need exactly 2 copies of logos
-  // The animation will scroll through the first copy, then reset (showing the second copy which looks identical)
-  // This creates the illusion of infinite scrolling
   const repeatedLogosHTML = logoItemsHTML + logoItemsHTML;
 
  return `<!DOCTYPE html>
@@ -88,7 +83,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
   
- <script type="importmap">
+  <script type="importmap">
     {
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
@@ -98,49 +93,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   </script>
   
   <link rel="stylesheet" href="/static/styles/main.css">
-  <style>
-    /* WIDGET FIX - FLOATING CHAT */
-    .lets-talk-widget {
-      position: fixed !important;
-      bottom: 30px !important;
-      right: 30px !important;
-      left: auto !important;
-      top: auto !important;
-      z-index: 99999 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-end !important;
-      gap: 12px !important;
-      transform: none !important;
-    }
-    .whatsapp-floating-btn {
-      width: 56px !important;
-      height: 56px !important;
-      background: #25D366 !important;
-      border-radius: 50% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
-    }
-    .lets-talk-btn {
-      display: flex !important;
-      align-items: center !important;
-      gap: 10px !important;
-      padding: 14px 24px !important;
-      background: #B8FF5C !important;
-      color: #000 !important;
-      border: none !important;
-      border-radius: 50px !important;
-      font-size: 14px !important;
-      font-weight: 600 !important;
-    }
-    @media (max-width: 768px) {
-      .lets-talk-widget { bottom: 20px !important; right: 20px !important; }
-      .lets-talk-btn { width: 56px !important; height: 56px !important; padding: 0 !important; border-radius: 50% !important; justify-content: center !important; }
-      .lets-talk-btn span { display: none !important; }
-    }
-  </style>
   ${getCustomCSS()}
 </head>
 <body>
@@ -174,8 +126,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
       </div>
     </div>
   </aside>
-
-
 
   <!-- Top Navigation -->
   <nav class="top-nav" id="topNav">
@@ -217,11 +167,8 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     <div class="preloader-content">
       <div class="ghost-loader">
         <svg class="ghost-svg" height="80" viewBox="0 0 512 512" width="80" xmlns="http://www.w3.org/2000/svg">
-          <!-- Ghost body - white -->
           <path class="ghost-body" d="m508.374 432.802s-46.6-39.038-79.495-275.781c-8.833-87.68-82.856-156.139-172.879-156.139-90.015 0-164.046 68.458-172.879 156.138-32.895 236.743-79.495 275.782-79.495 275.782-15.107 25.181 20.733 28.178 38.699 27.94 35.254-.478 35.254 40.294 70.516 40.294 35.254 0 35.254-35.261 70.508-35.261s37.396 45.343 72.65 45.343 37.389-45.343 72.651-45.343c35.254 0 35.254 35.261 70.508 35.261s35.27-40.772 70.524-40.294c17.959.238 53.798-2.76 38.692-27.94z" fill="white" />
-          <!-- Left eye - green -->
           <circle class="ghost-eye left-eye" cx="208" cy="225" r="22" fill="#00ff80" />
-          <!-- Right eye - green -->
           <circle class="ghost-eye right-eye" cx="297" cy="225" r="22" fill="#00ff80" />
         </svg>
       </div>
@@ -249,7 +196,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         </h1>
       </div>
     </div>
-    <!-- Contact Us Button -->
     <a href="/contact" class="hero-cta-btn">
       <span class="btn-text">Contact Us</span>
       <span class="btn-arrow">→</span>
@@ -383,7 +329,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
 
   <!-- About Us Transition Section -->
   <section class="about-transition-section" id="about">
-    <!-- SVG Curve -->
     <div class="curve-container">
       <svg viewBox="0 0 1440 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <path 
@@ -397,16 +342,13 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
       </svg>
     </div>
 
-    <!-- About Content -->
     <div class="about-content">
       <div class="about-grid">
-        <!-- Left Column - Heading -->
         <div class="about-left">
           <h2 class="about-heading">
             <span data-content="about.heading_line1">${getContent('about', 'heading_line1', 'About')}</span>
             <span data-content="about.heading_line2">${getContent('about', 'heading_line2', 'Us')}</span>
           </h2>
-          <!-- Stats -->
           <div class="about-stats">
             <div class="stat-item">
               <div class="stat-number" data-content="about.stat1_number">${getContent('about', 'stat1_number', '50+')}</div>
@@ -423,7 +365,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
           </div>
         </div>
 
-        <!-- Right Column - Text -->
         <div class="about-text">
           <p data-content="about.paragraph1">${getContent('about', 'paragraph1', 'At fitup, we believe that every brand has a unique story waiting to be told. We\'re not just a marketing agency—we\'re your strategic partners in growth, dedicated to transforming your vision into measurable success.')}</p>
           <p data-content="about.paragraph2">${getContent('about', 'paragraph2', 'Our team combines creative excellence with data-driven insights to craft campaigns that resonate with your audience and drive real results. From strategic consulting to full-scale media production, we handle every aspect of your brand\'s digital presence.')}</p>
@@ -436,7 +377,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <!-- Social Section -->
   <section class="social-section" id="social">
     <div class="social-wrapper">
-      <!-- Twitter Side -->
       <div class="social-item">
         <div class="social-text-content">
           <p class="social-label">Find Us On</p>
@@ -459,7 +399,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         </div>
       </div>
 
-      <!-- Instagram Side -->
       <div class="social-item reverse">
         <div class="social-text-content">
           <p class="social-label">Find Us On</p>
@@ -487,15 +426,12 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <!-- FAQ Section -->
   <section class="faq-section" id="faq">
     <div class="faq-container">
-      <!-- Left Side - Title -->
       <div class="faq-header">
         <p class="faq-label">/FAQ</p>
         <h2 class="faq-title">Questions<br>que vous<br>pourriez<br>poser</h2>
       </div>
 
-      <!-- Right Side - Questions -->
       <div class="faq-list">
-        <!-- Question 1 -->
         <div class="faq-item">
           <div class="faq-item-header">
             <span class="faq-number">/01</span>
@@ -513,7 +449,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
           </div>
         </div>
 
-        <!-- Question 2 -->
         <div class="faq-item active">
           <div class="faq-item-header">
             <span class="faq-number">/02</span>
@@ -531,7 +466,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
           </div>
         </div>
 
-        <!-- Question 3 -->
         <div class="faq-item">
           <div class="faq-item-header">
             <span class="faq-number">/03</span>
@@ -549,7 +483,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
           </div>
         </div>
 
-        <!-- Question 4 -->
         <div class="faq-item">
           <div class="faq-item-header">
             <span class="faq-number">/04</span>
@@ -602,7 +535,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <h4>Contact</h4>
         <ul class="footer-links">
           <li><a href="mailto:${getContent('footer', 'email', 'hello@fitup.ma')}" data-content="footer.email">${getContent('footer', 'email', 'hello@fitup.ma')}</a></li>
-          <li><a href="tel:${getContent('footer', 'phone', '+212 6 00 00 00 00').replace(/\\s/g, '')}" data-content="footer.phone">${getContent('footer', 'phone', '+212 6 00 00 00 00')}</a></li>
+          <li><a href="tel:${getContent('footer', 'phone', '+212 6 00 00 00 00').replace(/\s/g, '')}" data-content="footer.phone">${getContent('footer', 'phone', '+212 6 00 00 00 00')}</a></li>
           <li><a href="#" data-content="footer.location">${getContent('footer', 'location', 'Casablanca, Morocco')}</a></li>
         </ul>
       </div>
@@ -619,7 +552,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
   </footer>
 
-  <!-- Let's Talk Floating Button & Chat Widget -->
+  <!-- Let's Talk Floating Widget -->
   <div class="lets-talk-widget">
     <a href="https://wa.me/212770259572" target="_blank" rel="noopener noreferrer" class="whatsapp-floating-btn" title="Chat on WhatsApp">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -666,7 +599,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
   </div>
 
-<!-- GSAP - Must load before hero.js -->
+  <!-- GSAP - Must load before hero.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   
