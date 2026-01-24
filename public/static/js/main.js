@@ -555,7 +555,36 @@ function initTextAnimation() {
     });
   }
 })();
+// ==================== SCROLL TEXT ANIMATION ====================
+function initScrollTextAnimation() {
+  const items = document.querySelectorAll('.scroll-text-list li');
+  if (!items.length) return;
 
+  const observerOptions = {
+    root: null,
+    rootMargin: '-45% 0px -45% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove active from all
+        items.forEach(item => item.classList.remove('active'));
+        // Add active to current
+        entry.target.classList.add('active');
+      }
+    });
+  }, observerOptions);
+
+  items.forEach(item => observer.observe(item));
+  
+  // Set first item active initially
+  if (items[0]) items[0].classList.add('active');
+}
+
+// Call it
+initScrollTextAnimation();
 // ==================== FIX WIDGET POSITION ====================
 // Remove body transforms that break position:fixed for widgets
 (function fixWidgetPosition() {
