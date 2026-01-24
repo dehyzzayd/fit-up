@@ -16,8 +16,8 @@
     "db:console:local": "wrangler d1 execute FITUP_DB --local"
   },
   "dependencies": {
-    "hono": "^4.11.4"
-   "three": "^0.170.0"
+    "hono": "^4.11.4",
+   "three": "^0.170.0",
      "gsap": "^3.12.5"
 
   },
