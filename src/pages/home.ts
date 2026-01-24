@@ -297,6 +297,28 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
   </section>
 
+<!-- Scroll Text Animation Section -->
+  <section class="scroll-text-section" id="scroll-text">
+    <div class="scroll-text-container">
+      <div class="scroll-text-sticky">
+        <h2 class="scroll-text-prefix">We can&nbsp;</h2>
+      </div>
+      <ul class="scroll-text-list" style="--count: 12">
+        <li style="--i: 0">strategize.</li>
+        <li style="--i: 1">create.</li>
+        <li style="--i: 2">design.</li>
+        <li style="--i: 3">develop.</li>
+        <li style="--i: 4">optimize.</li>
+        <li style="--i: 5">produce.</li>
+        <li style="--i: 6">analyze.</li>
+        <li style="--i: 7">scale.</li>
+        <li style="--i: 8">transform.</li>
+        <li style="--i: 9">innovate.</li>
+        <li style="--i: 10">deliver.</li>
+        <li style="--i: 11">win.</li>
+      </ul>
+    </div>
+  </section>
   <!-- Game Section -->
   <section class="game-section" id="discount">
     <div class="game-container">
