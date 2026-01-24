@@ -2135,3 +2135,21 @@ body {
     bottom: 120px;
   }
 }
+
+/* Ensure canvas doesn't block widget interactions */
+.webgl {
+    pointer-events: none !important;
+}
+
+/* Widget always on top and clickable */
+.lets-talk-widget {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+}
+
+.lets-talk-widget * {
+    pointer-events: auto !important;
+}
