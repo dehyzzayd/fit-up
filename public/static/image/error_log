@@ -1,0 +1,10 @@
+[21-Jan-2026 13:56:19 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home2/fitupma/public_html/Mediafitup/index.php on line 3
+[21-Jan-2026 14:11:27 UTC] PHP Warning:  Undefined variable $_SESSIONs in /home2/fitupma/public_html/Mediafitup/index.php on line 6
+[21-Jan-2026 14:11:27 UTC] PHP Warning:  Trying to access array offset on value of type null in /home2/fitupma/public_html/Mediafitup/index.php on line 6
+[21-Jan-2026 14:11:30 UTC] PHP Warning:  Undefined variable $_SESSIONs in /home2/fitupma/public_html/Mediafitup/index.php on line 6
+[21-Jan-2026 14:11:30 UTC] PHP Warning:  Trying to access array offset on value of type null in /home2/fitupma/public_html/Mediafitup/index.php on line 6
+[21-Jan-2026 14:11:39 UTC] PHP Warning:  Undefined variable $_SESSIONs in /home2/fitupma/public_html/Mediafitup/index.php on line 6
+[21-Jan-2026 14:11:39 UTC] PHP Warning:  Trying to access array offset on value of type null in /home2/fitupma/public_html/Mediafitup/index.php on line 6
+[21-Jan-2026 14:11:46 UTC] PHP Warning:  Undefined variable $_SESSIONs in /home2/fitupma/public_html/Mediafitup/index.php on line 6
+[21-Jan-2026 14:11:46 UTC] PHP Warning:  Trying to access array offset on value of type null in /home2/fitupma/public_html/Mediafitup/index.php on line 6
+[21-Jan-2026 14:14:49 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home2/fitupma/public_html/Mediafitup/index.php on line 3
