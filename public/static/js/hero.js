@@ -103,9 +103,7 @@ class PreloaderManager {
 const preloader = new PreloaderManager();
 
 // Force browser to use GPU acceleration
-document.body.style.transform = "translateZ(0)";
-document.body.style.backfaceVisibility = "hidden";
-document.body.style.perspective = "1000px";
+
 
 preloader.updateProgress(1);
 
