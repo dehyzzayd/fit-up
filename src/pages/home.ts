@@ -604,7 +604,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   
   <!-- Hero animation -->
-  <script type="module" src="/static/js/hero.js"></script>
+<script type="module" src="/static/js/hero.js?v=3"></script>
   
   <!-- Main JS -->
   <script src="/static/js/main.js"></script>
