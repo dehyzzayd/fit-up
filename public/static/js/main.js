@@ -561,58 +561,34 @@ function initTextAnimation() {
 
 // ==================== SCROLL TEXT ANIMATION ====================
 function initScrollTextAnimation() {
-  const items = document.querySelectorAll('.scroll-text-list li');
+  const items = gsap.utils.toArray('.scroll-text-list li');
   if (!items.length) return;
 
-  // Set first item active initially
-  items[0].classList.add('active');
+  gsap.registerPlugin(ScrollTrigger);
 
-  // Use GSAP ScrollTrigger for smooth animation
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
+  // Set initial state: only first word visible, rest completely hidden
+  gsap.set(items, { 
+    opacity: (i) => (i === 0 ? 1 : 0)
+  });
 
-    // Set initial state
-    gsap.set(items, { opacity: (i) => (i === 0 ? 1 : 0.15) });
-
-    // Create timeline for opacity animation
-    const dimmer = gsap.timeline()
-      .to(items, {
-        opacity: 1,
-        stagger: 0.5,
-      })
-      .to(items.slice(0, items.length - 1), {
-        opacity: 0.15,
-        stagger: 0.5,
-      }, 0);
+  // Create scroll-triggered swap for each word
+  items.forEach((item, i) => {
+    if (i === items.length - 1) return;
 
     ScrollTrigger.create({
-      trigger: items[0],
-      endTrigger: items[items.length - 1],
+      trigger: item,
       start: 'center center',
-      end: 'center center',
-      animation: dimmer,
-      scrub: 0.2,
+      end: 'center center-=1',
+      onEnter: () => {
+        gsap.to(items[i], { opacity: 0, duration: 0.15 });
+        gsap.to(items[i + 1], { opacity: 1, duration: 0.15 });
+      },
+      onLeaveBack: () => {
+        gsap.to(items[i], { opacity: 1, duration: 0.15 });
+        gsap.to(items[i + 1], { opacity: 0, duration: 0.15 });
+      }
     });
-
-  } else {
-    // Fallback: Use Intersection Observer
-    const observerOptions = {
-      root: null,
-      rootMargin: '-40% 0px -40% 0px',
-      threshold: 0
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          items.forEach(item => item.classList.remove('active'));
-          entry.target.classList.add('active');
-        }
-      });
-    }, observerOptions);
-
-    items.forEach(item => observer.observe(item));
-  }
+  });
 }
 
 // ==================== FIX WIDGET POSITION ====================
