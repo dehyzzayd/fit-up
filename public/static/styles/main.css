@@ -2155,7 +2155,7 @@ body {
 }
 
 /*
-* ==================== SCROLL TEXT ANIMATION ==================== */
+/* ==================== SCROLL TEXT ANIMATION ==================== */
 .scroll-text-section {
   position: relative;
   width: 100%;
@@ -2165,6 +2165,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 
 .scroll-text-content {
@@ -2201,4 +2203,10 @@ body {
   white-space: nowrap;
   color: #B8FF5C;
   line-height: 1.2;
+}
+
+/* Remove any gaps from pinning */
+.pin-spacer {
+  margin: 0 !important;
+  padding: 0 !important;
 }
