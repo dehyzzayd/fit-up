@@ -1,4 +1,4 @@
-/* EXACT CSS FROM ORIGINAL FITUP MAIN HTML */
+Copy/* EXACT CSS FROM ORIGINAL FITUP MAIN HTML */
 /* ============================================
    FONTS
    ============================================ */
@@ -524,7 +524,6 @@ body {
   transform: translateX(4px);
 }
 
-/* Enhanced glowing effect for Hero CTA */
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 4px 20px rgba(184, 255, 92, 0.4),
@@ -1756,7 +1755,104 @@ body {
 }
 
 /* ============================================
-   LET'S TALK FLOATING WIDGET - FIXED BOTTOM RIGHT
+   RESPONSIVE - SMALL SCREENS
+   ============================================ */
+
+@media screen and (max-width: 375px) {
+  .webgl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 55vh;
+    height: 55dvh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .hero-section {
+    min-height: 55vh;
+    min-height: 55dvh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .hero {
+    height: 55vh;
+    height: 55dvh;
+    margin: 0;
+    padding: 0 10px;
+  }
+  
+  .top-nav {
+    padding: 16px 14px;
+  }
+  
+  .nav-logo {
+    font-size: 10px;
+  }
+  
+  .nav-logo-img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .nav-lang-toggle {
+    font-size: 10px;
+  }
+  
+  .menu-text {
+    font-size: 10px;
+  }
+  
+  .nav-right {
+    justify-self: end;
+  }
+  
+  .side-menu-link {
+    font-size: 18px;
+    padding: 12px 0;
+  }
+  
+  .option {
+    height: 160px;
+    min-height: 160px;
+  }
+  
+  .option.active {
+    height: 200px;
+  }
+}
+
+/* Landscape orientation fixes */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .webgl {
+    height: 100vh;
+    height: 100dvh;
+  }
+  
+  .hero-section {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  
+  .hero {
+    height: 100vh;
+    height: 100dvh;
+  }
+  
+  .side-menu-nav {
+    padding: 16px 24px;
+  }
+  
+  .side-menu-link {
+    font-size: 18px;
+    padding: 10px 0;
+  }
+}
+
+/* ============================================
+   LET'S TALK FLOATING WIDGET
    ============================================ */
 
 .lets-talk-widget {
@@ -1769,8 +1865,8 @@ body {
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-end !important;
-  gap: 12px;
-  pointer-events: auto;
+  gap: 12px !important;
+  pointer-events: auto !important;
   transform: none !important;
 }
 
@@ -1986,6 +2082,7 @@ body {
   margin: 0;
 }
 
+/* Widget Mobile Responsive */
 @media (max-width: 768px) {
   .lets-talk-widget {
     bottom: 20px !important;
@@ -2036,170 +2133,5 @@ body {
   .lets-talk-widget .lets-talk-dialog {
     width: calc(100vw - 32px);
     bottom: 120px;
-  }
-
-@media screen and (max-width: 375px) {
-  .webgl {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 55vh;
-    height: 55dvh;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .hero-section {
-    min-height: 55vh;
-    min-height: 55dvh;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .hero {
-    height: 55vh;
-    height: 55dvh;
-    margin: 0;
-    padding: 0 10px;
-  }
-  
-  .top-nav {
-    padding: 16px 14px;
-  }
-  
-  .nav-logo {
-    font-size: 10px;
-  }
-  
-  .nav-logo-img {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .nav-lang-toggle {
-    font-size: 10px;
-  }
-  
-  .menu-text {
-    font-size: 10px;
-  }
-  
-  .nav-right {
-    justify-self: end;
-  }
-  
-  .side-menu-link {
-    font-size: 18px;
-    padding: 12px 0;
-  }
-  
-  .option {
-    height: 160px;
-    min-height: 160px;
-  }
-  
-  .option.active {
-    height: 200px;
-  }
-}
-
-/* Landscape orientation fixes */
-@media screen and (max-height: 500px) and (orientation: landscape) {
-  .webgl {
-    height: 100vh;
-    height: 100dvh;
-  }
-  
-  .hero-section {
-    min-height: 100vh;
-    min-height: 100dvh;
-  }
-  
-  .hero {
-    height: 100vh;
-    height: 100dvh;
-  }
-  
-  .side-menu-nav {
-    padding: 16px 24px;
-  }
-  
-  .side-menu-link {
-    font-size: 18px;
-    padding: 10px 0;
-  }
-}
-
-/* ============================================
-   WIDGET FIX - ADD THIS AT THE VERY END
-   ============================================ */
-
-.lets-talk-widget {
-  position: fixed !important;
-  bottom: 30px !important;
-  right: 30px !important;
-  left: auto !important;
-  top: auto !important;
-  z-index: 99999 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-end !important;
-  gap: 12px !important;
-  transform: none !important;
-}
-
-.whatsapp-floating-btn {
-  position: relative !important;
-  width: 56px !important;
-  height: 56px !important;
-  background: #25D366 !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
-}
-
-.lets-talk-btn {
-  position: relative !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  padding: 14px 24px !important;
-  background: #B8FF5C !important;
-  color: #000 !important;
-  border: none !important;
-  border-radius: 50px !important;
-  cursor: pointer !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-}
-
-.lets-talk-dialog {
-  position: absolute !important;
-  bottom: 130px !important;
-  right: 0 !important;
-  width: 340px !important;
-  background: #111 !important;
-  border-radius: 20px !important;
-}
-
-@media (max-width: 768px) {
-  .lets-talk-widget {
-    bottom: 20px !important;
-    right: 20px !important;
-  }
-  
-  .lets-talk-btn {
-    width: 56px !important;
-    height: 56px !important;
-    padding: 0 !important;
-    border-radius: 50% !important;
-    justify-content: center !important;
-  }
-  
-  .lets-talk-btn span {
-    display: none !important;
   }
 }
