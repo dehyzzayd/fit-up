@@ -2155,31 +2155,31 @@ body {
 }
 
 /*
-/*/* ==================== SCROLL TEXT ANIMATION ==================== */
+* ==================== SCROLL TEXT ANIMATION ==================== */
 .scroll-text-section {
   position: relative;
   width: 100%;
-  min-height: 300vh;
+  height: 100vh;
   background: #000;
   z-index: 10;
-}
-
-.scroll-text-container {
-  position: sticky;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  padding-left: 5rem;
-  height: 1.2em;
-  overflow: hidden;
+  justify-content: center;
+}
+
+.scroll-text-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2em;
 }
 
 .scroll-text-prefix {
-  font-size: clamp(2rem, 6vw, 5rem);
-  font-weight: 600;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 700;
   color: #fff;
-  margin-right: 0.3em;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .scroll-text-list {
@@ -2188,8 +2188,9 @@ body {
   margin: 0;
   padding: 0;
   height: 1.2em;
-  font-size: clamp(2rem, 6vw, 5rem);
-  font-weight: 600;
+  min-width: 6em;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 700;
 }
 
 .scroll-text-list li {
@@ -2199,8 +2200,5 @@ body {
   opacity: 0;
   white-space: nowrap;
   color: #B8FF5C;
-}
-
-.scroll-text-list li:first-child {
-  opacity: 1;
+  line-height: 1.2;
 }
