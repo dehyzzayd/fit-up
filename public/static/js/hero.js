@@ -1,10 +1,10 @@
 // Ghost Hero Animation - Fitup
 import * as THREE from "three";
-import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "jsm/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "jsm/postprocessing/UnrealBloomPass.js";
-import { OutputPass } from "jsm/postprocessing/OutputPass.js";
-import { ShaderPass } from "jsm/postprocessing/ShaderPass.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 
 // Preloader management
 class PreloaderManager {
@@ -47,7 +47,12 @@ class PreloaderManager {
 
       if (canvas && canvas.classList) {
         canvas.classList.add("fade-in");
+        // CRITICAL: Allow clicks to pass through canvas to widgets
+        canvas.style.pointerEvents = "none";
       }
+
+      // CRITICAL: Ensure floating widgets remain visible after preloader completes
+      this.ensureWidgetsVisible();
 
       setTimeout(() => {
         if (this.preloader) {
@@ -55,6 +60,42 @@ class PreloaderManager {
         }
       }, 1000);
     }, 1500);
+  }
+
+  // New method to ensure widgets stay visible
+  ensureWidgetsVisible() {
+    const widget = document.querySelector(".lets-talk-widget");
+    if (widget) {
+      widget.style.cssText = `
+        position: fixed !important;
+        bottom: 30px !important;
+        right: 30px !important;
+        left: auto !important;
+        top: auto !important;
+        z-index: 99999 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        gap: 12px !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+      `;
+    }
+
+    const whatsappBtn = document.querySelector(".whatsapp-floating-btn");
+    if (whatsappBtn) {
+      whatsappBtn.style.pointerEvents = "auto";
+      whatsappBtn.style.opacity = "1";
+      whatsappBtn.style.visibility = "visible";
+    }
+
+    const letsTalkBtn = document.querySelector(".lets-talk-btn");
+    if (letsTalkBtn) {
+      letsTalkBtn.style.pointerEvents = "auto";
+      letsTalkBtn.style.opacity = "1";
+      letsTalkBtn.style.visibility = "visible";
+    }
   }
 }
 
@@ -123,12 +164,12 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.9;
 renderer.setClearColor(0x000000, 0);
 
-// Canvas styling
+// Canvas styling - FIXED: pointer-events set to none so widgets are clickable
 renderer.domElement.style.position = "absolute";
 renderer.domElement.style.top = "0";
 renderer.domElement.style.left = "0";
 renderer.domElement.style.zIndex = "50";
-renderer.domElement.style.pointerEvents = "auto";
+renderer.domElement.style.pointerEvents = "none"; // CHANGED from "auto" to "none"
 renderer.domElement.style.background = "transparent";
 
 // Store original bloom values
@@ -678,6 +719,9 @@ window.addEventListener("resize", () => {
       window.innerWidth,
       newHeight
     );
+    
+    // Re-ensure widgets are visible after resize
+    preloader.ensureWidgetsVisible();
   }, 250);
 });
 
@@ -711,7 +755,20 @@ window.addEventListener("mousemove", (e) => {
   }
 });
 
-// Touch support for mobile
+// Touch support for mobile - FIXED: Added touchstart handler
+let lastTouchX = 0;
+let lastTouchY = 0;
+
+window.addEventListener("touchstart", (e) => {
+  if (e.touches.length > 0) {
+    const touch = e.touches[0];
+    lastTouchX = touch.clientX;
+    lastTouchY = touch.clientY;
+    mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+  }
+}, { passive: true });
+
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length > 0) {
     const touch = e.touches[0];
@@ -735,7 +792,7 @@ window.addEventListener("touchmove", (e) => {
       lastMouseUpdate = now;
     }
   }
-});
+}, { passive: true });
 
 // Animation loop
 let lastParticleTime = 0;
@@ -964,6 +1021,14 @@ if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
 } else {
   console.warn("GSAP or ScrollTrigger not loaded - scroll fade disabled");
 }
+
+// Ensure widgets stay visible after everything loads
+window.addEventListener("load", () => {
+  // Double-check widget visibility after full page load
+  setTimeout(() => {
+    preloader.ensureWidgetsVisible();
+  }, 2500);
+});
 
 // Start animation
 animate(0);
