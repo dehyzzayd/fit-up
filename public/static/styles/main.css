@@ -2155,90 +2155,52 @@ body {
 }
 
 /*
-/* ============================================
-   SCROLL TEXT ANIMATION SECTION
-   ============================================ */
-
+/*/* ==================== SCROLL TEXT ANIMATION ==================== */
 .scroll-text-section {
   position: relative;
   width: 100%;
+  min-height: 300vh;
   background: #000;
   z-index: 10;
 }
 
-.scroll-text-content {
+.scroll-text-container {
+  position: sticky;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
-  width: 100%;
+  align-items: center;
   padding-left: 5rem;
-  line-height: 1.25;
+  height: 1.2em;
+  overflow: hidden;
 }
 
 .scroll-text-prefix {
-  position: sticky;
-  top: 50vh;
-  transform: translateY(-50%);
-  font-family: 'Roboto', sans-serif;
-  font-size: clamp(2.5rem, 8vw, 7rem);
-  font-weight: 700;
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 600;
   color: #fff;
-  margin: 0;
-  white-space: nowrap;
-  height: fit-content;
-  z-index: 2;
+  margin-right: 0.3em;
 }
 
 .scroll-text-list {
+  position: relative;
   list-style: none;
-  padding: 0;
   margin: 0;
-  padding-top: 50vh;
-  padding-bottom: 50vh;
+  padding: 0;
+  height: 1.2em;
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 600;
 }
 
 .scroll-text-list li {
-  font-family: 'Roboto', sans-serif;
-  font-size: clamp(2.5rem, 8vw, 7rem);
-  font-weight: 700;
-  line-height: 1.5;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  white-space: nowrap;
   color: #B8FF5C;
-  opacity: 0.15;
-  transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
-.scroll-text-list li:last-child {
-  background: linear-gradient(#fff 50%, rgba(255,255,255,0.4));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.scroll-text-list li.active {
+.scroll-text-list li:first-child {
   opacity: 1;
-  filter: brightness(1.2);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .scroll-text-content {
-    flex-direction: column;
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-  
-  .scroll-text-prefix {
-    position: sticky;
-    top: 30vh;
-    font-size: clamp(1.8rem, 12vw, 3.5rem);
-    padding-bottom: 1rem;
-  }
-  
-  .scroll-text-list {
-    padding-top: 2rem;
-    padding-bottom: 40vh;
-  }
-  
-  .scroll-text-list li {
-    font-size: clamp(1.8rem, 12vw, 3.5rem);
-    line-height: 1.6;
-  }
 }
