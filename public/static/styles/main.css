@@ -133,7 +133,7 @@
    ============================================ */
 
 #main-content {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -465,7 +465,7 @@ body {
    ============================================ */
 
 .hero-cta-btn {
-  position: fixed;
+  position: absolute;
   bottom: 12%;
   left: 50%;
   transform: translateX(-50%);
@@ -1760,7 +1760,7 @@ body {
 
 @media screen and (max-width: 375px) {
   .webgl {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
