@@ -86,6 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize FAQ Accordion
   initFaqAccordion();
 
+  // Initialize Scroll Text Animation
+  initScrollTextAnimation();
+
   console.log("fitup home loaded");
 });
 
@@ -555,36 +558,63 @@ function initTextAnimation() {
     });
   }
 })();
+
 // ==================== SCROLL TEXT ANIMATION ====================
 function initScrollTextAnimation() {
   const items = document.querySelectorAll('.scroll-text-list li');
   if (!items.length) return;
 
-  const observerOptions = {
-    root: null,
-    rootMargin: '-45% 0px -45% 0px',
-    threshold: 0
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        // Remove active from all
-        items.forEach(item => item.classList.remove('active'));
-        // Add active to current
-        entry.target.classList.add('active');
-      }
-    });
-  }, observerOptions);
-
-  items.forEach(item => observer.observe(item));
-  
   // Set first item active initially
-  if (items[0]) items[0].classList.add('active');
+  items[0].classList.add('active');
+
+  // Use GSAP ScrollTrigger for smooth animation
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Set initial state
+    gsap.set(items, { opacity: (i) => (i === 0 ? 1 : 0.15) });
+
+    // Create timeline for opacity animation
+    const dimmer = gsap.timeline()
+      .to(items, {
+        opacity: 1,
+        stagger: 0.5,
+      })
+      .to(items.slice(0, items.length - 1), {
+        opacity: 0.15,
+        stagger: 0.5,
+      }, 0);
+
+    ScrollTrigger.create({
+      trigger: items[0],
+      endTrigger: items[items.length - 1],
+      start: 'center center',
+      end: 'center center',
+      animation: dimmer,
+      scrub: 0.2,
+    });
+
+  } else {
+    // Fallback: Use Intersection Observer
+    const observerOptions = {
+      root: null,
+      rootMargin: '-40% 0px -40% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          items.forEach(item => item.classList.remove('active'));
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    items.forEach(item => observer.observe(item));
+  }
 }
 
-// Call it
-initScrollTextAnimation();
 // ==================== FIX WIDGET POSITION ====================
 // Remove body transforms that break position:fixed for widgets
 (function fixWidgetPosition() {
@@ -592,16 +622,10 @@ initScrollTextAnimation();
     document.body.style.transform = 'none';
     document.body.style.perspective = 'none';
     document.body.style.backfaceVisibility = 'visible';
-    console.log('Widget position fix applied');
   }
   
   // Apply immediately
   applyFix();
-  
-  // Apply after DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyFix);
-  }
   
   // Apply after full load (catches hero.js changes)
   window.addEventListener('load', () => {
