@@ -2210,3 +2210,469 @@ body {
   margin: 0 !important;
   padding: 0 !important;
 }
+
+/* ============================================
+   RESPONSIVE - MOBILE STYLES
+   ============================================ */
+
+/* Tablet - 1024px and below */
+@media (max-width: 1024px) {
+  .top-nav {
+    padding: 24px 30px;
+    grid-template-columns: auto 1fr auto;
+  }
+  
+  .nav-center-left,
+  .nav-center,
+  .nav-center-right {
+    display: none;
+  }
+  
+  .nav-right {
+    grid-column: 3;
+  }
+  
+  .options {
+    height: 400px;
+  }
+  
+  .game-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .about-heading {
+    font-size: 56px;
+  }
+  
+  .about-stats {
+    gap: 40px;
+  }
+  
+  .social-wrapper {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  
+  .social-item,
+  .social-item.reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .social-text-content,
+  .social-item.reverse .social-text-content {
+    text-align: center;
+  }
+  
+  .faq-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .faq-title {
+    font-size: 42px;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+}
+
+/* Mobile - 768px and below */
+@media (max-width: 768px) {
+  .top-nav {
+    padding: 20px;
+  }
+  
+  .nav-logo span {
+    display: none;
+  }
+  
+  .menu-text {
+    display: none;
+  }
+  
+  .side-menu {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .side-menu-header {
+    padding: 24px;
+  }
+  
+  .side-menu-nav {
+    padding: 24px;
+  }
+  
+  .side-menu-link {
+    font-size: 24px;
+    padding: 16px 0;
+  }
+  
+  .side-menu-footer {
+    padding: 24px;
+  }
+  
+  .hero-cta-btn {
+    padding: 14px 24px;
+    font-size: 12px;
+    bottom: 8%;
+  }
+  
+  .logo-scroll-section {
+    padding: 40px 0;
+  }
+  
+  .logo-scroll-title {
+    font-size: 12px;
+    margin-bottom: 24px;
+    padding: 0 20px;
+  }
+  
+  .logo-scroll-track {
+    gap: 40px;
+  }
+  
+  .logo-item,
+  .logo-item.round img {
+    height: 40px;
+    width: 40px;
+  }
+  
+  .services-section {
+    padding: 60px 0;
+    min-height: auto;
+  }
+  
+  .services-title {
+    margin-bottom: 30px;
+  }
+  
+  .options {
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+    padding: 0 16px;
+  }
+  
+  .option {
+    min-width: 100%;
+    min-height: 120px;
+    margin: 0;
+    border-radius: 16px;
+  }
+  
+  .option.active {
+    min-height: 280px;
+    border-radius: 20px;
+  }
+  
+  .option .label {
+    left: 16px;
+    bottom: 16px;
+  }
+  
+  .option.active .label {
+    left: 20px;
+    bottom: 20px;
+  }
+  
+  .option .label .info .main {
+    font-size: 1.1rem;
+  }
+  
+  .option .label .info .sub {
+    font-size: 0.8rem;
+  }
+  
+  /* Scroll Text Section - Mobile */
+  .scroll-text-section {
+    height: 100vh;
+    height: 100dvh;
+  }
+  
+  .scroll-text-content {
+    flex-direction: column;
+    gap: 0.1em;
+    padding: 0 20px;
+  }
+  
+  .scroll-text-prefix {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+  }
+  
+  .scroll-text-list {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+    min-width: auto;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .scroll-text-list li {
+    width: 100%;
+    text-align: center;
+    position: relative;
+  }
+  
+  /* Game Section - Mobile */
+  .game-section {
+    padding: 60px 16px;
+    min-height: auto;
+  }
+  
+  .game-container {
+    gap: 30px;
+  }
+  
+  .game-svg {
+    max-width: 280px;
+  }
+  
+  .animation-stage {
+    height: 150px;
+    margin-bottom: 24px;
+  }
+  
+  .animation-word, 
+  .animation-clone {
+    font-size: 28px;
+    line-height: 32px;
+  }
+  
+  .game-cta-text {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  
+  .game-cta-subtext {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .game-win-title {
+    font-size: 24px;
+  }
+  
+  .game-win-subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .claim-btn {
+    padding: 14px 30px;
+    font-size: 12px;
+  }
+  
+  /* About Section - Mobile */
+  .about-transition-section {
+    margin-top: 100px;
+  }
+  
+  .curve-container {
+    height: 150px;
+  }
+  
+  .about-content {
+    padding: 30px 20px 0;
+  }
+  
+  .about-heading {
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+  
+  .about-text {
+    font-size: 16px;
+  }
+  
+  .about-stats {
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 30px;
+  }
+  
+  .stat-number {
+    font-size: 36px;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+  }
+  
+  /* Social Section - Mobile */
+  .social-section {
+    padding: 40px 16px;
+  }
+  
+  .social-wrapper {
+    gap: 50px;
+  }
+  
+  .social-title {
+    font-size: 2rem;
+  }
+  
+  .social-slide {
+    width: 160px;
+    height: 340px;
+  }
+  
+  /* FAQ Section - Mobile */
+  .faq-section {
+    padding: 60px 20px;
+  }
+  
+  .faq-title {
+    font-size: 32px;
+  }
+  
+  .faq-item-header {
+    grid-template-columns: 40px 1fr 30px;
+    gap: 12px;
+  }
+  
+  .faq-number {
+    font-size: 12px;
+  }
+  
+  .faq-question {
+    font-size: 16px;
+  }
+  
+  .faq-answer {
+    grid-template-columns: 40px 1fr 30px;
+    gap: 12px;
+  }
+  
+  .faq-answer-text {
+    font-size: 14px;
+  }
+  
+  /* Footer - Mobile */
+  .footer {
+    padding: 50px 20px 30px;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .footer-brand {
+    text-align: center;
+    align-items: center;
+  }
+  
+  .footer-description {
+    max-width: 100%;
+    text-align: center;
+  }
+  
+  .footer-column {
+    text-align: center;
+  }
+  
+  .footer-column h4 {
+    margin-bottom: 16px;
+  }
+  
+  .footer-links li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .footer-social {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Let's Talk Widget - Mobile */
+  .lets-talk-widget {
+    right: 16px !important;
+    bottom: 16px !important;
+  }
+  
+  .lets-talk-btn {
+    padding: 12px 20px !important;
+  }
+  
+  .lets-talk-btn span {
+    display: none;
+  }
+  
+  .lets-talk-dialog {
+    width: calc(100vw - 32px) !important;
+    max-width: 320px !important;
+    right: 0 !important;
+  }
+}
+
+/* Small Mobile - 480px and below */
+@media (max-width: 480px) {
+  .hero-slogan {
+    font-size: 10vw;
+  }
+  
+  .scroll-text-prefix {
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
+  }
+  
+  .scroll-text-list {
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
+  }
+  
+  .option.active {
+    min-height: 240px;
+  }
+  
+  .about-heading {
+    font-size: 32px;
+  }
+  
+  .faq-title {
+    font-size: 26px;
+  }
+  
+  .faq-question {
+    font-size: 14px;
+  }
+  
+  .game-svg {
+    max-width: 240px;
+  }
+  
+  .social-slide {
+    width: 140px;
+    height: 300px;
+  }
+  
+  .social-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* Fix for pinned sections on mobile */
+@media (max-width: 768px) {
+  .pin-spacer {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .scroll-text-content {
+    transform: none !important;
+  }
+}
