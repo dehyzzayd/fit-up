@@ -555,3 +555,29 @@ function initTextAnimation() {
     });
   }
 })();
+
+// ==================== FIX WIDGET POSITION ====================
+// Remove body transforms that break position:fixed for widgets
+(function fixWidgetPosition() {
+  function applyFix() {
+    document.body.style.transform = 'none';
+    document.body.style.perspective = 'none';
+    document.body.style.backfaceVisibility = 'visible';
+    console.log('Widget position fix applied');
+  }
+  
+  // Apply immediately
+  applyFix();
+  
+  // Apply after DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyFix);
+  }
+  
+  // Apply after full load (catches hero.js changes)
+  window.addEventListener('load', () => {
+    setTimeout(applyFix, 100);
+    setTimeout(applyFix, 500);
+    setTimeout(applyFix, 2000);
+  });
+})();
