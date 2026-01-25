@@ -7,7 +7,102 @@ document.addEventListener('DOMContentLoaded', () => {
     div.textContent = str;
     return div.innerHTML;
   }
+// Render field with upload support
+function renderField(page, sectionKey, field, content) {
+  const value = content[sectionKey]?.[field.key] || field.default || '';
+  
+  if (field.type === 'url') {
+    // Image URL field with upload button
+    return `
+      <div class="form-group image-field-group">
+        <label>${field.label}</label>
+        <div class="image-input-wrapper">
+          <input type="url" 
+                 name="${page}|${sectionKey}|${field.key}" 
+                 value="${escapeHtml(value)}" 
+                 placeholder="https://... or click upload"
+                 class="image-url-input">
+          <label class="upload-btn">
+            <input type="file" 
+                   accept="image/*" 
+                   class="file-upload-input" 
+                   data-target="${page}|${sectionKey}|${field.key}"
+                   style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Upload
+          </label>
+        </div>
+        <div class="url-preview" style="margin-top: 8px; width: 60px; height: 60px; border-radius: 8px; overflow: hidden; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+          ${value ? `<img src="${escapeHtml(value)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='<span style=\\'color:#999;font-size:10px;\\'>Invalid</span>'">` : '<span style="color:#999;font-size:10px;">No img</span>'}
+        </div>
+      </div>
+    `;
+  }
+  // ... rest of your existing field rendering
+}
 
+// Initialize file upload handlers
+function initFileUploadHandlers() {
+  document.querySelectorAll('.file-upload-input').forEach(input => {
+    input.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const targetKey = e.target.dataset.target;
+      const urlInput = document.querySelector(`input[name="${targetKey}"]`);
+      const preview = urlInput.parentElement.nextElementSibling;
+      
+      // Show loading state
+      const uploadBtn = e.target.parentElement;
+      const originalHTML = uploadBtn.innerHTML;
+      uploadBtn.innerHTML = '<span class="spinner"></span> Uploading...';
+      uploadBtn.style.pointerEvents = 'none';
+      
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${getToken()}`
+          },
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.url) {
+          // Update the URL input
+          urlInput.value = result.url;
+          
+          // Update preview
+          preview.innerHTML = `<img src="${result.url}" style="width: 100%; height: 100%; object-fit: cover;">`;
+          
+          // Trigger input event for auto-save if you have it
+          urlInput.dispatchEvent(new Event('input', { bubbles: true }));
+        } else {
+          alert(result.error || 'Upload failed');
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        alert('Upload failed. Please try again.');
+      } finally {
+        uploadBtn.innerHTML = originalHTML;
+        uploadBtn.style.pointerEvents = '';
+      }
+    });
+  });
+}
+
+// Call this after rendering content editor
+// renderContentEditor(page);
+// initFileUploadHandlers();
+  
   // State
   let currentUser = null;
   let inquiries = [];
