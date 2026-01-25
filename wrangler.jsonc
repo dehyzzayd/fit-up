@@ -10,5 +10,11 @@
       "database_name": "fitup-db",
       "database_id": "149d4ff4-c33d-4d54-b0c6-28f1dc780ef9"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA_BUCKET",
+      "bucket_name": "fitup-media"
+    }
   ]
 }
