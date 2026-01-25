@@ -46,7 +46,7 @@ api.post('/upload', async (c) => {
     });
 
     // Return the public URL (you'll need to set up a custom domain or use R2 public access)
-    const publicUrl = `https://media.fitup.ma/${filename}`;
+const publicUrl = `https://pub-50774f5cfbcf4da7ba6fee97e7e98d23.r2.dev/${filename}`;
     // Or if using R2 public bucket: `https://pub-xxx.r2.dev/${filename}`
 
     return c.json({ 
