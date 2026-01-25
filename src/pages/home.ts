@@ -21,7 +21,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     // Default logos
     return [
       { url: 'https://fedaura.ma/cdn/shop/files/Untitled_design_10_5944d3f3-9115-4fd0-b1ed-58c69bbc602f.png?height=72&v=1756045971', name: 'Fedaura', round: false },
-      { url: 'https://instagram.fcmn3-1.fna.fbcdn.net/v/t51.2885-19/573221119_17946853287053011_813047376054832019_n.jpg', name: 'Brand', round: true },
+      { url: 'https://instagram.fcmn1-2.fna.fbcdn.net/v/t51.2885-19/605997942_17850007239614033_1994629091166485047_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fcmn1-2.fna.fbcdn.net&_nc_cat=105&_nc_oc=Q6cZ2QHGn01lclAwEn5OrvEjHYTrGrudEzqOTNFPYsOjvT07y3SqRAD65CRqRRO9nkz-cYM&_nc_ohc=5l9Qb98YxLgQ7kNvwGhG-Yg&_nc_gid=SfNhaIEK73bg3rZzIsa-Rw&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AfpnE52P_ToQBscYWYJmccT33hBU8T2NL-hCzmDdmfpniw&oe=697C2282&_nc_sid=7a9f4b', name: 'Brand', round: true },
       { url: 'https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg', name: 'fitup', round: true }
     ];
   };
