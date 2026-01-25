@@ -8,6 +8,84 @@ const api = new Hono<{ Bindings: Env }>();
 // Enable CORS
 api.use('/*', cors());
 
+// ==================== MEDIA UPLOAD ROUTES ====================
+
+// Upload image
+api.post('/upload', async (c) => {
+  try {
+    const formData = await c.req.formData();
+    const file = formData.get('file') as File;
+    
+    if (!file) {
+      return c.json({ error: 'No file provided' }, 400);
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    if (!allowedTypes.includes(file.type)) {
+      return c.json({ error: 'Invalid file type. Allowed: JPEG, PNG, GIF, WebP, SVG' }, 400);
+    }
+
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return c.json({ error: 'File too large. Max 10MB' }, 400);
+    }
+
+    // Generate unique filename
+    const ext = file.name.split('.').pop() || 'jpg';
+    const timestamp = Date.now();
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const filename = `uploads/${timestamp}_${randomStr}.${ext}`;
+
+    // Upload to R2
+    await c.env.MEDIA_BUCKET.put(filename, file.stream(), {
+      httpMetadata: {
+        contentType: file.type,
+      },
+    });
+
+    // Return the public URL (you'll need to set up a custom domain or use R2 public access)
+    const publicUrl = `https://media.fitup.ma/${filename}`;
+    // Or if using R2 public bucket: `https://pub-xxx.r2.dev/${filename}`
+
+    return c.json({ 
+      success: true, 
+      url: publicUrl,
+      filename: filename 
+    });
+  } catch (error) {
+    console.error('Upload error:', error);
+    return c.json({ error: 'Upload failed' }, 500);
+  }
+});
+
+// Delete uploaded image
+api.delete('/upload/:filename', async (c) => {
+  try {
+    const filename = c.req.param('filename');
+    await c.env.MEDIA_BUCKET.delete(`uploads/${filename}`);
+    return c.json({ success: true });
+  } catch (error) {
+    return c.json({ error: 'Delete failed' }, 500);
+  }
+});
+
+// List uploaded images
+api.get('/uploads', async (c) => {
+  try {
+    const list = await c.env.MEDIA_BUCKET.list({ prefix: 'uploads/' });
+    const files = list.objects.map(obj => ({
+      key: obj.key,
+      size: obj.size,
+      uploaded: obj.uploaded,
+      url: `https://media.fitup.ma/${obj.key}`
+    }));
+    return c.json({ files });
+  } catch (error) {
+    return c.json({ error: 'Failed to list files' }, 500);
+  }
+});
 // ==================== AUTH ROUTES ====================
 
 // Login
