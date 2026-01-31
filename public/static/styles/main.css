@@ -645,7 +645,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 5px 0 0px; /* was 80px 0 or similar */
+  padding: 5px 0 20px; /* was 80px 0 or similar */
 }
 
 .services-title {
