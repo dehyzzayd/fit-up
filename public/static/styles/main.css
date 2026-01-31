@@ -2678,150 +2678,192 @@ body {
 }
 
 /* ============================================
-   BRAND GRID SECTION - 6 IMAGES 
+   WORK PREVIEW SECTION - FROSTED CARDS
    ============================================ */
 
-.brand-grid-section {
+.work-preview-section {
   position: relative;
   width: 100%;
   background: #000;
-  padding: 40px 20px;
+  padding: 60px 20px 80px;
   z-index: 10;
   display: grid;
   place-items: center;
 }
 
-.brand-grid-title {
+.work-preview-title {
   text-align: center;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 }
 
-.brand-grid-wrapper {
-  --border-size: 5px;
-  --border-color: #fff;
+.preview-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.previewCard {
+  --gutter: 15px;
+  --brightness: 0.85;
+  --saturation: 1.5;
+  --frostRadius: 15px;
   
+  padding: var(--gutter);
+  border-radius: var(--gutter);
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  display: grid;
+  justify-content: start;
+  align-content: end;
   position: relative;
-  width: min(100%, 1300px);
-  height: 500px;
-  counter-reset: card-counter;
+  background: #333;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 250ms ease-in-out;
 }
 
-.brand-grid-wrapper > div {
+.previewCard img {
+  transition: transform 500ms ease-in-out;
+}
+
+.previewCard svg {
+  transition: transform 250ms ease-in-out;
+}
+
+.previewCard:hover {
+  transform: scale(1.05);
+}
+
+.previewCard:hover img {
+  transform: scale(1.1);
+}
+
+.previewCard:hover svg {
+  transform: scale(1.5);
+}
+
+.previewCard::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  z-index: 1;
+  pointer-events: none;
+  backdrop-filter: blur(var(--frostRadius)) saturate(var(--saturation)) brightness(var(--brightness));
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 40%,
+    rgba(0, 0, 0, 0.5) 55%,
+    black 75%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 40%,
+    rgba(0, 0, 0, 0.5) 55%,
+    black 75%
+  );
+}
+
+.previewCard .backdrop {
   position: absolute;
   top: 0;
-  height: 100%;
-  width: 25%;
-  transition: all 300ms ease-in-out;
-  background-image: var(--bg-img);
-  background-size: cover;
-  background-position: center;
-  cursor: pointer;
-  /* Notch clip-path */
-  clip-path: url(#notch-clip);
-}
-
-.brand-grid-wrapper > div::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: var(--border-size) solid var(--border-color);
-  clip-path: url(#notch-clip);
+  left: 0;
+  object-fit: cover;
   pointer-events: none;
+  user-select: none;
+  width: 100%;
+  height: 100%;
+}
+
+.previewCard .content {
+  position: relative;
   z-index: 2;
+  display: grid;
+  bottom: 0;
+  justify-content: start;
+  align-content: end;
+  gap: 5px;
 }
 
-.brand-grid-wrapper > div:first-child {
-  clip-path: url(#notch-clip-first);
-}
-
-.brand-grid-wrapper > div:first-child::before {
-  clip-path: url(#notch-clip-first);
-}
-
-/* Position each card */
-.brand-grid-wrapper > div:nth-child(1) { left: 0%; z-index: 6; }
-.brand-grid-wrapper > div:nth-child(2) { left: 15%; z-index: 5; }
-.brand-grid-wrapper > div:nth-child(3) { left: 30%; z-index: 4; }
-.brand-grid-wrapper > div:nth-child(4) { left: 45%; z-index: 3; }
-.brand-grid-wrapper > div:nth-child(5) { left: 60%; z-index: 2; }
-.brand-grid-wrapper > div:nth-child(6) { left: 75%; z-index: 1; }
-
-/* Expand on hover */
-.brand-grid-wrapper > div:hover {
-  width: 45%;
-  clip-path: none;
-  z-index: 10;
-}
-
-.brand-grid-wrapper > div:hover::before {
-  clip-path: none;
-}
-
-/* Remove notch from next sibling on hover */
-.brand-grid-wrapper:has(> div:nth-child(1):hover) > div:nth-child(2),
-.brand-grid-wrapper:has(> div:nth-child(2):hover) > div:nth-child(3),
-.brand-grid-wrapper:has(> div:nth-child(3):hover) > div:nth-child(4),
-.brand-grid-wrapper:has(> div:nth-child(4):hover) > div:nth-child(5),
-.brand-grid-wrapper:has(> div:nth-child(5):hover) > div:nth-child(6) {
-  clip-path: none;
-}
-
-.brand-grid-wrapper:has(> div:nth-child(1):hover) > div:nth-child(2)::before,
-.brand-grid-wrapper:has(> div:nth-child(2):hover) > div:nth-child(3)::before,
-.brand-grid-wrapper:has(> div:nth-child(3):hover) > div:nth-child(4)::before,
-.brand-grid-wrapper:has(> div:nth-child(4):hover) > div:nth-child(5)::before,
-.brand-grid-wrapper:has(> div:nth-child(5):hover) > div:nth-child(6)::before {
-  clip-path: none;
-}
-
-/* Counter */
-.brand-grid-wrapper > div::after {
-  content: counter(card-counter) ".";
-  counter-increment: card-counter;
-  position: absolute;
-  top: 0.5rem;
-  left: 1rem;
-  font-size: 2rem;
-  font-weight: 500;
+.previewCard .title {
+  font-size: 17px;
+  font-weight: 600;
   color: #fff;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-  transition: scale 150ms ease-in-out;
-  scale: 0;
-  z-index: 3;
 }
 
-.brand-grid-wrapper > div:hover::after {
-  scale: 1;
+.previewCard .category {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  opacity: 0.45;
+  color: #fff;
+}
+
+.previewCard .description {
+  font-size: 13px;
+  line-height: 1.35;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  place-content: start;
+  gap: 5px;
+  color: #fff;
+}
+
+.previewCard .description p {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+}
+
+.previewCard .description span {
+  transform: translateY(-1px);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+}
+
+.previewCard .description span svg {
+  width: 100%;
+  height: 100%;
 }
 
 /* ============================================
-   MOBILE
+   MOBILE RESPONSIVE
    ============================================ */
 
-@media (max-width: 768px) {
-  .brand-grid-wrapper {
-    --border-size: 3px;
-    width: 100%;
-    height: 350px;
+@media (max-width: 1024px) {
+  .preview-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+}
+
+@media (max-width: 640px) {
+  .preview-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 400px;
   }
   
-  .brand-grid-wrapper > div {
-    width: 30%;
-  }
-  
-  .brand-grid-wrapper > div:nth-child(1) { left: 0%; }
-  .brand-grid-wrapper > div:nth-child(2) { left: 14%; }
-  .brand-grid-wrapper > div:nth-child(3) { left: 28%; }
-  .brand-grid-wrapper > div:nth-child(4) { left: 42%; }
-  .brand-grid-wrapper > div:nth-child(5) { left: 56%; }
-  .brand-grid-wrapper > div:nth-child(6) { left: 70%; }
-  
-  .brand-grid-wrapper > div:hover {
-    width: 50%;
+  .previewCard {
+    aspect-ratio: 16 / 10;
   }
 }
