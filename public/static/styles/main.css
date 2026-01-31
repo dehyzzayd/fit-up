@@ -2678,14 +2678,14 @@ body {
 }
 
 /* ============================================
-   BRAND GRID SECTION - 6 IMAGES (Exact CodePen Style)
+   BRAND GRID SECTION - 6 IMAGES WITH NOTCH
    ============================================ */
 
 .brand-grid-section {
   position: relative;
   width: 100%;
   background: #000;
-  padding: 0 20px 40px;
+  padding: 40px 20px;
   z-index: 10;
   display: grid;
   place-items: center;
@@ -2694,7 +2694,6 @@ body {
 .brand-grid-wrapper {
   --border-size: 5px;
   --border-color: #fff;
-  /* 13 columns for 6 cards: each spans 3, overlaps by 1 */
   --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   
   display: grid;
@@ -2703,52 +2702,86 @@ body {
   margin-inline: auto;
   aspect-ratio: 2.5 / 1;
   transition: grid-template-columns 300ms ease-in-out;
-  counter-reset: --card-counter;
+  counter-reset: card-counter;
 }
 
-/* Define grid columns according to which one has hover - 6 CARDS */
-.brand-grid-wrapper:has(:nth-child(1):hover) { --grid-cols: 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(:nth-child(2):hover) { --grid-cols: 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(:nth-child(3):hover) { --grid-cols: 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(:nth-child(4):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(:nth-child(5):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(:nth-child(6):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr; }
+/* Hover states for 6 cards */
+.brand-grid-wrapper:has(> div:nth-child(1):hover) { --grid-cols: 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(2):hover) { --grid-cols: 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(3):hover) { --grid-cols: 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(4):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(5):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(6):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr; }
 
-.brand-grid-wrapper > * {
+.brand-grid-wrapper > div {
   position: relative;
   overflow: hidden;
-  border-radius: 0 0 0 30% / 0 0 0 50%;
   transition: all 300ms ease-in-out;
-  border: var(--border-size) solid var(--border-color);
   background-image: var(--bg-img);
   background-size: 550px 100%;
   background-position: center;
   cursor: pointer;
   grid-row: 1;
+  
+  /* Inward notch using clip-path */
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 100%,
+    0% 100%,
+    0% 70%,
+    8% 50%,
+    0% 30%
+  );
 }
 
-.brand-grid-wrapper > *:first-child {
-  border-radius: 0 0 0 0 / 0 0 0 200px;
+/* First card - deeper curved notch */
+.brand-grid-wrapper > div:first-child {
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 100%,
+    0% 100%,
+    0% 85%,
+    12% 50%,
+    0% 15%
+  );
 }
 
-/* Remove notch from current and next sibling on hover */
-.brand-grid-wrapper > *:hover,
-.brand-grid-wrapper > *:hover + * {
-  border-radius: 0 0 0 0;
+/* Remove notch on hover */
+.brand-grid-wrapper > div:hover,
+.brand-grid-wrapper > div:hover + div {
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 100%,
+    0% 100%
+  );
 }
 
-/* Define grid position - each element overlaps by 1 column */
-.brand-grid-wrapper > *:nth-child(1) { grid-column: 1 / span 3; }
-.brand-grid-wrapper > *:nth-child(2) { grid-column: 3 / span 3; }
-.brand-grid-wrapper > *:nth-child(3) { grid-column: 5 / span 3; }
-.brand-grid-wrapper > *:nth-child(4) { grid-column: 7 / span 3; }
-.brand-grid-wrapper > *:nth-child(5) { grid-column: 9 / span 3; }
-.brand-grid-wrapper > *:nth-child(6) { grid-column: 11 / span 3; }
+/* Grid positions - 6 cards */
+.brand-grid-wrapper > div:nth-child(1) { grid-column: 1 / span 3; }
+.brand-grid-wrapper > div:nth-child(2) { grid-column: 3 / span 3; }
+.brand-grid-wrapper > div:nth-child(3) { grid-column: 5 / span 3; }
+.brand-grid-wrapper > div:nth-child(4) { grid-column: 7 / span 3; }
+.brand-grid-wrapper > div:nth-child(5) { grid-column: 9 / span 3; }
+.brand-grid-wrapper > div:nth-child(6) { grid-column: 11 / span 3; }
 
-/* Image counter */
-.brand-grid-wrapper > *::after {
-  content: counter(--card-counter) ".";
-  counter-increment: --card-counter;
+/* White border using pseudo-element */
+.brand-grid-wrapper > div::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: var(--border-size) solid var(--border-color);
+  clip-path: inherit;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Counter on hover */
+.brand-grid-wrapper > div::after {
+  content: counter(card-counter) ".";
+  counter-increment: card-counter;
   position: absolute;
   top: 0.5rem;
   left: 1rem;
@@ -2756,48 +2789,31 @@ body {
   font-weight: 700;
   color: #fff;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-  transition: scale 150ms ease-in-out;
-  scale: 0;
+  transition: transform 150ms ease-in-out;
+  transform: scale(0);
+  z-index: 3;
 }
 
-.brand-grid-wrapper > *:hover::after {
-  scale: 1;
+.brand-grid-wrapper > div:hover::after {
+  transform: scale(1);
 }
 
 /* ============================================
-   MOBILE RESPONSIVE
+   MOBILE
    ============================================ */
 
 @media (max-width: 768px) {
-  .brand-grid-section {
-    padding: 0 10px 30px;
-  }
-  
   .brand-grid-wrapper {
     --border-size: 3px;
-    --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     width: 100%;
     aspect-ratio: 2 / 1;
   }
   
-  .brand-grid-wrapper > * {
+  .brand-grid-wrapper > div {
     background-size: 300px 100%;
   }
   
-  .brand-grid-wrapper > *::after {
+  .brand-grid-wrapper > div::after {
     font-size: 1.2rem;
-    top: 0.3rem;
-    left: 0.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .brand-grid-wrapper {
-    --border-size: 2px;
-    aspect-ratio: 1.8 / 1;
-  }
-  
-  .brand-grid-wrapper > * {
-    background-size: 200px 100%;
   }
 }
