@@ -212,6 +212,18 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     </div>
   </section>
 
+
+<!-- ADD THIS NEW SECTION BELOW -->
+<!-- Brand Partners Interactive Grid -->
+<section class="brand-grid-section">
+  <div class="brand-grid-wrapper">
+    <div style="--bg-img:url(https://images.unsplash.com/photo-1518005020951-eccb494ad742?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400)"></div>
+    <div style="--bg-img:url(https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400)"></div>
+    <div style="--bg-img:url(https://images.unsplash.com/photo-1493397212122-2b85dda8106b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400)"></div>
+    <div style="--bg-img:url(https://images.unsplash.com/photo-1524126675694-1efa3488b7c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400)"></div>
+  </div>
+</section>
+
   <!-- Services Section - Expanding Cards -->
   <section class="services-section" id="services">
     <p class="services-title" data-content="services.title">${getContent('services', 'title', 'Our Services')}</p>
