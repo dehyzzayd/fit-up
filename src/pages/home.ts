@@ -378,36 +378,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   </section>
 
  
-  <!-- Game Section -->
-  <section class="game-section" id="discount">
-    <div class="game-container">
-      <div class="game-left">
-        <svg class="game-svg" id="gameSvg" viewBox="0 0 320 320">
-          <g class="slots"></g>
-          <g class="tiles"></g>
-        </svg>
-      </div>
-
-      <div class="game-right">
-        <div class="animation-stage">
-          <div class="animation-bg"></div>
-          <div class="animation-word">20% OFF</div>
-        </div>
-        
-        <div class="game-initial-message" id="gameInitialMessage">
-          <p class="game-cta-text">Click to claim 20% off</p>
-          <p class="game-cta-subtext">Tap the letters to reveal your discount</p>
-        </div>
-
-        <div class="game-win-message" id="winMessage">
-          <div class="game-win-title">Congratulations!</div>
-          <div class="game-win-subtitle">You've unlocked 20% off your first project</div>
-          <a href="/contact" class="claim-btn">Claim Your Discount</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
+  
   <!-- About Us Transition Section -->
   <section class="about-transition-section" id="about">
     <div class="curve-container">
