@@ -2685,24 +2685,24 @@ body {
   position: relative;
   width: 100%;
   background: #000;
-  padding: 0 20px 40px; /* Reduced bottom padding */
+  padding: 0 20px 40px;
   z-index: 10;
   overflow: hidden;
 }
 
 .brand-grid-wrapper {
-  --border-size: 1px; /* Much thinner border */
-  --border-color: rgba(255, 255, 255, 0.08); /* Much darker/subtler */
+  --border-size: 4px;
+  --border-color: #fff; /* Solid white border */
   --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   
   display: grid;
   grid-template-columns: var(--grid-cols);
-  width: min(100%, 1200px); /* WIDER container */
+  width: min(100%, 1200px);
   margin-inline: auto;
-  aspect-ratio: 2.2 / 1; /* Slightly wider aspect */
+  aspect-ratio: 2 / 1;
   transition: grid-template-columns 400ms cubic-bezier(0.23, 1, 0.32, 1);
   counter-reset: --card-counter;
-  gap: 0; /* NO gaps */
+  gap: 0;
 }
 
 /* Grid expansion on hover */
@@ -2716,18 +2716,13 @@ body {
   overflow: hidden;
   border-radius: 0 0 0 30% / 0 0 0 50%;
   transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
-  border: var(--border-size) solid var(--border-color);
-  border-right: none; /* Remove right border to eliminate white gaps */
+  outline: var(--border-size) solid var(--border-color); /* White outline */
+  outline-offset: calc(var(--border-size) * -1);
   background-image: var(--bg-img);
-  background-size: 600px 100%; /* Larger for wider container */
+  background-size: 600px 100%;
   background-position: center;
   cursor: pointer;
   grid-row: 1;
-}
-
-/* Last item needs right border */
-.brand-grid-wrapper > div:last-child {
-  border-right: var(--border-size) solid var(--border-color);
 }
 
 .brand-grid-wrapper > div:first-child {
@@ -2741,13 +2736,31 @@ body {
 }
 
 /* Overlapping grid positions */
-.brand-grid-wrapper > div:nth-child(1) { grid-column: 1 / span 3; }
-.brand-grid-wrapper > div:nth-child(2) { grid-column: 3 / span 3; }
-.brand-grid-wrapper > div:nth-child(3) { grid-column: 5 / span 3; }
-.brand-grid-wrapper > div:nth-child(4) { grid-column: 7 / span 3; }
+.brand-grid-wrapper > div:nth-child(1) { grid-column: 1 / span 3; z-index: 4; }
+.brand-grid-wrapper > div:nth-child(2) { grid-column: 3 / span 3; z-index: 3; }
+.brand-grid-wrapper > div:nth-child(3) { grid-column: 5 / span 3; z-index: 2; }
+.brand-grid-wrapper > div:nth-child(4) { grid-column: 7 / span 3; z-index: 1; }
 
-/* Counter number on hover */
-.brand-grid-wrapper > div::after {
+/* White separator line on left edge (the notch border) */
+.brand-grid-wrapper > div:not(:first-child)::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--border-size);
+  height: 100%;
+  background: #fff;
+  z-index: 10;
+  border-radius: 0 0 0 30% / 0 0 0 50%; /* Match the notch curve */
+}
+
+/* First card has the curved notch separator */
+.brand-grid-wrapper > div:nth-child(1)::after {
+  content: none; /* No separator on first card */
+}
+
+/* Counter number on hover - OPTIONAL, remove if not needed */
+.brand-grid-wrapper > div::before {
   content: counter(--card-counter) ".";
   counter-increment: --card-counter;
   position: absolute;
@@ -2761,32 +2774,12 @@ body {
   transition: transform 200ms ease-out, opacity 200ms ease-out;
   transform: scale(0);
   opacity: 0;
-}
-
-.brand-grid-wrapper > div:hover::after {
-  transform: scale(1);
-  opacity: 1;
-}
-
-/* Gradient overlay on hover */
-.brand-grid-wrapper > div::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 300ms ease;
-  pointer-events: none;
+  z-index: 5;
 }
 
 .brand-grid-wrapper > div:hover::before {
+  transform: scale(1);
   opacity: 1;
-}
-
-/* Subtle glow effect on hover */
-.brand-grid-wrapper > div:hover {
-  border-color: rgba(184, 255, 92, 0.3);
-  box-shadow: 0 0 30px rgba(184, 255, 92, 0.1);
 }
 
 /* ============================================
@@ -2800,6 +2793,7 @@ body {
   
   .brand-grid-wrapper {
     --grid-cols: 1fr 1fr 1fr 1fr 1fr;
+    --border-size: 3px;
     aspect-ratio: 1.5 / 1;
   }
   
@@ -2817,7 +2811,7 @@ body {
     background-size: 280px 100%;
   }
   
-  .brand-grid-wrapper > div::after {
+  .brand-grid-wrapper > div::before {
     font-size: 1.2rem;
     top: 0.5rem;
     left: 0.75rem;
@@ -2827,10 +2821,10 @@ body {
 @media (max-width: 480px) {
   .brand-grid-wrapper {
     aspect-ratio: 1.2 / 1;
+    --border-size: 2px;
   }
   
   .brand-grid-wrapper > div {
     background-size: 200px 100%;
   }
-}
 }
