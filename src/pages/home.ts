@@ -213,7 +213,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   </section>
 
 
-Copy<!-- Work Preview Section -->
+<!-- Work Preview Section -->
 <section class="work-preview-section">
   <p class="work-preview-title">Our Work</p>
   <article class="preview-cards">
