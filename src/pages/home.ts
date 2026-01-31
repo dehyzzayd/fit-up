@@ -213,6 +213,20 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   </section>
 
 
+<!-- SVG Clip Path Definitions (hidden) -->
+<svg width="0" height="0" style="position:absolute;">
+  <defs>
+    <!-- Notch for cards 2-6 -->
+    <clipPath id="notch-clip" clipPathUnits="objectBoundingBox">
+      <path d="M 0 0 L 1 0 L 1 1 L 0 1 L 0 0.7 Q 0.15 0.5 0 0.3 Z"/>
+    </clipPath>
+    <!-- Deeper notch for first card -->
+    <clipPath id="notch-clip-first" clipPathUnits="objectBoundingBox">
+      <path d="M 0 0 L 1 0 L 1 1 L 0 1 L 0 0.85 Q 0.2 0.5 0 0.15 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
 <!-- Brand Grid Section -->
 <section class="brand-grid-section">
   <p class="brand-grid-title">Our Work</p>
