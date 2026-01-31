@@ -2706,7 +2706,6 @@ body {
   --border-color: #fff;
   
   position: relative;
-  display: flex;
   width: min(100%, 1300px);
   height: 500px;
   counter-reset: card-counter;
@@ -2722,16 +2721,29 @@ body {
   background-size: cover;
   background-position: center;
   cursor: pointer;
+  /* Notch clip-path */
+  clip-path: url(#notch-clip);
+}
+
+.brand-grid-wrapper > div::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   border: var(--border-size) solid var(--border-color);
-  border-radius: 0 0 0 30% / 0 0 0 50%;
-  corner-shape: notch;
+  clip-path: url(#notch-clip);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .brand-grid-wrapper > div:first-child {
-  border-radius: 0 0 0 0 / 0 0 0 200px;
+  clip-path: url(#notch-clip-first);
 }
 
-/* Position each card with overlap */
+.brand-grid-wrapper > div:first-child::before {
+  clip-path: url(#notch-clip-first);
+}
+
+/* Position each card */
 .brand-grid-wrapper > div:nth-child(1) { left: 0%; z-index: 6; }
 .brand-grid-wrapper > div:nth-child(2) { left: 15%; z-index: 5; }
 .brand-grid-wrapper > div:nth-child(3) { left: 30%; z-index: 4; }
@@ -2742,8 +2754,12 @@ body {
 /* Expand on hover */
 .brand-grid-wrapper > div:hover {
   width: 45%;
-  border-radius: 0;
+  clip-path: none;
   z-index: 10;
+}
+
+.brand-grid-wrapper > div:hover::before {
+  clip-path: none;
 }
 
 /* Remove notch from next sibling on hover */
@@ -2752,7 +2768,15 @@ body {
 .brand-grid-wrapper:has(> div:nth-child(3):hover) > div:nth-child(4),
 .brand-grid-wrapper:has(> div:nth-child(4):hover) > div:nth-child(5),
 .brand-grid-wrapper:has(> div:nth-child(5):hover) > div:nth-child(6) {
-  border-radius: 0;
+  clip-path: none;
+}
+
+.brand-grid-wrapper:has(> div:nth-child(1):hover) > div:nth-child(2)::before,
+.brand-grid-wrapper:has(> div:nth-child(2):hover) > div:nth-child(3)::before,
+.brand-grid-wrapper:has(> div:nth-child(3):hover) > div:nth-child(4)::before,
+.brand-grid-wrapper:has(> div:nth-child(4):hover) > div:nth-child(5)::before,
+.brand-grid-wrapper:has(> div:nth-child(5):hover) > div:nth-child(6)::before {
+  clip-path: none;
 }
 
 /* Counter */
@@ -2768,6 +2792,7 @@ body {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
   transition: scale 150ms ease-in-out;
   scale: 0;
+  z-index: 3;
 }
 
 .brand-grid-wrapper > div:hover::after {
