@@ -2685,23 +2685,24 @@ body {
   position: relative;
   width: 100%;
   background: #000;
-  padding: 0 20px 80px;
+  padding: 0 20px 40px; /* Reduced bottom padding */
   z-index: 10;
   overflow: hidden;
 }
 
 .brand-grid-wrapper {
-  --border-size: 4px;
-  --border-color: rgba(255, 255, 255, 0.15);
+  --border-size: 1px; /* Much thinner border */
+  --border-color: rgba(255, 255, 255, 0.08); /* Much darker/subtler */
   --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   
   display: grid;
   grid-template-columns: var(--grid-cols);
-  width: min(100%, 900px);
+  width: min(100%, 1200px); /* WIDER container */
   margin-inline: auto;
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 2.2 / 1; /* Slightly wider aspect */
   transition: grid-template-columns 400ms cubic-bezier(0.23, 1, 0.32, 1);
   counter-reset: --card-counter;
+  gap: 0; /* NO gaps */
 }
 
 /* Grid expansion on hover */
@@ -2716,11 +2717,17 @@ body {
   border-radius: 0 0 0 30% / 0 0 0 50%;
   transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
   border: var(--border-size) solid var(--border-color);
+  border-right: none; /* Remove right border to eliminate white gaps */
   background-image: var(--bg-img);
-  background-size: 500px 100%;
+  background-size: 600px 100%; /* Larger for wider container */
   background-position: center;
   cursor: pointer;
   grid-row: 1;
+}
+
+/* Last item needs right border */
+.brand-grid-wrapper > div:last-child {
+  border-right: var(--border-size) solid var(--border-color);
 }
 
 .brand-grid-wrapper > div:first-child {
@@ -2776,10 +2783,10 @@ body {
   opacity: 1;
 }
 
-/* Glow effect on hover (your green accent) */
+/* Subtle glow effect on hover */
 .brand-grid-wrapper > div:hover {
-  border-color: rgba(184, 255, 92, 0.5);
-  box-shadow: 0 0 40px rgba(184, 255, 92, 0.15);
+  border-color: rgba(184, 255, 92, 0.3);
+  box-shadow: 0 0 30px rgba(184, 255, 92, 0.1);
 }
 
 /* ============================================
@@ -2788,7 +2795,7 @@ body {
 
 @media (max-width: 768px) {
   .brand-grid-section {
-    padding: 0 15px 60px;
+    padding: 0 15px 30px;
   }
   
   .brand-grid-wrapper {
@@ -2824,6 +2831,6 @@ body {
   
   .brand-grid-wrapper > div {
     background-size: 200px 100%;
-    --border-size: 3px;
   }
+}
 }
