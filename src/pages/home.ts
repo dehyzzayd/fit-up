@@ -213,14 +213,15 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   </section>
 
 
-<!-- ADD THIS NEW SECTION BELOW -->
-<!-- Brand Partners Interactive Grid -->
+<!-- Brand Partners Interactive Grid - 6 IMAGES -->
 <section class="brand-grid-section">
   <div class="brand-grid-wrapper">
-    <div style="--bg-img:url(https://images.unsplash.com/photo-1518005020951-eccb494ad742?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400)"></div>
-    <div style="--bg-img:url(https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400)"></div>
-    <div style="--bg-img:url(https://images.unsplash.com/photo-1493397212122-2b85dda8106b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400)"></div>
-    <div style="--bg-img:url(https://images.unsplash.com/photo-1524126675694-1efa3488b7c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400)"></div>
+    <div style="--bg-img:url(https://thumbs4.imagebam.com/bc/ec/b6/ME1A9KOY_t.jpg)"></div>
+    <div style="--bg-img:url(https://thumbs4.imagebam.com/60/df/f1/ME1A9KP0_t.jpg)"></div>
+    <div style="--bg-img:url(https://thumbs4.imagebam.com/c5/99/40/ME1A9KP2_t.jpg)"></div>
+    <div style="--bg-img:url(https://thumbs4.imagebam.com/f3/ba/02/ME1A9KP4_t.jpg)"></div>
+    <div style="--bg-img:url(https://thumbs4.imagebam.com/90/11/bd/ME1A9KP6_t.jpg)"></div>
+    <div style="--bg-img:url(https://thumbs4.imagebam.com/d9/a8/dd/ME1A9KP8_t.jpg)"></div>
   </div>
 </section>
 
