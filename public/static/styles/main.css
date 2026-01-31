@@ -2678,93 +2678,90 @@ body {
 }
 
 /* ============================================
-   BRAND GRID SECTION - 6 IMAGES WITH NOTCH
+   BRAND GRID SECTION - 6 IMAGES (Exact CodePen Style)
    ============================================ */
 
 .brand-grid-section {
   position: relative;
   width: 100%;
   background: #000;
-  padding: 0 40px 40px;
+  padding: 0 20px 40px;
   z-index: 10;
-  overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 
 .brand-grid-wrapper {
   --border-size: 5px;
   --border-color: #fff;
+  /* 13 columns for 6 cards: each spans 3, overlaps by 1 */
   --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   
   display: grid;
   grid-template-columns: var(--grid-cols);
   width: min(100%, 1000px);
   margin-inline: auto;
-  aspect-ratio: 2 / 1;
-  transition: grid-template-columns 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  aspect-ratio: 2.5 / 1;
+  transition: grid-template-columns 300ms ease-in-out;
   counter-reset: --card-counter;
 }
 
-/* Grid expansion on hover - 6 CARDS */
-.brand-grid-wrapper:has(> :nth-child(1):hover) { --grid-cols: 5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> :nth-child(2):hover) { --grid-cols: 1fr 1fr 5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> :nth-child(3):hover) { --grid-cols: 1fr 1fr 1fr 1fr 5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> :nth-child(4):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 5fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> :nth-child(5):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 5fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> :nth-child(6):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 5fr 1fr 1fr; }
+/* Define grid columns according to which one has hover - 6 CARDS */
+.brand-grid-wrapper:has(:nth-child(1):hover) { --grid-cols: 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(:nth-child(2):hover) { --grid-cols: 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(:nth-child(3):hover) { --grid-cols: 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(:nth-child(4):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(:nth-child(5):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(:nth-child(6):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr; }
 
-.brand-grid-wrapper > div {
+.brand-grid-wrapper > * {
   position: relative;
   overflow: hidden;
-  transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  border-radius: 0 0 0 30% / 0 0 0 50%;
+  transition: all 300ms ease-in-out;
+  border: var(--border-size) solid var(--border-color);
   background-image: var(--bg-img);
-  background-size: 600px 100%;
+  background-size: 550px 100%;
   background-position: center;
   cursor: pointer;
   grid-row: 1;
-  
-  /* THE KEY: Curved notch on bottom-left */
-  border-radius: 0 0 0 35% / 0 0 0 55%;
-  border: var(--border-size) solid var(--border-color);
 }
 
-/* First card - larger curved notch */
-.brand-grid-wrapper > div:first-child {
-  border-radius: 0 0 0 40% / 0 0 0 100%;
+.brand-grid-wrapper > *:first-child {
+  border-radius: 0 0 0 0 / 0 0 0 200px;
 }
 
-/* Remove notch on hover for current and next */
-.brand-grid-wrapper > div:hover,
-.brand-grid-wrapper > div:hover + div {
-  border-radius: 0 !important;
+/* Remove notch from current and next sibling on hover */
+.brand-grid-wrapper > *:hover,
+.brand-grid-wrapper > *:hover + * {
+  border-radius: 0 0 0 0;
 }
 
-/* Overlapping grid positions - 6 CARDS */
-.brand-grid-wrapper > div:nth-child(1) { grid-column: 1 / span 3; z-index: 6; }
-.brand-grid-wrapper > div:nth-child(2) { grid-column: 3 / span 3; z-index: 5; }
-.brand-grid-wrapper > div:nth-child(3) { grid-column: 5 / span 3; z-index: 4; }
-.brand-grid-wrapper > div:nth-child(4) { grid-column: 7 / span 3; z-index: 3; }
-.brand-grid-wrapper > div:nth-child(5) { grid-column: 9 / span 3; z-index: 2; }
-.brand-grid-wrapper > div:nth-child(6) { grid-column: 11 / span 3; z-index: 1; }
+/* Define grid position - each element overlaps by 1 column */
+.brand-grid-wrapper > *:nth-child(1) { grid-column: 1 / span 3; }
+.brand-grid-wrapper > *:nth-child(2) { grid-column: 3 / span 3; }
+.brand-grid-wrapper > *:nth-child(3) { grid-column: 5 / span 3; }
+.brand-grid-wrapper > *:nth-child(4) { grid-column: 7 / span 3; }
+.brand-grid-wrapper > *:nth-child(5) { grid-column: 9 / span 3; }
+.brand-grid-wrapper > *:nth-child(6) { grid-column: 11 / span 3; }
 
-/* Counter number on hover */
-.brand-grid-wrapper > div::after {
+/* Image counter */
+.brand-grid-wrapper > *::after {
   content: counter(--card-counter) ".";
   counter-increment: --card-counter;
   position: absolute;
   top: 0.5rem;
   left: 1rem;
-  font-family: 'Roboto', sans-serif;
   font-size: 2rem;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
-  transition: transform 150ms ease-out;
-  transform: scale(0);
-  z-index: 5;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  transition: scale 150ms ease-in-out;
+  scale: 0;
 }
 
-.brand-grid-wrapper > div:hover::after {
-  transform: scale(1);
+.brand-grid-wrapper > *:hover::after {
+  scale: 1;
 }
 
 /* ============================================
@@ -2773,36 +2770,34 @@ body {
 
 @media (max-width: 768px) {
   .brand-grid-section {
-    padding: 0 15px 30px;
+    padding: 0 10px 30px;
   }
   
   .brand-grid-wrapper {
     --border-size: 3px;
-    --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    aspect-ratio: 1.5 / 1;
+    --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     width: 100%;
+    aspect-ratio: 2 / 1;
   }
   
-  .brand-grid-wrapper:has(> :nth-child(1):hover) { --grid-cols: 3fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-  .brand-grid-wrapper:has(> :nth-child(2):hover) { --grid-cols: 1fr 3fr 1fr 1fr 1fr 1fr 1fr; }
-  .brand-grid-wrapper:has(> :nth-child(3):hover) { --grid-cols: 1fr 1fr 3fr 1fr 1fr 1fr 1fr; }
-  .brand-grid-wrapper:has(> :nth-child(4):hover) { --grid-cols: 1fr 1fr 1fr 3fr 1fr 1fr 1fr; }
-  .brand-grid-wrapper:has(> :nth-child(5):hover) { --grid-cols: 1fr 1fr 1fr 1fr 3fr 1fr 1fr; }
-  .brand-grid-wrapper:has(> :nth-child(6):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 3fr 1fr; }
-  
-  .brand-grid-wrapper > div:nth-child(1) { grid-column: 1 / span 2; }
-  .brand-grid-wrapper > div:nth-child(2) { grid-column: 2 / span 2; }
-  .brand-grid-wrapper > div:nth-child(3) { grid-column: 3 / span 2; }
-  .brand-grid-wrapper > div:nth-child(4) { grid-column: 4 / span 2; }
-  .brand-grid-wrapper > div:nth-child(5) { grid-column: 5 / span 2; }
-  .brand-grid-wrapper > div:nth-child(6) { grid-column: 6 / span 2; }
-  
-  .brand-grid-wrapper > div {
-    background-size: 250px 100%;
-    border-radius: 0 0 0 25% / 0 0 0 40%;
+  .brand-grid-wrapper > * {
+    background-size: 300px 100%;
   }
   
-  .brand-grid-wrapper > div:first-child {
-    border-radius: 0 0 0 30% / 0 0 0 60%;
+  .brand-grid-wrapper > *::after {
+    font-size: 1.2rem;
+    top: 0.3rem;
+    left: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-grid-wrapper {
+    --border-size: 2px;
+    aspect-ratio: 1.8 / 1;
+  }
+  
+  .brand-grid-wrapper > * {
+    background-size: 200px 100%;
   }
 }
