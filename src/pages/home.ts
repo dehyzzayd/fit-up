@@ -104,7 +104,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <aside class="side-menu" id="sideMenu">
     <div class="side-menu-header">
       <div class="side-menu-logo">
-        <img src="https://raw.githubusercontent.com/dehyzzayd/fit-up/refs/heads/main/public/static/images/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+        <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup">
         <span>fitup</span>
       </div>
       <button class="side-menu-close" id="sideMenuClose">
@@ -131,7 +131,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   <nav class="top-nav" id="topNav">
     <div class="nav-left">
       <a href="#" class="nav-logo">
-        <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup" class="nav-logo-img">
+        <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup" class="nav-logo-img">
         <span>© fitup</span>
       </a>
     </div>
@@ -221,7 +221,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+            <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service1_title">${getContent('services', 'service1_title', 'Strategic Consulting')}</div>
@@ -234,7 +234,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+            <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service2_title">${getContent('services', 'service2_title', 'Media Buying')}</div>
@@ -247,7 +247,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+            <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service3_title">${getContent('services', 'service3_title', 'Video Production')}</div>
@@ -260,7 +260,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+            <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service4_title">${getContent('services', 'service4_title', 'Social Media Management')}</div>
@@ -273,7 +273,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+            <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service5_title">${getContent('services', 'service5_title', 'Graphic Design')}</div>
@@ -286,7 +286,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="shadow"></div>
         <div class="label">
           <div class="icon">
-            <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+            <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup">
           </div>
           <div class="info">
             <div class="main" data-content="services.service6_title">${getContent('services', 'service6_title', 'Data Analytics')}</div>
@@ -528,7 +528,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     <div class="footer-content">
       <div class="footer-brand">
         <div class="footer-logo">
-          <img src="https://fitup.ma/Mediafitup/uploads/logos/20260121_141541_605997942_17850007239614033_1994629091166485047_n.jpg" alt="fitup">
+          <img src="https://images4.imagebam.com/f5/94/cf/ME1A9JZB_o.jpg" alt="fitup">
           <span>fitup</span>
         </div>
         <p class="footer-description" data-content="footer.description">${getContent('footer', 'description', 'Where brands win. We help businesses grow through strategic marketing, creative content, and data-driven decisions.')}</p>
