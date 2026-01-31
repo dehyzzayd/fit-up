@@ -2677,7 +2677,7 @@ body {
   }
 }
 
-Copy/* ============================================
+/* ============================================
    BRAND GRID SECTION - 6 IMAGES 
    ============================================ */
 
@@ -2698,33 +2698,33 @@ Copy/* ============================================
   
   display: grid;
   grid-template-columns: var(--grid-cols);
-  grid-template-rows: 1fr; /* Force single row to fill height */
-  width: min(100%, 1000px);
+  grid-template-rows: 1fr;
+  width: min(100%, 1300px); /* WIDER */
   margin-inline: auto;
-  aspect-ratio: 2 / 1; /* Taller - was 2.5/1 */
+  aspect-ratio: 1.6 / 1; /* TALLER */
   transition: grid-template-columns 300ms ease-in-out;
   counter-reset: card-counter;
 }
 
-/* Hover states - 6 cards */
+/* FIXED: Hover states - expansion at START of each card's span */
 .brand-grid-wrapper:has(> div:nth-child(1):hover) { --grid-cols: 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> div:nth-child(2):hover) { --grid-cols: 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> div:nth-child(3):hover) { --grid-cols: 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> div:nth-child(4):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> div:nth-child(5):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr; }
-.brand-grid-wrapper:has(> div:nth-child(6):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(2):hover) { --grid-cols: 1fr 1fr 6fr 6fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(3):hover) { --grid-cols: 1fr 1fr 1fr 1fr 6fr 6fr 6fr 1fr 1fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(4):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 6fr 6fr 6fr 1fr 1fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(5):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 6fr 6fr 1fr 1fr; }
+.brand-grid-wrapper:has(> div:nth-child(6):hover) { --grid-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 6fr 6fr 6fr; }
 
 .brand-grid-wrapper > div {
   position: relative;
   overflow: hidden;
   transition: all 300ms ease-in-out;
   background-image: var(--bg-img);
-  background-size: cover; /* Changed from fixed width */
+  background-size: cover;
   background-position: center;
   cursor: pointer;
-  grid-row: 1 / -1; /* Stretch full height */
-  height: 100%; /* Ensure full height */
-  min-height: 0; /* Fix grid stretch */
+  grid-row: 1 / -1;
+  height: 100%;
+  min-height: 0;
   border: var(--border-size) solid var(--border-color);
   border-radius: 0 0 0 30% / 0 0 0 50%;
   corner-shape: notch;
@@ -2775,6 +2775,6 @@ Copy/* ============================================
   .brand-grid-wrapper {
     --border-size: 3px;
     width: 100%;
-    aspect-ratio: 1.8 / 1;
+    aspect-ratio: 1.5 / 1;
   }
 }
