@@ -213,10 +213,11 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   </section>
 
 
-<!-- Work Preview Section -->
+Copy<!-- Work Preview Section -->
 <section class="work-preview-section">
   <p class="work-preview-title">Our Work</p>
   <article class="preview-cards">
+    <!-- Row 1 -->
     <div class="previewCard">
       <img src="https://images4.imagebam.com/5c/8b/ed/ME1A9KOY_o.jpg" class="backdrop" />
       <div class="content">
@@ -248,6 +249,43 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
         <div class="title">Local Heroes</div>
         <div class="description">
           <p>Portraits of everyday people making a difference</p>
+          <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="previewCard">
+      <img src="https://images4.imagebam.com/e0/da/9b/ME1A9KP4_o.jpg" class="backdrop" />
+      <div class="content">
+        <div class="category">Food</div>
+        <div class="title">Street Cuisine</div>
+        <div class="description">
+          <p>The art of traditional Moroccan street food preparation</p>
+          <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="previewCard">
+      <img src="https://images4.imagebam.com/d5/49/67/ME1A9KP6_o.jpg" class="backdrop" />
+      <div class="content">
+        <div class="category">Craft</div>
+        <div class="title">Iron Works</div>
+        <div class="description">
+          <p>Master blacksmiths keeping ancient traditions alive</p>
+          <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="previewCard">
+      <img src="https://images4.imagebam.com/4d/17/a3/ME1A9KP8_o.jpg" class="backdrop" />
+      <div class="content">
+        <div class="category">Market</div>
+        <div class="title">Fresh Catch</div>
+        <div class="description">
+          <p>Daily life at the local fish and seafood markets</p>
           <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg></span>
         </div>
       </div>
