@@ -215,6 +215,7 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
 
 <!-- Brand Grid Section -->
 <section class="brand-grid-section">
+  <p class="brand-grid-title">Our Work</p>
   <div class="brand-grid-wrapper">
     <div style="--bg-img:url(https://images4.imagebam.com/5c/8b/ed/ME1A9KOY_o.jpg)"></div>
     <div style="--bg-img:url(https://images4.imagebam.com/ac/d9/c1/ME1A9KP0_o.jpg)"></div>
@@ -224,7 +225,6 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
     <div style="--bg-img:url(https://images4.imagebam.com/4d/17/a3/ME1A9KP8_o.jpg)"></div>
   </div>
 </section>
-
 
   <!-- Services Section - Expanding Cards -->
   <section class="services-section" id="services">
