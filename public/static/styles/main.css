@@ -835,26 +835,26 @@ body {
 }
 
 /* ============================================
-   GAME SECTION
+   GAME SECTION - COMPACT
    ============================================ */
 
 .game-section {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: auto;
   background: #000;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0px 0px;
+  padding: 40px 20px;
 }
 
 .game-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  max-width: 1400px;
+  gap: 30px; /* was 60px */
+  max-width: 1200px; /* was 1400px */
   width: 100%;
   align-items: center;
 }
@@ -868,74 +868,37 @@ body {
 
 .game-svg {
   width: 100%;
-  max-width: 320px;
+  max-width: 280px; /* was 320px */
   font-family: "Rubik Mono One", monospace;
   font-size: 32px;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
-.game-svg:hover {
-  transform: scale(1.02);
-}
-
-.game-svg.clicked {
-  pointer-events: none;
-}
-
-.game-right {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
 .animation-stage {
   position: relative;
   width: 100%;
-  max-width: 400px;
-  height: 200px;
+  max-width: 350px; /* was 400px */
+  height: 120px; /* was 200px */
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  margin-bottom: 40px;
-}
-
-.animation-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.animation-word, .animation-clone {
-  position: relative;
-  background: #000;
-  font-family: "Comfortaa", sans-serif;
-  font-size: 36px;
-  line-height: 40px;
-  padding-top: 5px;
-  box-shadow: 0px 0px 15px #000;
-  color: #B8FF5C;
-  font-weight: 500;
+  margin-bottom: 20px; /* was 40px */
 }
 
 .game-cta-text {
-  font-size: 24px;
+  font-size: 20px; /* was 24px */
   font-weight: 300;
-  margin-bottom: 20px;
+  margin-bottom: 10px; /* was 20px */
   color: rgba(255,255,255,0.9);
   letter-spacing: 0.02em;
 }
 
 .game-cta-subtext {
-  font-size: 14px;
+  font-size: 13px; /* was 14px */
   color: rgba(255,255,255,0.5);
-  margin-bottom: 30px;
+  margin-bottom: 0; /* was 30px */
   letter-spacing: 0.05em;
 }
 
@@ -946,53 +909,18 @@ body {
   animation: fadeInUp 0.5s ease;
 }
 
-.game-win-message.show {
-  display: flex;
-}
-
 .game-win-title {
-  font-size: 32px;
+  font-size: 28px; /* was 32px */
   font-weight: 700;
   color: #B8FF5C;
-  margin-bottom: 15px;
+  margin-bottom: 10px; /* was 15px */
 }
 
 .game-win-subtitle {
-  font-size: 16px;
+  font-size: 14px; /* was 16px */
   color: rgba(255,255,255,0.7);
-  margin-bottom: 30px;
+  margin-bottom: 20px; /* was 30px */
 }
-
-.claim-btn {
-  display: inline-block;
-  padding: 16px 40px;
-  background: #B8FF5C;
-  color: #000;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  transition: all 0.3s ease;
-}
-
-.claim-btn:hover {
-  background: #c9ff7d;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px rgba(184, 255, 92, 0.3);
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* ============================================
    ABOUT US TRANSITION SECTION
    ============================================ */
