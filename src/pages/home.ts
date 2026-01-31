@@ -213,33 +213,47 @@ export function homePage(content: Record<string, Record<string, string>> = {}): 
   </section>
 
 
-<!-- SVG Clip Path Definitions (hidden) -->
-<svg width="0" height="0" style="position:absolute;">
-  <defs>
-    <!-- Notch for cards 2-6 -->
-    <clipPath id="notch-clip" clipPathUnits="objectBoundingBox">
-      <path d="M 0 0 L 1 0 L 1 1 L 0 1 L 0 0.7 Q 0.15 0.5 0 0.3 Z"/>
-    </clipPath>
-    <!-- Deeper notch for first card -->
-    <clipPath id="notch-clip-first" clipPathUnits="objectBoundingBox">
-      <path d="M 0 0 L 1 0 L 1 1 L 0 1 L 0 0.85 Q 0.2 0.5 0 0.15 Z"/>
-    </clipPath>
-  </defs>
-</svg>
+<!-- Work Preview Section -->
+<section class="work-preview-section">
+  <p class="work-preview-title">Our Work</p>
+  <article class="preview-cards">
+    <div class="previewCard">
+      <img src="https://images4.imagebam.com/5c/8b/ed/ME1A9KOY_o.jpg" class="backdrop" />
+      <div class="content">
+        <div class="category">Photography</div>
+        <div class="title">Market Life</div>
+        <div class="description">
+          <p>Capturing authentic moments in traditional Moroccan markets</p>
+          <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg></span>
+        </div>
+      </div>
+    </div>
 
-<!-- Brand Grid Section -->
-<section class="brand-grid-section">
-  <p class="brand-grid-title">Our Work</p>
-  <div class="brand-grid-wrapper">
-    <div style="--bg-img:url(https://images4.imagebam.com/5c/8b/ed/ME1A9KOY_o.jpg)"></div>
-    <div style="--bg-img:url(https://images4.imagebam.com/ac/d9/c1/ME1A9KP0_o.jpg)"></div>
-    <div style="--bg-img:url(https://images4.imagebam.com/7b/02/8e/ME1A9KP2_o.jpg)"></div>
-    <div style="--bg-img:url(https://images4.imagebam.com/e0/da/9b/ME1A9KP4_o.jpg)"></div>
-    <div style="--bg-img:url(https://images4.imagebam.com/d5/49/67/ME1A9KP6_o.jpg)"></div>
-    <div style="--bg-img:url(https://images4.imagebam.com/4d/17/a3/ME1A9KP8_o.jpg)"></div>
-  </div>
+    <div class="previewCard">
+      <img src="https://images4.imagebam.com/ac/d9/c1/ME1A9KP0_o.jpg" class="backdrop" />
+      <div class="content">
+        <div class="category">Documentary</div>
+        <div class="title">Craftsmen</div>
+        <div class="description">
+          <p>Stories of skilled artisans preserving traditional crafts</p>
+          <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="previewCard">
+      <img src="https://images4.imagebam.com/7b/02/8e/ME1A9KP2_o.jpg" class="backdrop" />
+      <div class="content">
+        <div class="category">Portrait</div>
+        <div class="title">Local Heroes</div>
+        <div class="description">
+          <p>Portraits of everyday people making a difference</p>
+          <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </article>
 </section>
-
   <!-- Services Section - Expanding Cards -->
   <section class="services-section" id="services">
     <p class="services-title" data-content="services.title">${getContent('services', 'title', 'Our Services')}</p>
